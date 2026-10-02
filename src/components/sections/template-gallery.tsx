@@ -2,32 +2,44 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
-import { templates, waLink } from "@/lib/site";
+import { useSearchParams } from "next/navigation";
+import { templateCategories, templates, waLink } from "@/lib/site";
 import { PillLink } from "../brand";
 import { Icon } from "../icons";
 import { Mascot } from "../mascot";
 
-const categories = ["Semua", ...new Set(templates.map((t) => t.kind))];
+const categories = [{ slug: null, label: "Semua" }, ...templateCategories];
 
+// Kategori aktif disimpan di URL (?kategori=...), jadi bisa dibuka langsung dari navbar atau dibagikan
 export function TemplateGallery() {
-  const [filter, setFilter] = useState("Semua");
-  const shown = filter === "Semua" ? templates : templates.filter((t) => t.kind === filter);
+  const param = useSearchParams().get("kategori");
+  const filter = templateCategories.some((c) => c.slug === param) ? param : null;
+  const shown = filter ? templates.filter((t) => t.category === filter) : templates;
+
+  // Kartu "custom" mengisi sisa kolom di baris terakhir supaya grid selalu penuh
+  const lgSpan = ["lg:col-span-3 lg:flex-row lg:items-center lg:px-10", "lg:col-span-2 lg:flex-row lg:items-center", ""][
+    shown.length % 3
+  ];
+  const mdSpan = shown.length % 2 === 0 ? "md:col-span-2" : "";
+  const wide = shown.length % 3 !== 2;
+
+  const choose = (slug: string | null) =>
+    window.history.replaceState(null, "", slug ? `/template?kategori=${slug}` : "/template");
 
   return (
     <section className="mx-auto max-w-6xl px-4 py-16 sm:px-6 md:py-20">
       <div role="group" aria-label="Filter kategori template" className="flex flex-wrap gap-2">
         {categories.map((c) => (
           <button
-            key={c}
+            key={c.label}
             type="button"
-            aria-pressed={filter === c}
-            onClick={() => setFilter(c)}
+            aria-pressed={filter === c.slug}
+            onClick={() => choose(c.slug)}
             className={`rounded-full px-4 py-2 text-sm font-semibold transition-colors ${
-              filter === c ? "bg-brand text-white" : "bg-lilac-soft text-ink/75 hover:text-brand"
+              filter === c.slug ? "bg-brand text-white" : "bg-lilac-soft text-ink/75 hover:text-brand"
             }`}
           >
-            {c}
+            {c.label}
           </button>
         ))}
       </div>
@@ -97,10 +109,10 @@ export function TemplateGallery() {
           </li>
         ))}
 
-        <li className="flex flex-col items-start justify-between gap-8 rounded-3xl bg-brand p-7 text-white lg:col-span-3 lg:flex-row lg:items-center lg:px-10">
-          <div className="lg:flex lg:items-center lg:gap-8">
+        <li className={`flex flex-col items-start justify-between gap-8 rounded-3xl bg-brand p-7 text-white ${mdSpan} ${lgSpan}`}>
+          <div className={wide ? "lg:flex lg:items-center lg:gap-8" : ""}>
             <Mascot mood="kedip" className="w-20 shrink-0 -rotate-6" />
-            <div className="mt-6 lg:mt-0">
+            <div className={wide ? "mt-6 lg:mt-0" : "mt-6"}>
               <h2 className="text-2xl leading-tight font-bold">
                 Nggak nemu yang pas?
                 <span className="block text-mint">Kami bikinin dari nol.</span>

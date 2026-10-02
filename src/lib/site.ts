@@ -14,11 +14,8 @@ export function waLink(message = "Halo Webkeun, aku mau tanya-tanya soal pembuat
   return `https://wa.me/${site.whatsapp}?text=${encodeURIComponent(message)}`;
 }
 
-// Link biasa di menu utama. "Layanan" dan "Resources" punya dropdown sendiri (aboutLinks & resourcesLinks).
-export const navLinks = [
-  { href: "/template", label: "Template", icon: "browser" },
-  { href: "/#faq", label: "FAQ", icon: "help" },
-] as const;
+// Link biasa di menu utama. "Layanan", "Template", dan "Resources" punya dropdown sendiri.
+export const navLinks = [{ href: "/#faq", label: "FAQ", icon: "help" }] as const;
 
 // Isi dropdown "Resources": halaman-halaman pendukung
 export const resourcesLinks = [
@@ -227,13 +224,22 @@ export const faqs = [
   },
 ];
 
-// Template website. Halaman demonya ada di /template/<slug>.
+// Kategori template; slug-nya dipakai di URL /template?kategori=<slug>
+export const templateCategories = [
+  { slug: "umkm", label: "Website UMKM", desc: "Kafe, toko, usaha jasa", icon: "store" },
+  { slug: "company-profile", label: "Company Profile", desc: "CV, PT, kontraktor", icon: "building" },
+  { slug: "portofolio", label: "Portofolio", desc: "Desainer, fotografer", icon: "user" },
+  { slug: "undangan", label: "Undangan Digital", desc: "Pernikahan online", icon: "heart" },
+] as const;
+
+// Template website & undangan. Halaman demonya ada di /template/<slug>.
 // Gambar di /public/preview adalah screenshot dari halaman demo itu; kalau tampilannya diubah, ambil ulang.
 export const templates = [
   {
     slug: "kopi-senja",
     name: "Kopi Senja",
     kind: "Website UMKM",
+    category: "umkm",
     url: "kopisenja.id",
     desc: "Kedai kopi di Bandung: menu lengkap dengan harga, jam buka, dan alamat. Pelanggan bisa langsung pesan antar.",
     laptop: "/preview/laptop-kopi-senja.webp",
@@ -244,6 +250,7 @@ export const templates = [
     slug: "arunika-konstruksi",
     name: "Arunika Konstruksi",
     kind: "Company Profile",
+    category: "company-profile",
     url: "arunikakonstruksi.co.id",
     desc: "Kontraktor umum: profil perusahaan, layanan, dan proyek terbaru, dibuat tegas supaya calon klien langsung percaya.",
     laptop: "/preview/laptop-arunika-konstruksi.webp",
@@ -254,11 +261,23 @@ export const templates = [
     slug: "nadia-putri",
     name: "Nadia Putri",
     kind: "Portofolio",
+    category: "portofolio",
     url: "nadiaputri.com",
     desc: "Desainer grafis: karya pilihan ditata bersih dan lega, jadi hasil kerjanya yang paling menonjol.",
     laptop: "/preview/laptop-nadia-putri.webp",
     phone: "/preview/hp-nadia-1.webp",
     includes: ["Karya pilihan", "Tentang saya", "Kontak"],
+  },
+  {
+    slug: "undangan-rara-dimas",
+    name: "Rara & Dimas",
+    kind: "Undangan Digital",
+    category: "undangan",
+    url: "rarandimas.my.id",
+    desc: "Undangan pernikahan bernuansa sage yang kalem. Nama tamu tampil di sampul, lengkap dengan lokasi dan RSVP.",
+    laptop: "/preview/laptop-undangan-rara-dimas.webp",
+    phone: "/preview/hp-undangan-1.webp",
+    includes: ["Nama tamu di sampul", "Hitung mundur", "RSVP & ucapan", "Amplop digital"],
   },
 ];
 
@@ -266,12 +285,14 @@ export const templates = [
 const kopi = "kopisenja.id";
 const arunika = "arunikakonstruksi.co.id";
 const nadia = "nadiaputri.com";
+const undangan = "rarandimas.my.id";
 export const heroShots = {
   desktop: [
     { src: "/preview/laptop-kopi-senja.webp", url: kopi },
     { src: "/preview/web-arunika-2.webp", url: arunika },
     { src: "/preview/laptop-nadia-putri.webp", url: nadia },
     { src: "/preview/web-kopi-senja-2.webp", url: kopi },
+    { src: "/preview/laptop-undangan-rara-dimas.webp", url: undangan },
     { src: "/preview/laptop-arunika-konstruksi.webp", url: arunika },
     { src: "/preview/web-nadia-2.webp", url: nadia },
     { src: "/preview/web-arunika-3.webp", url: arunika },
@@ -279,6 +300,7 @@ export const heroShots = {
   phone: [
     { src: "/preview/hp-arunika-1.webp", url: arunika },
     { src: "/preview/hp-kopi-senja-1.webp", url: kopi },
+    { src: "/preview/hp-undangan-1.webp", url: undangan },
     { src: "/preview/hp-nadia-1.webp", url: nadia },
     { src: "/preview/hp-arunika-2.webp", url: arunika },
     { src: "/preview/hp-kopi-senja-2.webp", url: kopi },

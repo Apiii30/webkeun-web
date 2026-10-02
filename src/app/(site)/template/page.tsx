@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import { Badge, SectionHeading } from "@/components/brand";
 import { Mascot } from "@/components/mascot";
 import { ClosingCta } from "@/components/sections/closing";
@@ -6,14 +7,14 @@ import { TemplateGallery } from "@/components/sections/template-gallery";
 import { templates } from "@/lib/site";
 
 export const metadata: Metadata = {
-  title: "Template Website",
+  title: "Template Website & Undangan",
   description:
-    "Pilih template website UMKM, company profile, atau portofolio. Warna, foto, dan isinya kami sesuaikan dengan usaha kamu.",
+    "Pilih template website UMKM, company profile, portofolio, atau undangan digital. Warna, foto, dan isinya kami sesuaikan buat kamu.",
 };
 
 const steps = [
   { title: "Pilih template", desc: "Cari yang gayanya paling dekat sama usaha kamu." },
-  { title: "Kirim materi", desc: "Logo, foto, dan info usaha. Belum lengkap? Kami bantu rapikan." },
+  { title: "Kirim materi", desc: "Logo, foto, info usaha atau acara. Belum lengkap? Kami bantu rapikan." },
   { title: "Kami sesuaikan", desc: "Warna & isi diganti sesuai brand kamu, lalu website online." },
 ];
 
@@ -26,11 +27,11 @@ export default function TemplatePage() {
             <Badge>{templates.length} template siap pakai</Badge>
             <h1 className="mt-5 text-4xl leading-[1.08] font-bold tracking-[-0.03em] sm:text-5xl lg:text-[3.4rem]">
               Template website
-              <span className="block text-brand">siap kamu pakai</span>
+              <span className="block text-brand">& undangan digital</span>
             </h1>
             <p className="mt-5 max-w-xl text-lg text-ink/70">
               Lihat demonya langsung, pilih yang kamu suka, lalu kami sesuaikan warna, foto, dan isinya dengan usaha
-              kamu.
+              atau acara kamu.
             </p>
           </div>
           <div className="relative hidden w-56 md:block" aria-hidden="true">
@@ -43,7 +44,10 @@ export default function TemplatePage() {
         </div>
       </section>
 
-      <TemplateGallery />
+      {/* Suspense dibutuhkan karena galeri membaca ?kategori= dari URL */}
+      <Suspense>
+        <TemplateGallery />
+      </Suspense>
 
       <section className="mx-auto max-w-6xl px-4 pb-20 sm:px-6 md:pb-28">
         <SectionHeading top="Cara pakai template" bottom="cuma 3 langkah" />

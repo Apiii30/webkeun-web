@@ -4,10 +4,10 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { type PointerEvent as ReactPointerEvent, type ReactNode, useEffect, useRef, useState } from "react";
-import { aboutLinks, navLinks, resourcesLinks, services, site, waLink } from "@/lib/site";
+import { aboutLinks, navLinks, resourcesLinks, services, site, templateCategories, templates, waLink } from "@/lib/site";
 import { Icon, type IconName } from "./icons";
 
-type MenuKey = "layanan" | "resources";
+type MenuKey = "layanan" | "template" | "resources";
 
 function WaStrip({ title, desc, message, onNavigate }: { title: string; desc: string; message: string; onNavigate: () => void }) {
   return (
@@ -86,6 +86,51 @@ function LayananMenu({ onNavigate }: { onNavigate: () => void }) {
         message="Halo Webkeun! Aku masih bingung pilih layanan yang mana, bisa bantu?"
         onNavigate={onNavigate}
       />
+    </>
+  );
+}
+
+// Isi menu "Template": pilih kategori, langsung terfilter di halaman template
+function TemplateMenu({ onNavigate }: { onNavigate: () => void }) {
+  return (
+    <>
+      <ul className="grid gap-1 p-1 md:grid-cols-2">
+        {templateCategories.map((c) => {
+          const count = templates.filter((t) => t.category === c.slug).length;
+          return (
+            <li key={c.slug}>
+              <Link
+                href={`/template?kategori=${c.slug}`}
+                onClick={onNavigate}
+                className="group flex items-center gap-3 rounded-xl px-3 py-2.5 transition-colors hover:bg-lilac-soft"
+              >
+                <span className="grid size-10 shrink-0 place-items-center rounded-xl bg-lilac-soft text-brand transition-colors group-hover:bg-brand group-hover:text-white">
+                  <Icon name={c.icon} className="size-5" />
+                </span>
+                <span className="min-w-0">
+                  <span className="block font-semibold">{c.label}</span>
+                  <span className="block truncate text-sm text-ink/55">
+                    {count} template · {c.desc}
+                  </span>
+                </span>
+              </Link>
+            </li>
+          );
+        })}
+      </ul>
+      <Link
+        href="/template"
+        onClick={onNavigate}
+        className="group mt-2 flex items-center justify-between gap-3 rounded-2xl bg-brand px-5 py-3.5 text-white transition-colors hover:bg-brand-deep"
+      >
+        <span>
+          <span className="block font-semibold">Lihat semua template</span>
+          <span className="block text-sm text-white/75">{templates.length} template siap pakai</span>
+        </span>
+        <span className="grid size-9 shrink-0 place-items-center rounded-full bg-white text-brand transition-transform group-hover:translate-x-0.5">
+          <Icon name="arrow" className="size-4" strokeWidth={2.5} />
+        </span>
+      </Link>
     </>
   );
 }
@@ -192,7 +237,8 @@ export function Navbar() {
     <li
       onPointerEnter={hoverOpen(key)}
       onPointerLeave={hoverClose}
-      className={`relative flex items-center rounded-xl transition-colors hover:bg-lilac-soft ${
+      // Panel Resources kecil, jadi menempel di bawah tombolnya; panel lain lebar dan berada di tengah navbar
+      className={`${key === "resources" ? "relative" : ""} flex items-center rounded-xl transition-colors hover:bg-lilac-soft ${
         open === key || active ? "bg-lilac-soft text-brand" : "text-ink/80"
       }`}
     >
@@ -223,15 +269,12 @@ export function Navbar() {
   );
 
   const plainLink = (l: (typeof navLinks)[number]) => {
-    const active = l.href === "/template" && pathname.startsWith("/template");
     return (
       <li key={l.href}>
         <Link
           href={l.href}
           onClick={close}
-          className={`flex items-center gap-1.5 rounded-xl px-3 py-2 text-[15px] font-medium transition-colors hover:bg-lilac-soft hover:text-brand ${
-            active ? "bg-lilac-soft text-brand" : "text-ink/80"
-          }`}
+          className="flex items-center gap-1.5 rounded-xl px-3 py-2 text-[15px] font-medium text-ink/80 transition-colors hover:bg-lilac-soft hover:text-brand"
         >
           <Icon name={l.icon} className="size-4" />
           {l.label}
@@ -257,7 +300,20 @@ export function Navbar() {
         <ul className="hidden items-center gap-1 md:flex">
           {/* Dari halaman lain, "Layanan" membuka landing page dari atas; di landing page, menggulir ke section-nya */}
           {menuTrigger("layanan", "Layanan", "layers", pathname === "/" ? "/#layanan" : "/", false)}
-          {plainLink(navLinks[0])}
+          {menuTrigger(
+            "template",
+            "Template",
+            "browser",
+            "/template",
+            pathname.startsWith("/template"),
+            <div
+              id="menu-template"
+              inert={open !== "template"}
+              className={`left-1/2 w-[min(42rem,calc(100vw-2rem))] -translate-x-1/2 ${panelClass(open === "template")}`}
+            >
+              <TemplateMenu onNavigate={close} />
+            </div>,
+          )}
           {menuTrigger(
             "resources",
             "Resources",
@@ -272,7 +328,7 @@ export function Navbar() {
               <ResourcesMenu onNavigate={close} />
             </div>,
           )}
-          {plainLink(navLinks[1])}
+          {navLinks.map(plainLink)}
         </ul>
 
         <a
@@ -302,7 +358,7 @@ export function Navbar() {
   );
 }
 
-const sheetTitle: Record<MenuKey, string> = { layanan: "Layanan", resources: "Resources" };
+const sheetTitle: Record<MenuKey, string> = { layanan: "Layanan", template: "Template", resources: "Resources" };
 
 // Navigasi bawah ala aplikasi, hanya tampil di HP
 export function BottomNav() {
@@ -381,7 +437,9 @@ export function BottomNav() {
               <Icon name="close" className="size-4" strokeWidth={2.5} />
             </button>
           </div>
-          {content === "layanan" ? <LayananMenu onNavigate={closeSheet} /> : <ResourcesMenu onNavigate={closeSheet} />}
+          {content === "layanan" && <LayananMenu onNavigate={closeSheet} />}
+          {content === "template" && <TemplateMenu onNavigate={closeSheet} />}
+          {content === "resources" && <ResourcesMenu onNavigate={closeSheet} />}
         </div>
       </div>
 
@@ -392,7 +450,7 @@ export function BottomNav() {
         <ul className="mx-auto flex max-w-md justify-between px-2">
           {link("/#beranda", "Beranda", "home", false)}
           {sheetButton("layanan", "layers", false)}
-          {link("/template", "Template", "browser", pathname.startsWith("/template"))}
+          {sheetButton("template", "browser", pathname.startsWith("/template"))}
           {sheetButton("resources", "book", resourcesLinks.some((l) => pathname === l.href))}
           {link("/#faq", "FAQ", "help", false)}
         </ul>
