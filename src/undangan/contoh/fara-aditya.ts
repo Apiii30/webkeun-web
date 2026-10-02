@@ -35,6 +35,11 @@ export const faraAditya: Undangan = {
   pembuka:
     "Dengan memohon rahmat Tuhan Yang Maha Esa, kami mengundang kamu untuk hadir dan ikut merayakan hari pernikahan kami. Kehadiran dan doa restumu akan jadi bunga terindah di hari bahagia kami.",
   kutipan: "Dua orang, satu cerita panjang yang baru saja dimulai.",
+  ayat: {
+    teks: "Dan di antara tanda-tanda kebesaran-Nya ialah Dia menciptakan pasangan-pasangan untukmu dari jenismu sendiri, agar kamu cenderung dan merasa tenteram kepadanya, dan Dia menjadikan di antaramu rasa kasih dan sayang.",
+    sumber: "QS. Ar-Rum: 21",
+  },
+  salam: { buka: "Assalamu'alaikum Wr. Wb.", tutup: "Wassalamu'alaikum Wr. Wb." },
   cerita: [
     { tahun: "2021", judul: "Pertemuan", isi: "Dikenalkan teman kantor. Obrolan pertama soal kopi yang kemanisan, lalu nggak pernah berhenti ngobrol." },
     { tahun: "2024", judul: "Jatuh hati", isi: "Dari teman diskusi jadi teman pulang. Pelan-pelan, kami sadar sedang menulis cerita yang sama." },

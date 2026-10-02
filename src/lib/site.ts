@@ -269,15 +269,15 @@ export const templates = [
     includes: ["Karya pilihan", "Tentang saya", "Kontak"],
   },
   {
-    slug: "undangan-fara-aditya",
-    name: "Fara & Aditya",
+    slug: "undangan-fara-aditya-rimba",
+    name: "Fara & Aditya · Rimba",
     kind: "Undangan Digital",
     category: "undangan",
     url: "faraaditya.my.id",
-    desc: "Tema Floral: bunga-bunga modern berwarna cerah, khusus tampilan HP, dengan kartu bertumpuk, parallax, dan amplop yang terbuka sendiri.",
-    laptop: "/preview/laptop-undangan-fara-aditya.webp",
-    phone: "/preview/hp-undangan-floral-1.webp",
-    includes: ["Sampul buka undangan", "Animasi parallax & bertumpuk", "Galeri geser", "RSVP & ucapan"],
+    desc: "Tema Rimba: hutan berkabut dari lukisan klasik, bunga ilustrasi botani, dan bingkai emas. Khusus tampilan HP, dengan animasi masuk yang beragam dan galeri yang membesar saat diketuk.",
+    laptop: "/preview/laptop-undangan-rimba.webp",
+    phone: "/preview/hp-undangan-rimba-1.webp",
+    includes: ["Sampul buka undangan", "Ayat & salam", "Galeri layar penuh", "RSVP & amplop digital"],
   },
   {
     slug: "undangan-rara-dimas",
@@ -297,13 +297,13 @@ const kopi = "kopisenja.id";
 const arunika = "arunikakonstruksi.co.id";
 const nadia = "nadiaputri.com";
 const undangan = "rarandimas.my.id";
-const floral = "faraaditya.my.id";
+const faraAditya = "faraaditya.my.id";
 export const heroShots = {
   desktop: [
     { src: "/preview/laptop-kopi-senja.webp", url: kopi },
     { src: "/preview/web-arunika-2.webp", url: arunika },
     { src: "/preview/laptop-nadia-putri.webp", url: nadia },
-    { src: "/preview/laptop-undangan-fara-aditya.webp", url: floral },
+    { src: "/preview/laptop-undangan-rimba.webp", url: faraAditya },
     { src: "/preview/web-kopi-senja-2.webp", url: kopi },
     { src: "/preview/laptop-undangan-rara-dimas.webp", url: undangan },
     { src: "/preview/laptop-arunika-konstruksi.webp", url: arunika },
@@ -318,6 +318,6 @@ export const heroShots = {
     { src: "/preview/hp-arunika-2.webp", url: arunika },
     { src: "/preview/hp-kopi-senja-2.webp", url: kopi },
     { src: "/preview/hp-nadia-2.webp", url: nadia },
-    { src: "/preview/hp-undangan-floral-1.webp", url: floral },
+    { src: "/preview/hp-undangan-rimba-1.webp", url: faraAditya },
   ],
 };

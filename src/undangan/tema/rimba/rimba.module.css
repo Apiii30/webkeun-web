@@ -1,0 +1,403 @@
+/* Tema Rimba: gerakan alam yang terus berjalan (angin, awan, kabut, kupu-kupu, burung) */
+
+/* Tanaman bergoyang tertiup angin, berporos di pangkal batang */
+.goyang {
+  transform-origin: 50% 100%;
+  animation: goyang 7s ease-in-out infinite alternate;
+}
+@keyframes goyang {
+  from {
+    transform: rotate(-2.5deg);
+  }
+  to {
+    transform: rotate(2.5deg);
+  }
+}
+
+/* Tanaman yang menjuntai dari atas berayun dari pangkalnya di atas */
+.ayun {
+  transform-origin: 50% 0%;
+  animation: goyang 9s ease-in-out infinite alternate;
+}
+
+.awan {
+  animation: awan 70s linear infinite;
+}
+@keyframes awan {
+  from {
+    transform: translateX(-60%);
+  }
+  to {
+    transform: translateX(160%);
+  }
+}
+
+.kabut {
+  animation: kabut 26s ease-in-out infinite alternate;
+}
+@keyframes kabut {
+  from {
+    transform: translateX(-18%);
+  }
+  to {
+    transform: translateX(8%);
+  }
+}
+
+/* Burung kecil terbang melintas dengan sayap mengepak */
+.burung {
+  animation: burung 24s linear infinite;
+}
+@keyframes burung {
+  from {
+    transform: translate(-40px, 0);
+  }
+  50% {
+    transform: translate(220px, -26px);
+  }
+  to {
+    transform: translate(480px, -10px);
+  }
+}
+.kepakBurung {
+  transform-origin: 50% 60%;
+  animation: kepakBurung 0.5s ease-in-out infinite alternate;
+}
+@keyframes kepakBurung {
+  to {
+    transform: scaleY(0.35);
+  }
+}
+
+/* Kupu-kupu: terbang berkelok, sayap mengepak cepat */
+.terbang {
+  animation: terbang 18s ease-in-out infinite;
+}
+@keyframes terbang {
+  0% {
+    transform: translate(0, 0) rotate(-8deg);
+  }
+  20% {
+    transform: translate(60px, -40px) rotate(6deg);
+  }
+  40% {
+    transform: translate(130px, -10px) rotate(-4deg);
+  }
+  60% {
+    transform: translate(90px, -80px) rotate(10deg);
+  }
+  80% {
+    transform: translate(20px, -50px) rotate(-6deg);
+  }
+  100% {
+    transform: translate(0, 0) rotate(-8deg);
+  }
+}
+.kepak {
+  animation: kepak 0.22s ease-in-out infinite alternate;
+}
+@keyframes kepak {
+  to {
+    transform: scaleX(0.3);
+  }
+}
+
+/* Kilau emas yang menyapu tombol */
+.kilau {
+  background-size: 220% 100%;
+  animation: kilau 4s ease-in-out infinite;
+}
+@keyframes kilau {
+  from {
+    background-position: 100% 0;
+  }
+  to {
+    background-position: -120% 0;
+  }
+}
+
+/* Bingkai emas ganda: garis luar dari padding bergradasi, garis dalam dari outline */
+.emas {
+  background: linear-gradient(155deg, #f6e4b0 0%, #b98d45 30%, #f3dfa6 52%, #9b7231 78%, #e9d197 100%);
+}
+.garisDalam {
+  outline: 1px solid rgb(243 223 166 / 0.75);
+  outline-offset: -7px;
+}
+
+/* Kunang-kunang: berkelip sambil melayang pelan */
+.kunang {
+  animation:
+    kunangGerak var(--d, 9s) ease-in-out infinite alternate,
+    kunangKedip var(--k, 2.6s) ease-in-out infinite alternate;
+}
+@keyframes kunangGerak {
+  to {
+    transform: translate(var(--x, 30px), var(--y, -40px));
+  }
+}
+@keyframes kunangKedip {
+  from {
+    opacity: 0.1;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Berkas cahaya matahari yang menembus pepohonan, menguat & melemah */
+.sinar {
+  animation: sinar 8s ease-in-out infinite alternate;
+}
+@keyframes sinar {
+  from {
+    opacity: 0.12;
+  }
+  to {
+    opacity: 0.5;
+  }
+}
+
+/* Kelopak yang jatuh berputar dari atas */
+.kelopak {
+  animation: kelopakJatuh var(--d, 16s) linear infinite;
+}
+@keyframes kelopakJatuh {
+  from {
+    transform: translate(0, -12vh) rotate(0deg);
+  }
+  50% {
+    transform: translate(var(--x, 60px), 50vh) rotate(200deg);
+  }
+  to {
+    transform: translate(calc(var(--x, 60px) * -0.4), 112vh) rotate(420deg);
+  }
+}
+.kelopakPutar {
+  animation: kelopakPutar 2.2s ease-in-out infinite alternate;
+}
+@keyframes kelopakPutar {
+  to {
+    transform: rotateY(70deg) rotateX(20deg);
+  }
+}
+
+/* Detak hati di garis kisah */
+.detak {
+  animation: detak 1.8s ease-in-out infinite;
+}
+@keyframes detak {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  15% {
+    transform: scale(1.2);
+  }
+  30% {
+    transform: scale(1);
+  }
+  45% {
+    transform: scale(1.12);
+  }
+}
+
+/* Ikon kado sesekali bergoyang minta ditekan */
+.goyangKado {
+  transform-origin: 50% 80%;
+  animation: goyangKado 3.2s ease-in-out infinite;
+}
+@keyframes goyangKado {
+  0%,
+  70%,
+  100% {
+    transform: rotate(0deg);
+  }
+  76% {
+    transform: rotate(-14deg);
+  }
+  82% {
+    transform: rotate(11deg);
+  }
+  88% {
+    transform: rotate(-6deg);
+  }
+  94% {
+    transform: rotate(3deg);
+  }
+}
+
+/* ── Efek yang mengikuti scroll ──
+   Dijalankan browser sendiri di GPU (CSS scroll-driven animation), bukan dihitung JavaScript tiap scroll,
+   jadi tidak tertinggal dari gerakan jari dan tidak kedut. Browser yang belum mendukung cukup menampilkan diam. */
+.sek {
+  view-timeline-name: --sek;
+}
+.wadahDepan {
+  view-timeline-name: --depan;
+}
+@supports (animation-timeline: view()) {
+  .latarGerak {
+    will-change: transform;
+    animation: latarGerak linear both;
+    animation-timeline: scroll(root);
+  }
+  .progres {
+    animation: progres linear both;
+    animation-timeline: scroll(root);
+  }
+  /* bagian pembuka: saat keluar dari atas layar */
+  .keluarTurun {
+    animation: keluarTurun linear both;
+    animation-timeline: --sek;
+    animation-range: exit 0% exit 80%;
+  }
+  .keluarPelan {
+    animation: keluarPelan linear both;
+    animation-timeline: --sek;
+    animation-range: exit 0% exit 100%;
+  }
+  /* gambar di dalam bingkai bergeser lebih lambat dari halaman */
+  .geserLambat {
+    animation: geserLambat linear both;
+    animation-timeline: --sek;
+    animation-range: cover;
+  }
+  .zoomKeluar {
+    animation: zoomKeluar linear both;
+    animation-timeline: --sek;
+    animation-range: entry 0% cover 55%;
+  }
+  .mendekat {
+    animation: mendekat linear both;
+    animation-timeline: --sek;
+    animation-range: entry 0% entry 100%;
+  }
+  /* tanaman di depan layar bergerak lebih cepat dari halaman: memberi kedalaman */
+  /* nilai ditulis langsung di keyframes (tanpa var()) supaya bisa dijalankan GPU, juga di Safari */
+  .depanKiri,
+  .depanKanan {
+    animation: depanKiri linear both;
+    animation-timeline: --depan;
+    animation-range: cover;
+  }
+  .depanKanan {
+    animation-name: depanKanan;
+  }
+
+  .tumbuhGaris {
+    animation: tumbuhGaris linear both;
+    animation-timeline: --sek;
+    animation-range: entry 60% exit 20%;
+  }
+}
+@keyframes latarGerak {
+  from {
+    transform: scale(1.2);
+  }
+  to {
+    transform: scale(1) translateY(-3%);
+  }
+}
+@keyframes progres {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+@keyframes keluarTurun {
+  to {
+    transform: translateY(140px) scale(0.92);
+    opacity: 0;
+  }
+}
+/* turun lebih lambat dari halaman: terasa jauh di belakang, dan tepi bawahnya tetap tersembunyi */
+@keyframes keluarPelan {
+  to {
+    transform: translateY(90px);
+  }
+}
+@keyframes geserLambat {
+  from {
+    transform: translateY(-10%);
+  }
+  to {
+    transform: translateY(10%);
+  }
+}
+@keyframes zoomKeluar {
+  from {
+    transform: scale(1.35);
+  }
+  to {
+    transform: scale(1);
+  }
+}
+@keyframes mendekat {
+  from {
+    transform: scale(0.8) translateY(40px);
+  }
+  to {
+    transform: none;
+  }
+}
+@keyframes depanKiri {
+  from {
+    transform: translateY(180px) rotate(-14deg);
+  }
+  to {
+    transform: translateY(-180px) rotate(6deg);
+  }
+}
+@keyframes depanKanan {
+  from {
+    transform: translateY(180px) rotate(14deg);
+  }
+  to {
+    transform: translateY(-180px) rotate(-6deg);
+  }
+}
+@keyframes tumbuhGaris {
+  from {
+    transform: scaleY(0);
+  }
+  to {
+    transform: scaleY(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .goyang,
+  .ayun,
+  .awan,
+  .kabut,
+  .burung,
+  .kepakBurung,
+  .terbang,
+  .kepak,
+  .kilau,
+  .kunang,
+  .sinar,
+  .kelopak,
+  .kelopakPutar,
+  .detak,
+  .goyangKado,
+  .latarGerak,
+  .progres,
+  .keluarTurun,
+  .keluarPelan,
+  .geserLambat,
+  .zoomKeluar,
+  .mendekat,
+  .depanKiri,
+  .depanKanan,
+  .tumbuhGaris {
+    animation: none;
+  }
+  .kelopak,
+  .kunang {
+    display: none;
+  }
+}

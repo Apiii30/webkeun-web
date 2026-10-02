@@ -22,6 +22,9 @@ export type Undangan = {
   lokasi: { nama: string; alamat: string; maps: string };
   pembuka: string;
   kutipan: string;
+  // opsional, dipakai tema yang menampilkan ayat & salam pembuka/penutup (mis. Rimba)
+  ayat?: { teks: string; sumber: string };
+  salam?: { buka: string; tutup: string };
   cerita: { tahun: string; judul: string; isi: string }[];
   foto: { sampul: string; kutipan: string; belakang: string; galeri: Foto[] };
   amplop: { bank: string; nomor: string; atasNama: string }[];
