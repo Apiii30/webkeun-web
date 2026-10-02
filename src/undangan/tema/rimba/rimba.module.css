@@ -227,65 +227,95 @@
   }
 }
 
-/* ── Efek yang mengikuti scroll ──
-   Dijalankan browser sendiri di GPU (CSS scroll-driven animation), bukan dihitung JavaScript tiap scroll,
-   jadi tidak tertinggal dari gerakan jari dan tidak kedut. Browser yang belum mendukung cukup menampilkan diam. */
+/* ── Parallax: efek yang mengikuti scroll ──
+   Murni CSS (scroll-driven animation) dan hanya mengubah transform, tanpa JavaScript tiap scroll.
+   Hanya aktif bila pembungkus tema punya atribut data-paralaks, yang dipasang shell.tsx khusus untuk browser
+   yang menjalankan efek ini di GPU (Chrome/Edge/Android, Safari 26.4+). Di browser lain efek ini membuat
+   elemen tertinggal dari scroll alias bergetar, jadi di sana semua elemen cukup diam di tempatnya.
+   Nilai ditulis langsung di keyframes (tanpa var()) supaya browser bisa menjalankannya di GPU. */
 .sek {
   view-timeline-name: --sek;
 }
 .wadahDepan {
   view-timeline-name: --depan;
 }
+.progres {
+  display: none;
+}
 @supports (animation-timeline: view()) {
-  .latarGerak {
+  /* latar hutan: lukisan bergeser & mengecil pelan sepanjang halaman */
+  [data-paralaks] .latarGerak {
     will-change: transform;
     animation: latarGerak linear both;
     animation-timeline: scroll(root);
   }
-  .progres {
+  /* di layar lebar: lukisan redup di kiri-kanan ikut bergeser pelan */
+  [data-paralaks] .latarSisi {
+    animation: latarSisi linear both;
+    animation-timeline: scroll(root);
+  }
+  [data-paralaks] .progres {
+    display: block;
     animation: progres linear both;
     animation-timeline: scroll(root);
   }
   /* bagian pembuka: saat keluar dari atas layar */
-  .keluarTurun {
+  [data-paralaks] .keluarTurun {
     animation: keluarTurun linear both;
     animation-timeline: --sek;
     animation-range: exit 0% exit 80%;
   }
-  .keluarPelan {
+  [data-paralaks] .keluarPelan {
     animation: keluarPelan linear both;
     animation-timeline: --sek;
     animation-range: exit 0% exit 100%;
   }
   /* gambar di dalam bingkai bergeser lebih lambat dari halaman */
-  .geserLambat {
+  [data-paralaks] .geserLambat {
     animation: geserLambat linear both;
     animation-timeline: --sek;
     animation-range: cover;
   }
-  .zoomKeluar {
+  [data-paralaks] .zoomKeluar {
     animation: zoomKeluar linear both;
     animation-timeline: --sek;
     animation-range: entry 0% cover 55%;
   }
-  .mendekat {
+  [data-paralaks] .mendekat {
     animation: mendekat linear both;
     animation-timeline: --sek;
     animation-range: entry 0% entry 100%;
   }
-  /* tanaman di depan layar bergerak lebih cepat dari halaman: memberi kedalaman */
-  /* nilai ditulis langsung di keyframes (tanpa var()) supaya bisa dijalankan GPU, juga di Safari */
-  .depanKiri,
-  .depanKanan {
+  /* tanaman besar di depan layar bergerak jauh lebih cepat dari halaman */
+  [data-paralaks] .depanKiri,
+  [data-paralaks] .depanKanan {
     animation: depanKiri linear both;
     animation-timeline: --depan;
     animation-range: cover;
   }
-  .depanKanan {
+  [data-paralaks] .depanKanan {
     animation-name: depanKanan;
   }
-
-  .tumbuhGaris {
+  /* lapisan kedalaman umum, diukur dari posisi elemen itu sendiri di layar:
+     jauh = sedikit lebih lambat dari halaman, dekat = sedikit lebih cepat */
+  [data-paralaks] .pJauh {
+    animation: pJauh linear both;
+    animation-timeline: view();
+    animation-range: cover;
+  }
+  /* judul bagian: sedikit mendahului halaman. Geserannya (24px) lebih kecil dari jarak ke isi di bawahnya,
+     jadi tidak pernah menimpa */
+  [data-paralaks] .pJudul {
+    animation: pJudul linear both;
+    animation-timeline: view();
+    animation-range: cover;
+  }
+  [data-paralaks] .pDekat {
+    animation: pDekat linear both;
+    animation-timeline: view();
+    animation-range: cover;
+  }
+  [data-paralaks] .tumbuhGaris {
     animation: tumbuhGaris linear both;
     animation-timeline: --sek;
     animation-range: entry 60% exit 20%;
@@ -297,6 +327,38 @@
   }
   to {
     transform: scale(1) translateY(-3%);
+  }
+}
+@keyframes latarSisi {
+  from {
+    transform: scale(1.12) translateY(3%);
+  }
+  to {
+    transform: scale(1.12) translateY(-3%);
+  }
+}
+@keyframes pJauh {
+  from {
+    transform: translateY(-45px);
+  }
+  to {
+    transform: translateY(45px);
+  }
+}
+@keyframes pJudul {
+  from {
+    transform: translateY(24px);
+  }
+  to {
+    transform: translateY(-24px);
+  }
+}
+@keyframes pDekat {
+  from {
+    transform: translateY(70px);
+  }
+  to {
+    transform: translateY(-70px);
   }
 }
 @keyframes progres {
@@ -385,6 +447,10 @@
   .detak,
   .goyangKado,
   .latarGerak,
+  .latarSisi,
+  .pJauh,
+  .pJudul,
+  .pDekat,
   .progres,
   .keluarTurun,
   .keluarPelan,

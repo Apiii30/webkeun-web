@@ -50,10 +50,11 @@ function Huruf({ teks, jeda = 0, cepat = 0.035 }: { teks: string; jeda?: number;
   );
 }
 
-// Judul bagian: tulisan sambung muncul seperti sedang ditulis, lalu judul besar naik huruf demi huruf
-function Judul({ kecil, children, className = "" }: { kecil?: string; children: string; className?: string }) {
+// Judul bagian: tulisan sambung muncul seperti sedang ditulis, lalu judul besar naik huruf demi huruf.
+// Saat di-scroll judul sedikit mendahului halaman (parallax). gerak={false} bila parallax dipasang di pembungkusnya.
+function Judul({ kecil, children, className = "", gerak = true }: { kecil?: string; children: string; className?: string; gerak?: boolean }) {
   return (
-    <motion.div className={`text-center ${className}`} initial="hidden" whileInView="show" viewport={{ once: true, amount: 0.7 }}>
+    <motion.div className={`${gerak ? s.pJudul : ""} text-center ${className}`} initial="hidden" whileInView="show" viewport={{ once: true, amount: 0.7 }}>
       {kecil && (
         <motion.p
           variants={{ hidden: { clipPath: "inset(0% 100% 0% 0%)" }, show: { clipPath: "inset(0% 0% 0% 0%)", transition: { duration: 1.4, ease: "easeInOut" } } }}
@@ -140,8 +141,8 @@ function Beranda({ u, opened }: { u: Undangan; opened: boolean }) {
       <div className={`${s.keluarPelan} absolute inset-x-0 bottom-0 aspect-[1/0.62]`}>
         <Rumpun items={RUMPUN_BAWAH} className="inset-0" />
       </div>
-      <Kupu className="top-[30%] left-[8%]" delay={-3} />
-      <Kupu a="kupuAntiopa" className="top-[60%] right-[22%]" delay={-11} w={30} />
+      <Kupu className="top-[30%] left-[8%]" delay={-3} dekat />
+      <Kupu a="kupuAntiopa" className="top-[60%] right-[22%]" delay={-11} w={30} dekat />
     </section>
   );
 }
@@ -161,7 +162,7 @@ function Ayat({ u }: { u: Undangan }) {
           <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#0b1610]/30 to-[#0b1610]/80" />
         </div>
         <motion.blockquote
-          className="absolute inset-x-0 bottom-[12%] px-8 text-center"
+          className={`${s.pJauh} absolute inset-x-0 bottom-[12%] px-8 text-center`}
           initial="hidden"
           whileInView="show"
           viewport={{ once: true, amount: 0.5 }}
@@ -241,7 +242,7 @@ function Mempelai({ u }: { u: Undangan }) {
               {p.keterangan}
             </motion.p>
           </motion.div>
-          <Kupu a={i ? "kupuVanessa" : "kupuSpeyeria"} className={`top-[15%] ${flip ? "left-[6%]" : "right-[10%]"}`} delay={-i * 7} w={30} />
+          <Kupu a={i ? "kupuVanessa" : "kupuSpeyeria"} className={`top-[15%] ${flip ? "left-[6%]" : "right-[10%]"}`} delay={-i * 7} w={30} dekat />
         </div>
       ))}
     </section>
@@ -284,7 +285,7 @@ function HitungMundur({ u }: { u: Undangan }) {
           </motion.div>
         </div>
       </motion.div>
-      <Rumpun items={RUMPUN_BAWAH.slice(0, 4)} className="inset-x-0 -bottom-4 aspect-[1/0.5]" />
+      <Rumpun items={RUMPUN_BAWAH.slice(0, 4)} className={`${s.pDekat} inset-x-0 -bottom-4 aspect-[1/0.5]`} />
     </section>
   );
 }
@@ -378,10 +379,15 @@ function Acara({ u }: { u: Undangan }) {
 function BagianGaleri({ u }: { u: Undangan }) {
   return (
     <section id="galeri" className="relative px-5 pt-20 pb-16">
-      <Judul kecil="Momen berharga">Galeri</Judul>
-      <Muncul as="lembut" delay={0.6}>
-        <p className="mt-3 mb-8 text-center text-xs tracking-wide text-[#f3ede0]/60">Ketuk foto untuk melihat lebih besar</p>
-      </Muncul>
+      <div className={s.pJudul}>
+        <Judul kecil="Momen berharga" gerak={false}>
+          Galeri
+        </Judul>
+        <Muncul as="lembut" delay={0.6}>
+          <p className="mt-3 text-center text-xs tracking-wide text-[#f3ede0]/60">Ketuk foto untuk melihat lebih besar</p>
+        </Muncul>
+      </div>
+      <div className="h-8" />
       <Galeri photos={u.foto.galeri} />
     </section>
   );
@@ -505,7 +511,7 @@ function Kado({ u }: { u: Undangan }) {
           </div>
         </motion.div>
       </motion.div>
-      <Rumpun items={RUMPUN_BAWAH.slice(3)} className="inset-x-0 -bottom-6 aspect-[1/0.5]" />
+      <Rumpun items={RUMPUN_BAWAH.slice(3)} className={`${s.pDekat} inset-x-0 -bottom-6 aspect-[1/0.5]`} />
     </section>
   );
 }
@@ -515,7 +521,7 @@ function Kado({ u }: { u: Undangan }) {
 function Penutup({ u }: { u: Undangan }) {
   return (
     <section className={`${s.sek} relative flex min-h-svh flex-col items-center justify-center overflow-clip px-6 pt-16 pb-[calc(16rem+var(--demo-h,0px))] text-center`}>
-      <Kunang n={12} />
+      <Kunang n={12} className={s.pJauh} />
       <div className={s.mendekat}>
         <BukaLensa>
           <Bingkai src={u.foto.belakang} alt={`${u.wanita.panggilan} & ${u.pria.panggilan}`} className="aspect-[3/4] h-[36svh] max-h-[20rem]" sizes="260px" />
@@ -540,7 +546,7 @@ function Penutup({ u }: { u: Undangan }) {
       <div className="absolute inset-x-0 bottom-[var(--demo-h,0px)] aspect-[1/0.62]">
         <Rumpun items={RUMPUN_BAWAH} className="inset-0" />
       </div>
-      <Kupu className="top-[12%] left-[10%]" delay={-5} />
+      <Kupu className="top-[12%] left-[10%]" delay={-5} dekat />
       <Kupu a="kupuVanessa" className="bottom-[34%] left-[14%]" delay={-12} w={28} />
     </section>
   );

@@ -3,7 +3,7 @@
 import { AnimatePresence, MotionConfig, motion, type Variants } from "motion/react";
 import Image from "next/image";
 import { useEffect, useState } from "react";
-import { useBukaUndangan } from "../../pakai";
+import { useBukaUndangan, useParalaks } from "../../pakai";
 import type { Undangan } from "../../types";
 import { Awan, Bingkai, Burung, Kabut, Kunang, Kupu, Latar, Rumpun, Sinar } from "./alam";
 import { ASET, RUMPUN_ATAS, RUMPUN_BAWAH } from "./aset";
@@ -18,10 +18,11 @@ const cinzel = "font-[family-name:var(--font-cinzel)]";
 
 export function Rimba({ data: u, tamu }: { data: Undangan; tamu?: string }) {
   const { opened, open } = useBukaUndangan({ halus: false });
+  const paralaks = useParalaks();
 
   return (
     <MotionConfig reducedMotion="user">
-      <div className="relative min-h-svh bg-[#0b1610] font-[family-name:var(--font-montserrat)] text-[#f3ede0] selection:bg-[#c9a45c]/40">
+      <div data-paralaks={paralaks ? "" : undefined} className="relative min-h-svh bg-[#0b1610] font-[family-name:var(--font-montserrat)] text-[#f3ede0] selection:bg-[#c9a45c]/40">
         <Latar />
 
         <AnimatePresence>{!opened && <Sampul key="sampul" u={u} tamu={tamu} onOpen={open} />}</AnimatePresence>

@@ -35,12 +35,15 @@ export function Burung({ className = "", delay = 0, size = 16 }: { className?: s
   );
 }
 
-export function Kupu({ a = "kupuMonarch", className = "", delay = 0, w = 38 }: { a?: NamaAset; className?: string; delay?: number; w?: number }) {
+// dekat: ikut parallax, bergerak lebih cepat dari halaman seolah terbang di depan layar
+export function Kupu({ a = "kupuMonarch", className = "", delay = 0, w = 38, dekat = false }: { a?: NamaAset; className?: string; delay?: number; w?: number; dekat?: boolean }) {
   const img = ASET[a];
   return (
-    <div className={`${s.terbang} pointer-events-none absolute z-20 ${className}`} style={{ animationDelay: `${delay}s` }} aria-hidden="true">
-      <div className={s.kepak} style={{ animationDelay: `${delay / 4}s` }}>
-        <Image src={img.src} alt="" width={img.w} height={img.h} sizes={`${w * 2}px`} style={{ width: w, height: "auto" }} />
+    <div className={`pointer-events-none absolute z-20 ${dekat ? s.pDekat : ""} ${className}`} aria-hidden="true">
+      <div className={s.terbang} style={{ animationDelay: `${delay}s` }}>
+        <div className={s.kepak} style={{ animationDelay: `${delay / 4}s` }}>
+          <Image src={img.src} alt="" width={img.w} height={img.h} sizes={`${w * 2}px`} style={{ width: w, height: "auto" }} />
+        </div>
       </div>
     </div>
   );
@@ -153,8 +156,10 @@ export function Latar() {
   return (
     <>
       {/* di layar lebar: versi redup lukisan yang sama memenuhi sisi kiri-kanan */}
-      <div className="pointer-events-none fixed inset-0 hidden min-[480px]:block" aria-hidden="true">
-        <Image src={ASET.hutan.src} alt="" fill sizes="100vw" className="object-cover opacity-25" />
+      <div className="pointer-events-none fixed inset-0 hidden overflow-hidden min-[480px]:block" aria-hidden="true">
+        <div className={`${s.latarSisi} absolute inset-0`}>
+          <Image src={ASET.hutan.src} alt="" fill sizes="100vw" className="object-cover opacity-25" />
+        </div>
       </div>
       <div className="pointer-events-none fixed inset-y-0 left-1/2 w-full max-w-[440px] -translate-x-1/2 overflow-hidden" aria-hidden="true">
         <div className={`${s.latarGerak} absolute inset-0`}>

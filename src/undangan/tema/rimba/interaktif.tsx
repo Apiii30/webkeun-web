@@ -116,7 +116,8 @@ export function Galeri({ photos }: { photos: Foto[] }) {
     <>
       <div className="grid grid-cols-2 gap-2.5 [perspective:900px]">
         {kolom.map((list, k) => (
-          <div key={k} className={`space-y-2.5 ${k === 1 ? "pt-10" : ""}`}>
+          // dua kolom bergeser berlawanan arah saat di-scroll
+          <div key={k} className={`space-y-2.5 ${k === 1 ? `${s.pJauh} pt-10` : s.pDekat}`}>
             {list.map((p) => {
               const i = photos.indexOf(p);
               return (

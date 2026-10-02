@@ -269,6 +269,17 @@ export const templates = [
     includes: ["Karya pilihan", "Tentang saya", "Kontak"],
   },
   {
+    slug: "undangan-fara-aditya-sunda",
+    name: "Fara & Aditya · Art Sunda",
+    kind: "Undangan Digital",
+    category: "undangan",
+    url: "faraaditya.my.id",
+    desc: "Tema Art Sunda: pintu bermotif mega mendung yang terbuka, Gedung Sate, kujang, siger, dan bunga melati-kenanga di atas kertas krem. Khusus tampilan HP.",
+    laptop: "/preview/laptop-undangan-sunda.webp",
+    phone: "/preview/hp-undangan-sunda-1.webp",
+    includes: ["Sampul pintu mega mendung", "Ornamen kujang & aksara Sunda", "Galeri layar penuh", "RSVP & amplop digital"],
+  },
+  {
     slug: "undangan-fara-aditya-rimba",
     name: "Fara & Aditya · Rimba",
     kind: "Undangan Digital",
@@ -319,5 +330,6 @@ export const heroShots = {
     { src: "/preview/hp-kopi-senja-2.webp", url: kopi },
     { src: "/preview/hp-nadia-2.webp", url: nadia },
     { src: "/preview/hp-undangan-rimba-1.webp", url: faraAditya },
+    { src: "/preview/hp-undangan-sunda-1.webp", url: faraAditya },
   ],
 };

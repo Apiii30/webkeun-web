@@ -1,7 +1,7 @@
 "use client";
 
 import Lenis from "lenis";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 
 // Hook bersama untuk semua tema undangan.
 
@@ -90,4 +90,26 @@ export function calendarLink(u: { wanita: { panggilan: string }; pria: { panggil
     dates: `${z(u.mulai)}/${z(u.selesai)}`,
     location: `${u.lokasi.nama}, ${u.lokasi.alamat}`,
   })}`;
+}
+
+// Parallax CSS (scroll-driven animation) hanya mulus bila browser menjalankannya di GPU, terpisah dari scroll
+// halaman. Chrome/Edge/Android sudah lama begitu; Safari baru sejak versi 26.4 (sebelumnya dihitung di thread
+// utama sehingga elemen tertinggal dari scroll dan terlihat bergetar). Browser lain & "kurangi gerakan": tanpa
+// parallax. Tema memasang hasilnya sebagai atribut data-paralaks, dan CSS-nya hanya aktif di bawah atribut itu.
+function paralaksMulus() {
+  if (!CSS.supports("animation-timeline: view()") || matchMedia("(prefers-reduced-motion: reduce)").matches) return false;
+  const ua = navigator.userAgent;
+  if (/Chrome\/|Chromium\//.test(ua)) return true;
+  // Safari menulis versinya di "Version/26.4"; aplikasi lain di iPhone (WhatsApp, Instagram) tidak, dan
+  // versi iOS di UA-nya dibekukan sejak iOS 26, jadi yang tidak jelas versinya dianggap tidak mendukung.
+  const v = ua.match(/Version\/(\d+)\.(\d+)/);
+  return !!v && (+v[1] > 26 || (+v[1] === 26 && +v[2] >= 4));
+}
+const ikutGerak = (cb: () => void) => {
+  const mq = matchMedia("(prefers-reduced-motion: reduce)");
+  mq.addEventListener("change", cb);
+  return () => mq.removeEventListener("change", cb);
+};
+export function useParalaks() {
+  return useSyncExternalStore(ikutGerak, paralaksMulus, () => false);
 }
