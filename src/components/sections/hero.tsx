@@ -1,89 +1,142 @@
-import { waLink } from "@/lib/site";
-import { ArrowIcon, StrokeUnderline } from "../brand";
+import Image from "next/image";
+import type { CSSProperties } from "react";
+import { facts, heroShots, waLink } from "@/lib/site";
+import { PillLink, StrokeUnderline } from "../brand";
 import { HeroMascot } from "../hero-mascot";
+import { Icon } from "../icons";
 
-const facts = ["Mulai 499rb", "Jadi ±3–7 hari", "Konsultasi gratis"];
+// Kata muncul satu per satu
+function Rise({ words, start = 0 }: { words: string; start?: number }) {
+  return words.split(" ").map((w, i) => (
+    <span key={i} className="inline-block animate-rise" style={{ animationDelay: `${start + i * 70}ms` }}>
+      {w}&nbsp;
+    </span>
+  ));
+}
+
+function ShotColumn({
+  shots,
+  down,
+  delay,
+  className = "",
+}: {
+  shots: string[];
+  down?: boolean;
+  delay: number;
+  className?: string;
+}) {
+  const card = (src: string, i: number, hidden?: boolean) => (
+    <div
+      key={`${src}-${i}`}
+      className="animate-card-in overflow-hidden rounded-[1.4rem] bg-white p-1.5 shadow-[0_18px_40px_-18px_rgb(21_19_43/0.35)]"
+      style={
+        {
+          animationDelay: `${delay + 250 + i * 140}ms`,
+          "--enter-tilt": `${down ? -4 : 4}deg`,
+        } as CSSProperties
+      }
+    >
+      <Image
+        src={src}
+        alt={hidden ? "" : "Tampilan HP website contoh buatan Webkeun"}
+        width={480}
+        height={960}
+        sizes="(min-width: 768px) 180px, 30vw"
+        loading={hidden ? "lazy" : "eager"}
+        className="w-full rounded-[1.05rem]"
+      />
+    </div>
+  );
+
+  return (
+    <div
+      className={`marquee animate-column-in overflow-hidden ${className}`}
+      style={{ animationDelay: `${delay}ms`, "--enter-y": down ? "-7rem" : "7rem" } as CSSProperties}
+    >
+      <div className={`marquee-track flex flex-col ${down ? "animate-marquee-down" : "animate-marquee-up"}`}>
+        <div className="flex flex-col gap-4 pb-4">{shots.map((s, i) => card(s, i))}</div>
+        <div className="flex flex-col gap-4 pb-4" aria-hidden="true">
+          {shots.map((s, i) => card(s, i, true))}
+        </div>
+      </div>
+    </div>
+  );
+}
 
 export function Hero() {
   return (
-    <section className="hero relative overflow-hidden">
-      <div className="mx-auto grid max-w-6xl items-center gap-12 px-4 pb-20 pt-10 sm:px-6 md:grid-cols-[1.5fr_1fr] md:pb-28 md:pt-16">
-        <div>
-          <p className="mb-6 inline-flex items-center gap-2 rounded-full border-2 border-ink bg-white px-3.5 py-1.5 text-sm font-bold">
-            <span className="size-2.5 rounded-full bg-mint" />
-            Jasa pembuatan website
+    <section id="beranda" className="hero relative overflow-hidden bg-lilac">
+      <div className="mx-auto grid max-w-6xl gap-10 px-4 sm:px-6 md:min-h-184 md:grid-cols-[1.1fr_1fr] md:gap-12">
+        <div className="pt-28 md:self-center md:pt-32 md:pb-24">
+          <p className="mb-6 inline-flex items-center gap-2.5 rounded-full bg-white/80 py-1 pr-4 pl-1 text-sm font-semibold">
+            <HeroMascot className="size-8" />
+            Halo! Konsultasinya gratis, kok.
           </p>
 
-          <h1 className="font-display text-[2.75rem] leading-[0.98] font-extrabold tracking-[-0.03em] text-balance sm:text-6xl lg:text-[4.75rem]">
-            Biar usaha kamu gampang <StrokeUnderline>dicari</StrokeUnderline> &amp; dipercaya.
+          <h1 className="text-[2.5rem] leading-[1.08] font-bold tracking-[-0.03em] sm:text-5xl lg:text-[3.6rem]">
+            <span className="block">
+              <Rise words="Jasa Pembuatan Website" />
+            </span>
+            <span className="block text-brand">
+              <Rise words="biar usaha kamu" start={280} />
+              <span className="inline-block animate-rise" style={{ animationDelay: "490ms" }}>
+                <StrokeUnderline>dicari</StrokeUnderline>
+              </span>
+            </span>
           </h1>
 
-          <p className="mt-7 max-w-xl text-lg leading-relaxed text-ink/75">
-            Webkeun bikinin website UMKM, company profile, dan portofolio yang rapi, cepat, dan enak dilihat di HP. Kamu
-            fokus jualan, urusan web biar kami.
+          <p
+            className="mt-6 max-w-lg animate-rise text-lg leading-relaxed text-ink/70"
+            style={{ animationDelay: "650ms" }}
+          >
+            Website UMKM, company profile, dan portofolio yang rapi, cepat, dan enak dilihat di HP. Kamu fokus jualan,
+            urusan web biar <strong className="font-semibold text-ink">Webkeun</strong> yang beresin.
           </p>
 
-          <div className="mt-9 flex flex-wrap items-center gap-3">
-            <a
+          <div className="mt-8 flex animate-rise flex-wrap items-center gap-3" style={{ animationDelay: "780ms" }}>
+            <PillLink
               href={waLink("Halo Webkeun! Aku mau bikin website, bisa ngobrol dulu?")}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hero-cta group inline-flex items-center gap-3 rounded-full bg-brand py-4 pl-7 pr-5 text-lg font-bold text-white transition-colors hover:bg-brand-deep"
+              external
+              size="lg"
+              className="hero-cta"
             >
               Yuk webkeun
-              <span className="grid size-8 place-items-center rounded-full bg-mint text-ink transition-transform group-hover:translate-x-1">
-                <ArrowIcon className="size-4" />
-              </span>
-            </a>
-            <a
-              href="#contoh"
-              className="rounded-full px-5 py-4 text-lg font-bold underline decoration-2 decoration-lilac-strong underline-offset-[6px] transition-colors hover:decoration-brand"
-            >
-              Lihat contoh dulu
-            </a>
+            </PillLink>
+            <PillLink href="#contoh" tone="white" size="lg" icon="browser">
+              Lihat contoh
+            </PillLink>
           </div>
-
-          <ul className="mt-10 flex flex-wrap gap-x-6 gap-y-2 text-sm font-semibold text-ink/70">
-            {facts.map((f) => (
-              <li key={f} className="flex items-center gap-2">
-                <span className="size-2 rounded-full bg-brand" />
-                {f}
-              </li>
-            ))}
-          </ul>
         </div>
 
-        <div className="relative mx-auto w-full max-w-[19rem] sm:max-w-sm md:max-w-none">
-          <div
-            className="absolute inset-x-6 top-10 bottom-0 rotate-[4deg] rounded-[40px] bg-brand"
-            aria-hidden="true"
-          />
-          <div
-            className="absolute inset-x-10 top-16 -bottom-4 -rotate-[3deg] rounded-[40px] bg-mint"
-            aria-hidden="true"
-          />
-
-          <div className="relative px-10 pt-24 pb-8">
-            <div className="absolute top-0 left-0 max-w-[15rem] rounded-3xl border-2 border-ink bg-white px-5 py-3.5 font-display text-lg leading-snug font-bold sm:left-2">
-              Halo! Mau dibikinin website apa?
-              <span
-                className="absolute -bottom-[11px] left-12 size-5 rotate-45 border-r-2 border-b-2 border-ink bg-white"
-                aria-hidden="true"
-              />
-            </div>
-            <HeroMascot className="w-full animate-float drop-shadow-[0_6px_0_#15132B]" />
-          </div>
-
-          <div className="pointer-events-none absolute right-0 -bottom-6 flex flex-col items-end gap-2 sm:right-2">
-            <span className="rotate-[6deg] rounded-full border-2 border-ink bg-white px-3.5 py-1.5 text-sm font-bold">
-              Company profile
-            </span>
-            <span className="-rotate-[4deg] rounded-full bg-ink px-3.5 py-1.5 text-sm font-bold text-white">
-              Website UMKM
-            </span>
+        {/* Kolom layar HP yang terus bergulir, dari demo website buatan Webkeun */}
+        <div className="relative -mx-4 h-104 mask-[linear-gradient(to_bottom,transparent,black_12%,black_88%,transparent)] sm:mx-0 sm:h-128 md:h-auto md:mask-none">
+          <div className="absolute inset-0 grid grid-cols-3 gap-3 px-4 sm:gap-4 sm:px-0">
+            <ShotColumn shots={heroShots[0]} delay={150} className="-mt-24" />
+            <ShotColumn shots={heroShots[1]} delay={330} down />
+            <ShotColumn shots={heroShots[2]} delay={510} className="-mt-40" />
           </div>
         </div>
       </div>
+    </section>
+  );
+}
+
+export function Facts() {
+  return (
+    <section className="bg-brand text-white">
+      <ul className="mx-auto grid max-w-6xl gap-6 px-4 py-8 sm:px-6 md:grid-cols-3 md:gap-8">
+        {facts.map((f) => (
+          <li key={f.title} className="flex items-center gap-4">
+            <span className="grid size-12 shrink-0 place-items-center rounded-full bg-white text-brand">
+              <Icon name={f.icon} className="size-6" />
+            </span>
+            <span>
+              <span className="block font-bold">{f.title}</span>
+              <span className="block text-sm text-white/75">{f.desc}</span>
+            </span>
+          </li>
+        ))}
+      </ul>
     </section>
   );
 }

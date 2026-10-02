@@ -16,7 +16,7 @@ export function DemoBanner({ name }: { name: string }) {
   if (inIframe) return null;
 
   return (
-    <div className="fixed inset-x-3 bottom-3 z-50 mx-auto flex max-w-2xl flex-wrap items-center justify-between gap-3 rounded-full bg-[#15132B] py-2 pr-2 pl-5 font-sans text-sm text-white shadow-[0_4px_0_#5B3DF5] max-sm:rounded-3xl max-sm:p-3">
+    <div className="fixed inset-x-3 bottom-3 z-50 mx-auto flex max-w-2xl flex-wrap items-center justify-between gap-3 rounded-full bg-[#15132B] py-2 pr-2 pl-5 font-sans text-sm text-white shadow-[0_20px_40px_-16px_rgb(21_19_43/0.6)] max-sm:rounded-3xl max-sm:p-3">
       <p>
         <span className="font-bold text-[#2FD3B0]">Demo</span> · {name} adalah contoh website buatan{" "}
         <Link href="/" className="font-bold underline underline-offset-2">

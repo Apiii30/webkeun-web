@@ -1,57 +1,47 @@
 import { services, waLink } from "@/lib/site";
-import { ArrowIcon, SectionLabel } from "../brand";
+import { SectionHeading } from "../brand";
+import { Icon } from "../icons";
 
 export function Services() {
   return (
-    <section id="layanan" className="bg-brand text-white">
-      <div className="mx-auto max-w-6xl px-4 py-20 sm:px-6 md:py-28">
-        <div className="mb-12 grid gap-6 md:grid-cols-2 md:items-end">
-          <div>
-            <SectionLabel tone="light">Layanan</SectionLabel>
-            <h2 className="font-display text-4xl leading-[1.02] font-extrabold tracking-[-0.02em] sm:text-5xl lg:text-6xl">
-              Kamu butuh yang mana?
-            </h2>
-          </div>
-          <p className="max-w-md text-lg text-lilac md:justify-self-end">
-            Bingung pilih? Chat aja dan ceritain usaha kamu. Nanti kami bantu tentuin yang paling pas.
-          </p>
-        </div>
-
-        <ol>
-          {services.map((s, i) => (
-            <li
-              key={s.title}
-              className="border-t-[3px] border-lilac-strong/50 transition-colors last:border-b-[3px] hover:border-t-mint"
-            >
-              <a
-                href={waLink(`Halo Webkeun! Aku tertarik bikin ${s.title}. Bisa dibantu?`)}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="group grid gap-x-8 gap-y-3 py-8 md:grid-cols-[5rem_1fr_1.2fr_auto] md:items-center"
-              >
-                <span className="font-display text-xl font-bold text-lilac-strong">
-                  {String(i + 1).padStart(2, "0")}
-                </span>
-                <span className="font-display text-3xl font-extrabold tracking-tight transition-transform group-hover:translate-x-2 sm:text-4xl">
-                  {s.title}
-                </span>
-                <span>
-                  <span className="block text-white/90">{s.desc}</span>
-                  <span className="mt-2 block text-sm text-lilac">Cocok buat: {s.fit}</span>
-                </span>
-                <span className="mt-2 inline-flex items-center gap-3 justify-self-start md:mt-0 md:justify-self-end">
-                  <span className="rounded-full bg-white/10 px-3.5 py-1.5 text-sm font-bold whitespace-nowrap">
-                    {s.price}
-                  </span>
-                  <span className="grid size-11 place-items-center rounded-full bg-white text-ink transition-colors group-hover:bg-mint">
-                    <ArrowIcon className="size-5 -rotate-45 transition-transform group-hover:rotate-0" />
-                  </span>
-                </span>
-              </a>
-            </li>
-          ))}
-        </ol>
+    <section id="layanan" className="mx-auto max-w-6xl px-4 py-20 sm:px-6 md:py-28">
+      <div className="grid gap-6 md:grid-cols-2 md:items-end">
+        <SectionHeading top="Kamu butuh" bottom="website yang mana?" />
+        <p className="max-w-md text-lg text-ink/70 md:justify-self-end">
+          Bingung pilih? Chat aja dan ceritain usaha kamu. Nanti kami bantu tentuin yang paling pas.
+        </p>
       </div>
+
+      <ul className="mt-12 grid gap-4 sm:grid-cols-2">
+        {services.map((s) => (
+          <li key={s.title}>
+            <a
+              href={waLink(`Halo Webkeun! Aku tertarik bikin ${s.title}. Bisa dibantu?`)}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group flex h-full flex-col rounded-3xl bg-lilac-soft p-7 ring-1 ring-transparent transition-[box-shadow,background-color] hover:bg-white hover:shadow-[0_20px_50px_-24px_rgb(91_61_245/0.45)] hover:ring-brand/15 sm:p-8"
+            >
+              <div className="flex items-start justify-between gap-4">
+                <span className="grid size-12 place-items-center rounded-2xl bg-brand text-white">
+                  <Icon name={s.icon} className="size-6" />
+                </span>
+                <span className="rounded-full bg-white px-3 py-1 text-sm font-semibold text-brand ring-1 ring-brand/15">
+                  {s.price}
+                </span>
+              </div>
+              <h3 className="mt-6 text-2xl font-bold tracking-tight">{s.title}</h3>
+              <p className="mt-2 flex-1 text-ink/70">{s.desc}</p>
+              <p className="mt-5 text-sm text-ink/55">
+                <span className="font-semibold text-ink/75">Cocok buat:</span> {s.fit}
+              </p>
+              <span className="mt-6 inline-flex items-center gap-2 font-semibold text-brand">
+                Tanya soal ini
+                <Icon name="arrow" className="size-4 transition-transform group-hover:translate-x-1" strokeWidth={2.5} />
+              </span>
+            </a>
+          </li>
+        ))}
+      </ul>
     </section>
   );
 }
