@@ -1,0 +1,309 @@
+/* Tema Luxury: gerakan halus & parallax. Semua hanya mengubah transform/opacity supaya dijalankan GPU. */
+
+/* Emas metalik untuk teks & garis */
+.emas {
+  background: linear-gradient(115deg, #b48d4b 0%, #f1dfae 38%, #c8a96a 55%, #8f6a32 100%);
+}
+.teksEmas {
+  background: linear-gradient(115deg, #a8823f 0%, #e9d5a1 40%, #b9945a 60%, #8f6a32 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+/* Huruf bergaris tanpa isi (label tegak & tahun raksasa). Isinya dikosongkan lewat text-fill-color, bukan color,
+   supaya garisnya tetap memakai warna teks (currentColor). */
+.garis {
+  -webkit-text-fill-color: transparent;
+  -webkit-text-stroke: 1.2px currentColor;
+}
+
+/* Daun putih di latar bergoyang sangat pelan */
+.goyang {
+  transform-origin: 50% 100%;
+  animation: goyang 9s ease-in-out infinite alternate;
+}
+@keyframes goyang {
+  from {
+    transform: rotate(-2deg);
+  }
+  to {
+    transform: rotate(2deg);
+  }
+}
+
+/* Foto aktif di galeri membesar pelan (efek Ken Burns) */
+.kenBurns {
+  animation: kenBurns 9s ease-in-out infinite alternate;
+}
+@keyframes kenBurns {
+  from {
+    transform: scale(1);
+  }
+  to {
+    transform: scale(1.08);
+  }
+}
+
+/* Kilau yang menyapu tombol emas */
+.kilau {
+  background-size: 220% 100%;
+  animation: kilau 4.5s ease-in-out infinite;
+}
+@keyframes kilau {
+  from {
+    background-position: 100% 0;
+  }
+  to {
+    background-position: -120% 0;
+  }
+}
+
+/* Kilau melintas di kartu ATM amplop */
+.kilauKartu {
+  animation: kilauKartu 5s ease-in-out infinite;
+}
+@keyframes kilauKartu {
+  0%,
+  55% {
+    transform: translateX(-120%) skewX(-20deg);
+  }
+  100% {
+    transform: translateX(220%) skewX(-20deg);
+  }
+}
+
+/* Titik cahaya keemasan yang berkelip */
+.kerlip {
+  animation: kerlip var(--d, 3s) ease-in-out infinite alternate;
+}
+@keyframes kerlip {
+  from {
+    opacity: 0.1;
+    transform: scale(0.6);
+  }
+  to {
+    opacity: 0.9;
+    transform: scale(1);
+  }
+}
+
+/* Panah "geser" di sampul naik-turun */
+.ajak {
+  animation: ajak 1.8s ease-in-out infinite;
+}
+@keyframes ajak {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(5px);
+  }
+}
+
+.goyangKado {
+  transform-origin: 50% 80%;
+  animation: goyangKado 3.2s ease-in-out infinite;
+}
+@keyframes goyangKado {
+  0%,
+  70%,
+  100% {
+    transform: rotate(0deg);
+  }
+  76% {
+    transform: rotate(-14deg);
+  }
+  82% {
+    transform: rotate(11deg);
+  }
+  88% {
+    transform: rotate(-6deg);
+  }
+  94% {
+    transform: rotate(3deg);
+  }
+}
+
+/* ── Parallax: efek yang mengikuti scroll ──
+   Murni CSS (scroll-driven animation) dan hanya transform/opacity, jadi digerakkan GPU tanpa JavaScript.
+   Aktif hanya di bawah atribut data-paralaks (lihat useParalaks): browser yang tidak menjalankannya di GPU
+   cukup menampilkan elemen diam. Nilai ditulis langsung di keyframes (tanpa var()). */
+.sek {
+  view-timeline-name: --sek;
+}
+.progres {
+  display: none;
+}
+@supports (animation-timeline: view()) {
+  [data-paralaks] .progres {
+    display: block;
+    animation: progres linear both;
+    animation-timeline: scroll(root);
+  }
+  /* foto beranda: bergeser lebih lambat & sedikit membesar saat halaman naik */
+  [data-paralaks] .fotoBeranda {
+    animation: fotoBeranda linear both;
+    animation-timeline: --sek;
+    animation-range: exit 0% exit 100%;
+  }
+  /* isi bagian yang sedang ditinggalkan mengecil & meredup, seperti lapisan yang tertutup lapisan berikutnya */
+  [data-paralaks] .tertutup {
+    animation: tertutup linear both;
+    animation-timeline: --sek;
+    animation-range: exit 10% exit 100%;
+  }
+  /* blok berikutnya naik sedikit lebih cepat saat masuk, menimpa bagian sebelumnya */
+  [data-paralaks] .naikLapis {
+    animation: naikLapis linear both;
+    animation-timeline: view();
+    animation-range: entry 0% entry 100%;
+  }
+  /* foto di dalam bingkai bergeser lebih lambat dari halaman */
+  [data-paralaks] .geserLambat {
+    animation: geserLambat linear both;
+    animation-timeline: --sek;
+    animation-range: cover;
+  }
+  [data-paralaks] .pJauh {
+    animation: pJauh linear both;
+    animation-timeline: view();
+    animation-range: cover;
+  }
+  [data-paralaks] .pDekat {
+    animation: pDekat linear both;
+    animation-timeline: view();
+    animation-range: cover;
+  }
+  [data-paralaks] .pJudul {
+    animation: pJudul linear both;
+    animation-timeline: view();
+    animation-range: cover;
+  }
+  /* label tegak raksasa (THE BRIDE, AKAD NIKAH) melaju lebih cepat dari halaman */
+  [data-paralaks] .labelGeser {
+    animation: labelGeser linear both;
+    animation-timeline: view();
+    animation-range: cover;
+  }
+  /* tahun raksasa di kisah cinta bergeser menyamping */
+  [data-paralaks] .tahunKanan {
+    animation: tahunKanan linear both;
+    animation-timeline: view();
+    animation-range: cover;
+  }
+  [data-paralaks] .tahunKiri {
+    animation: tahunKiri linear both;
+    animation-timeline: view();
+    animation-range: cover;
+  }
+  /* benang emas yang tumbuh mengikuti scroll */
+  [data-paralaks] .benang {
+    animation: benang linear both;
+    animation-timeline: view();
+    animation-range: entry 40% cover 60%;
+  }
+}
+@keyframes progres {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+@keyframes fotoBeranda {
+  to {
+    transform: translateY(32%) scale(1.12);
+  }
+}
+@keyframes tertutup {
+  to {
+    transform: scale(0.92) translateY(40px);
+    opacity: 0.35;
+  }
+}
+@keyframes naikLapis {
+  from {
+    transform: translateY(70px);
+  }
+  to {
+    transform: translateY(0px);
+  }
+}
+@keyframes geserLambat {
+  from {
+    transform: translateY(-9%);
+  }
+  to {
+    transform: translateY(9%);
+  }
+}
+@keyframes pJauh {
+  from {
+    transform: translateY(-40px);
+  }
+  to {
+    transform: translateY(40px);
+  }
+}
+@keyframes pDekat {
+  from {
+    transform: translateY(60px);
+  }
+  to {
+    transform: translateY(-60px);
+  }
+}
+@keyframes pJudul {
+  from {
+    transform: translateY(24px);
+  }
+  to {
+    transform: translateY(-24px);
+  }
+}
+@keyframes labelGeser {
+  from {
+    transform: translateY(110px);
+  }
+  to {
+    transform: translateY(-110px);
+  }
+}
+@keyframes tahunKanan {
+  from {
+    transform: translateX(-40px);
+  }
+  to {
+    transform: translateX(40px);
+  }
+}
+@keyframes tahunKiri {
+  from {
+    transform: translateX(40px);
+  }
+  to {
+    transform: translateX(-40px);
+  }
+}
+@keyframes benang {
+  from {
+    transform: scaleY(0);
+  }
+  to {
+    transform: scaleY(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .goyang,
+  .kenBurns,
+  .kilau,
+  .kilauKartu,
+  .kerlip,
+  .ajak,
+  .goyangKado {
+    animation: none;
+  }
+}

@@ -269,6 +269,17 @@ export const templates = [
     includes: ["Karya pilihan", "Tentang saya", "Kontak"],
   },
   {
+    slug: "undangan-fara-aditya-luxury",
+    name: "Fara & Aditya · Luxury",
+    kind: "Undangan Digital",
+    category: "undangan",
+    url: "faraaditya.my.id",
+    desc: "Tema Luxury: gaya majalah mewah ivory, taupe & emas. Foto besar bersudut lengkung, galeri carousel 3D, dan kisah cinta berbentuk bab-bab editorial. Khusus tampilan HP.",
+    laptop: "/preview/laptop-undangan-luxury.webp",
+    phone: "/preview/hp-undangan-luxury-1.webp",
+    includes: ["Sampul tirai terangkat", "Galeri carousel 3D", "Kisah cinta per bab", "Amplop kartu hitam metalik"],
+  },
+  {
     slug: "undangan-fara-aditya-sunda",
     name: "Fara & Aditya · Art Sunda",
     kind: "Undangan Digital",
@@ -331,5 +342,6 @@ export const heroShots = {
     { src: "/preview/hp-nadia-2.webp", url: nadia },
     { src: "/preview/hp-undangan-rimba-1.webp", url: faraAditya },
     { src: "/preview/hp-undangan-sunda-1.webp", url: faraAditya },
+    { src: "/preview/hp-undangan-luxury-1.webp", url: faraAditya },
   ],
 };
