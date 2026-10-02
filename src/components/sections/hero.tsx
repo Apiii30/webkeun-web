@@ -163,12 +163,12 @@ export function Hero() {
               shots={heroShots.phone.toReversed()}
               kind="phone"
               delay={380}
-              duration="84s"
+              duration="94s"
               down
               className="-mt-56 hidden xl:block"
             />
-            <ShotColumn shots={heroShots.desktop} kind="desktop" delay={150} duration="58s" className="-mt-16" />
-            <ShotColumn shots={heroShots.phone} kind="phone" delay={520} duration="90s" down />
+            <ShotColumn shots={heroShots.desktop} kind="desktop" delay={150} duration="64s" className="-mt-16" />
+            <ShotColumn shots={heroShots.phone} kind="phone" delay={520} duration="100s" down />
           </div>
           {/* Sesekali kolom contoh minggir dan maskot nongol */}
           <HeroCameo />

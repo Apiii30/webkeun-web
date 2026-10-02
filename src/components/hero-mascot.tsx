@@ -6,8 +6,8 @@ import { MascotFace } from "./mascot";
 const INK = "#15132B";
 const MAX_LOOK = 4; // seberapa jauh mata boleh melirik (unit viewBox)
 
-// Maskot hero: matanya ngikutin kursor, sesekali kedip,
-// dan ketawa saat tombol "Yuk webkeun" di-hover (diatur di globals.css).
+// Maskot yang matanya ngikutin kursor dan sesekali kedip. Dipakai di hero dan tombol chat;
+// ketawanya saat di-hover diatur di globals.css (.hero-cta dan .chat-fab).
 export function HeroMascot({ className }: { className?: string }) {
   const svgRef = useRef<SVGSVGElement>(null);
   const eyesRef = useRef<SVGGElement>(null);

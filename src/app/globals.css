@@ -17,6 +17,10 @@
   --animate-rise: rise 0.7s cubic-bezier(0.2, 0.7, 0.2, 1) both;
   --animate-column-in: column-in 1.6s cubic-bezier(0.16, 1, 0.3, 1) both;
   --animate-card-in: card-in 1.1s cubic-bezier(0.16, 1, 0.3, 1) both;
+  --animate-fab-in: fab-in 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) 1s both;
+  --animate-fab-attn: fab-attn 7s ease-in-out 4s infinite;
+  --animate-bubble-in: bubble-in 0.45s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+  --animate-typing: typing 1s ease-in-out infinite;
   --animate-marquee-up: marquee-y 46s linear infinite;
   --animate-marquee-down: marquee-y 46s linear infinite reverse;
 
@@ -71,6 +75,62 @@
       filter: none;
     }
   }
+  /* Tombol chat maskot: muncul melompat, sesekali goyang, gelembung sapaan & titik mengetik */
+  @keyframes fab-in {
+    from {
+      opacity: 0;
+      transform: translateY(1.5rem) scale(0.4);
+    }
+    60% {
+      opacity: 1;
+      transform: translateY(-0.3rem) scale(1.08);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+  @keyframes fab-attn {
+    0%,
+    84%,
+    100% {
+      transform: none;
+    }
+    87% {
+      transform: translateY(-0.45rem) rotate(-8deg);
+    }
+    90% {
+      transform: translateY(0) rotate(7deg);
+    }
+    93% {
+      transform: rotate(-5deg);
+    }
+    96% {
+      transform: rotate(3deg);
+    }
+  }
+  @keyframes bubble-in {
+    from {
+      opacity: 0;
+      transform: translateY(0.5rem) scale(0.7);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+  @keyframes typing {
+    0%,
+    60%,
+    100% {
+      transform: translateY(0);
+      opacity: 0.4;
+    }
+    30% {
+      transform: translateY(-4px);
+      opacity: 1;
+    }
+  }
   @keyframes marquee-y {
     from {
       transform: translateY(0);
@@ -101,6 +161,14 @@ body {
   opacity: 0;
 }
 .hero:has(.hero-cta:hover, .hero-cta:focus-visible) .mascot-laugh {
+  opacity: 1;
+}
+
+/* Maskot tombol chat juga ketawa saat di-hover */
+.chat-fab:hover .mascot-normal {
+  opacity: 0;
+}
+.chat-fab:hover .mascot-laugh {
   opacity: 1;
 }
 

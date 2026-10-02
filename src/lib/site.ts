@@ -269,6 +269,17 @@ export const templates = [
     includes: ["Karya pilihan", "Tentang saya", "Kontak"],
   },
   {
+    slug: "undangan-fara-aditya",
+    name: "Fara & Aditya",
+    kind: "Undangan Digital",
+    category: "undangan",
+    url: "faraaditya.my.id",
+    desc: "Tema Floral: bunga-bunga modern berwarna cerah, khusus tampilan HP, dengan kartu bertumpuk, parallax, dan amplop yang terbuka sendiri.",
+    laptop: "/preview/laptop-undangan-fara-aditya.webp",
+    phone: "/preview/hp-undangan-floral-1.webp",
+    includes: ["Sampul buka undangan", "Animasi parallax & bertumpuk", "Galeri geser", "RSVP & ucapan"],
+  },
+  {
     slug: "undangan-rara-dimas",
     name: "Rara & Dimas",
     kind: "Undangan Digital",
@@ -286,11 +297,13 @@ const kopi = "kopisenja.id";
 const arunika = "arunikakonstruksi.co.id";
 const nadia = "nadiaputri.com";
 const undangan = "rarandimas.my.id";
+const floral = "faraaditya.my.id";
 export const heroShots = {
   desktop: [
     { src: "/preview/laptop-kopi-senja.webp", url: kopi },
     { src: "/preview/web-arunika-2.webp", url: arunika },
     { src: "/preview/laptop-nadia-putri.webp", url: nadia },
+    { src: "/preview/laptop-undangan-fara-aditya.webp", url: floral },
     { src: "/preview/web-kopi-senja-2.webp", url: kopi },
     { src: "/preview/laptop-undangan-rara-dimas.webp", url: undangan },
     { src: "/preview/laptop-arunika-konstruksi.webp", url: arunika },
@@ -305,5 +318,6 @@ export const heroShots = {
     { src: "/preview/hp-arunika-2.webp", url: arunika },
     { src: "/preview/hp-kopi-senja-2.webp", url: kopi },
     { src: "/preview/hp-nadia-2.webp", url: nadia },
+    { src: "/preview/hp-undangan-floral-1.webp", url: floral },
   ],
 };

@@ -3,13 +3,16 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
-import { templates } from "@/lib/site";
+import { templateCategories, templates } from "@/lib/site";
 import { SectionHeading } from "../brand";
 import { Icon } from "../icons";
 
+// Satu template unggulan per kategori (yang paling atas di daftar templates)
+const featured = templateCategories.flatMap((c) => templates.find((t) => t.category === c.slug) ?? []);
+
 export function Portfolio() {
   const [active, setActive] = useState(0);
-  const d = templates[active];
+  const d = featured[active];
 
   return (
     <section id="template" className="border-t border-ink/10">
@@ -32,7 +35,7 @@ export function Portfolio() {
         </div>
 
         <div role="tablist" aria-label="Pilih template" className="mt-8 flex flex-wrap gap-2">
-          {templates.map((demo, i) => (
+          {featured.map((demo, i) => (
             <button
               key={demo.slug}
               type="button"
