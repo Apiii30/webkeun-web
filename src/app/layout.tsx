@@ -49,7 +49,9 @@ const scrollTopOnReload = `(function () {
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="id" className={`${jakarta.variable} h-full antialiased`}>
+    // data-scroll-behavior: scroll halus hanya untuk anchor di halaman yang sama;
+    // saat pindah halaman Next langsung mulai dari atas (Next 16 tidak melakukannya otomatis lagi)
+    <html lang="id" data-scroll-behavior="smooth" className={`${jakarta.variable} h-full antialiased`}>
       <head>
         <script dangerouslySetInnerHTML={{ __html: scrollTopOnReload }} />
       </head>

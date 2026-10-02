@@ -14,17 +14,31 @@ export function waLink(message = "Halo Webkeun, aku mau tanya-tanya soal pembuat
   return `https://wa.me/${site.whatsapp}?text=${encodeURIComponent(message)}`;
 }
 
-// Menu utama. "Layanan" punya dropdown sendiri (lihat layananMenu di bawah).
+// Link biasa di menu utama. "Layanan" dan "Resources" punya dropdown sendiri (aboutLinks & resourcesLinks).
 export const navLinks = [
   { href: "/template", label: "Template", icon: "browser" },
-  { href: "/#harga", label: "Harga", icon: "tag" },
   { href: "/#faq", label: "FAQ", icon: "help" },
 ] as const;
+
+// Isi dropdown "Resources": halaman-halaman pendukung
+export const resourcesLinks = [
+  { href: "/tentang", label: "Tentang Kami", desc: "Siapa kami & arti nama Webkeun", icon: "user" },
+  { href: "/kontak", label: "Kontak", desc: "Ngobrol & konsultasi gratis", icon: "chat" },
+] as const;
+
+export const footerLinks = [
+  { href: "/template", label: "Template" },
+  { href: "/#harga", label: "Harga" },
+  { href: "/#faq", label: "FAQ" },
+  { href: "/tentang", label: "Tentang Kami" },
+  { href: "/kontak", label: "Kontak" },
+];
 
 // Isi dropdown "Layanan": subjudul di landing page
 export const aboutLinks = [
   { href: "/#kenapa", label: "Kenapa Webkeun", desc: "Yang bikin kami beda", icon: "zap" },
   { href: "/#fitur", label: "Fitur yang termasuk", desc: "Domain, hosting, SEO dasar, dll.", icon: "check" },
+  { href: "/#harga", label: "Harga paket", desc: "Mulai 499rb, sekali bayar", icon: "tag" },
   { href: "/#cara-kerja", label: "Cara kerja", desc: "Dari ngobrol sampai online", icon: "steps" },
   { href: "/#faq", label: "Pertanyaan umum", desc: "Yang sering ditanyain", icon: "help" },
 ] as const;
