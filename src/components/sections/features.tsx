@@ -10,7 +10,7 @@ export function Features() {
   const [open, setOpen] = useState(0);
 
   return (
-    <section className="bg-lilac-soft">
+    <section id="fitur" className="bg-lilac-soft">
       <div className="mx-auto max-w-6xl px-4 py-20 sm:px-6 md:py-28">
         <div className="flex flex-col items-center text-center">
           <Badge>Sudah termasuk</Badge>
@@ -87,7 +87,7 @@ export function Features() {
                   <span className="size-2 rounded-full bg-[#28c840]" />
                 </div>
                 <Image
-                  src="/contoh/laptop-kopi-senja.webp"
+                  src="/preview/laptop-kopi-senja.webp"
                   alt="Contoh website Kopi Senja di laptop"
                   width={1280}
                   height={800}
@@ -97,7 +97,7 @@ export function Features() {
               </div>
               <div className="absolute right-4 -bottom-10 w-[28%] rotate-[4deg] overflow-hidden rounded-[1.1rem] bg-white p-1 shadow-2xl sm:right-5">
                 <Image
-                  src="/contoh/hp-kopi-senja-1.webp"
+                  src="/preview/hp-kopi-senja-1.webp"
                   alt="Contoh website Kopi Senja di HP"
                   width={480}
                   height={960}

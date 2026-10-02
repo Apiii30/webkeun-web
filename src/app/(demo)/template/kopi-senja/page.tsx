@@ -5,7 +5,7 @@ import { DemoBanner } from "@/components/demo-banner";
 const fraunces = Fraunces({ subsets: ["latin"], variable: "--font-fraunces" });
 
 export const metadata: Metadata = {
-  title: "Demo: Kopi Senja",
+  title: "Template: Kopi Senja",
   robots: { index: false },
 };
 

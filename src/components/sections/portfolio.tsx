@@ -3,32 +3,43 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
-import { demos } from "@/lib/site";
+import { templates } from "@/lib/site";
 import { SectionHeading } from "../brand";
 import { Icon } from "../icons";
 
 export function Portfolio() {
   const [active, setActive] = useState(0);
-  const d = demos[active];
+  const d = templates[active];
 
   return (
-    <section id="contoh" className="border-t border-ink/10">
+    <section id="template" className="border-t border-ink/10">
       <div className="mx-auto max-w-6xl px-4 py-20 sm:px-6 md:py-28">
-        <SectionHeading top="Contoh website" bottom="buatan Webkeun" />
-        <p className="mt-4 max-w-2xl text-lg text-ink/70">
-          Ini website demo yang kami bikin supaya kamu kebayang gayanya. Masing-masing beda karakter, dan punyamu nanti
-          dibikin khusus buat usaha kamu.
-        </p>
+        <div className="grid gap-6 md:grid-cols-[1fr_auto] md:items-end">
+          <div>
+            <SectionHeading top="Pilih template," bottom="kami sesuaikan buat kamu" />
+            <p className="mt-4 max-w-2xl text-lg text-ink/70">
+              Mulai dari template yang paling dekat sama usaha kamu. Warna, foto, dan isinya nanti kami ganti sesuai
+              brand kamu.
+            </p>
+          </div>
+          <Link
+            href="/template"
+            className="group inline-flex items-center gap-2 justify-self-start font-semibold text-brand md:justify-self-end"
+          >
+            Lihat semua template
+            <Icon name="arrow" className="size-4 transition-transform group-hover:translate-x-1" strokeWidth={2.5} />
+          </Link>
+        </div>
 
-        <div role="tablist" aria-label="Pilih contoh website" className="mt-8 flex flex-wrap gap-2">
-          {demos.map((demo, i) => (
+        <div role="tablist" aria-label="Pilih template" className="mt-8 flex flex-wrap gap-2">
+          {templates.map((demo, i) => (
             <button
               key={demo.slug}
               type="button"
               role="tab"
               id={`tab-${demo.slug}`}
               aria-selected={i === active}
-              aria-controls="panel-contoh"
+              aria-controls="panel-template"
               onClick={() => setActive(i)}
               className={`rounded-full px-4 py-2 text-sm font-semibold transition-colors ${
                 i === active ? "bg-brand text-white" : "bg-lilac-soft text-ink/75 hover:text-brand"
@@ -40,7 +51,7 @@ export function Portfolio() {
         </div>
 
         <div
-          id="panel-contoh"
+          id="panel-template"
           role="tabpanel"
           aria-labelledby={`tab-${d.slug}`}
           className="mt-6 grid gap-8 rounded-3xl bg-lilac p-4 sm:p-6 lg:grid-cols-[1fr_17rem] lg:items-end lg:p-8"
@@ -85,10 +96,10 @@ export function Portfolio() {
             <h3 className="mt-1 text-2xl font-bold tracking-tight">{d.name}</h3>
             <p className="mt-3 text-ink/70">{d.desc}</p>
             <Link
-              href={`/contoh/${d.slug}`}
+              href={`/template/${d.slug}`}
               className="group mt-6 inline-flex items-center gap-3 rounded-full bg-ink py-1.5 pr-1.5 pl-5 text-[15px] font-semibold text-white transition-colors hover:bg-ink/85"
             >
-              Buka demo lengkap
+              Lihat template
               <span className="grid size-8 place-items-center rounded-full bg-white text-ink transition-transform group-hover:translate-x-0.5">
                 <Icon name="arrow" className="size-4" strokeWidth={2.5} />
               </span>

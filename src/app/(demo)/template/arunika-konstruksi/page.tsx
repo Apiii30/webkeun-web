@@ -5,7 +5,7 @@ import { DemoBanner } from "@/components/demo-banner";
 const archivo = Archivo({ subsets: ["latin"], variable: "--font-archivo" });
 
 export const metadata: Metadata = {
-  title: "Demo: Arunika Konstruksi",
+  title: "Template: Arunika Konstruksi",
   robots: { index: false },
 };
 

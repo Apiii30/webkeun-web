@@ -12,7 +12,7 @@ const chips: { icon: IconName; label: string; className: string }[] = [
 
 export function Why() {
   return (
-    <section className="mx-auto grid max-w-6xl items-center gap-14 px-4 py-20 sm:px-6 md:grid-cols-[1.35fr_1fr] md:py-28">
+    <section id="kenapa" className="mx-auto grid max-w-6xl items-center gap-14 px-4 py-20 sm:px-6 md:grid-cols-[1.35fr_1fr] md:py-28">
       <div>
         <SectionHeading top="Kenapa" bottom="harus Webkeun?" />
         <p className="mt-6 max-w-2xl text-lg leading-relaxed text-ink/70">

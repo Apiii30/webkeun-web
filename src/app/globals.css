@@ -109,9 +109,317 @@ body {
   animation-play-state: paused;
 }
 
+/* ---------- Panggung hero ----------
+   Kolom contoh dan maskot bergantian dalam satu siklus 11 detik (1% ≈ 0,11 detik):
+   0–34%   contoh bergulir (±4 dtk)
+   34–40%  contoh minggir
+   38–47%  maskot melompat masuk (kaget → senyum, balon pertama)
+   56–64%  lompat kecil + kedip
+   70–80%  ketawa goyang + percikan titik (balon kedua)
+   82–89%  maskot melompat keluar
+   86–94%  contoh kembali
+   Semua lapisan pakai --stage yang sama supaya selalu sinkron. Hanya transform & opacity
+   yang dianimasikan, jadi ringan dan halus. Delay 1,5 dtk menunggu animasi masuk selesai. */
+.hero {
+  --stage: 11s ease-in-out 1.5s infinite both;
+}
+.stage-shots {
+  animation: stage-shots var(--stage);
+}
+.stage-mascot {
+  animation: stage-mascot var(--stage);
+}
+.stage-shadow {
+  animation: stage-shadow var(--stage);
+}
+.stage-bubble-1 {
+  animation: stage-bubble-1 var(--stage);
+}
+.stage-bubble-2 {
+  animation: stage-bubble-2 var(--stage);
+}
+.stage-dot {
+  animation: stage-dot var(--stage);
+}
+.stage-face-kaget {
+  animation: stage-face-kaget var(--stage);
+}
+.stage-face-senyum {
+  animation: stage-face-senyum var(--stage);
+}
+.stage-face-kedip {
+  animation: stage-face-kedip var(--stage);
+}
+.stage-face-tawa {
+  animation: stage-face-tawa var(--stage);
+}
+
+@keyframes stage-shots {
+  0%,
+  34% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  40%,
+  86% {
+    opacity: 0;
+    transform: translateY(2.5rem) scale(0.94);
+  }
+  94%,
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes stage-mascot {
+  0%,
+  38% {
+    opacity: 0;
+    transform: translateY(260%) scale(1, 1) rotate(0deg);
+  }
+  38.5% {
+    opacity: 1;
+    transform: translateY(240%) scale(1, 1) rotate(0deg);
+  }
+  /* meluncur naik sambil memanjang, lalu mendarat gepeng */
+  44% {
+    transform: translateY(-8%) scale(0.94, 1.08) rotate(0deg);
+  }
+  47% {
+    transform: translateY(0) scale(1.1, 0.88) rotate(0deg);
+  }
+  50%,
+  56% {
+    transform: translateY(0) scale(1, 1) rotate(0deg);
+  }
+  /* lompat kecil */
+  57.5% {
+    transform: translateY(0) scale(1.06, 0.92) rotate(0deg);
+  }
+  60% {
+    transform: translateY(-12%) scale(0.96, 1.05) rotate(-3deg);
+  }
+  62.5% {
+    transform: translateY(0) scale(1.08, 0.9) rotate(0deg);
+  }
+  64%,
+  70% {
+    transform: translateY(0) scale(1, 1) rotate(0deg);
+  }
+  /* ketawa sampai goyang */
+  72% {
+    transform: translateY(-3%) scale(1.03, 0.98) rotate(-6deg);
+  }
+  74% {
+    transform: translateY(0) scale(1, 1) rotate(5deg);
+  }
+  76% {
+    transform: translateY(-3%) scale(1.03, 0.98) rotate(-4deg);
+  }
+  78% {
+    transform: translateY(0) scale(1, 1) rotate(3deg);
+  }
+  80% {
+    transform: translateY(0) scale(1, 1) rotate(0deg);
+  }
+  /* jongkok, lompat, lalu turun keluar */
+  82% {
+    transform: translateY(0) scale(1.1, 0.86) rotate(0deg);
+  }
+  84.5% {
+    transform: translateY(-14%) scale(0.95, 1.07) rotate(0deg);
+  }
+  89% {
+    opacity: 1;
+    transform: translateY(260%) scale(1, 1) rotate(0deg);
+  }
+  90%,
+  100% {
+    opacity: 0;
+    transform: translateY(260%) scale(1, 1) rotate(0deg);
+  }
+}
+
+@keyframes stage-shadow {
+  0%,
+  40% {
+    opacity: 0;
+    transform: scale(0.4);
+  }
+  44% {
+    opacity: 0.5;
+    transform: scale(0.8);
+  }
+  47% {
+    opacity: 1;
+    transform: scale(1.15);
+  }
+  50%,
+  57.5% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  60% {
+    opacity: 0.5;
+    transform: scale(0.7);
+  }
+  62.5% {
+    opacity: 1;
+    transform: scale(1.12);
+  }
+  64%,
+  82% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  84.5% {
+    opacity: 0.5;
+    transform: scale(0.75);
+  }
+  88%,
+  100% {
+    opacity: 0;
+    transform: scale(0.4);
+  }
+}
+
+@keyframes stage-bubble-1 {
+  0%,
+  48% {
+    opacity: 0;
+    transform: translateY(0.75rem) scale(0.6);
+  }
+  50% {
+    opacity: 1;
+    transform: translateY(0) scale(1.06);
+  }
+  51.5%,
+  64% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  66%,
+  100% {
+    opacity: 0;
+    transform: translateY(-0.5rem) scale(0.85);
+  }
+}
+
+@keyframes stage-bubble-2 {
+  0%,
+  67% {
+    opacity: 0;
+    transform: translateY(0.75rem) scale(0.6);
+  }
+  69% {
+    opacity: 1;
+    transform: translateY(0) scale(1.1);
+  }
+  70.5%,
+  80% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  82%,
+  100% {
+    opacity: 0;
+    transform: translateY(-0.5rem) scale(0.85);
+  }
+}
+
+@keyframes stage-dot {
+  0%,
+  70% {
+    opacity: 0;
+    transform: translate(0, 0) scale(0);
+  }
+  72% {
+    opacity: 1;
+    transform: translate(calc(var(--dx) * 0.4), calc(var(--dy) * 0.4)) scale(1.2);
+  }
+  79% {
+    opacity: 0;
+    transform: translate(var(--dx), var(--dy)) scale(0.5);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(var(--dx), var(--dy)) scale(0);
+  }
+}
+
+/* Ekspresi wajah bergantian: kaget → senyum → kedip → senyum → tertawa */
+@keyframes stage-face-kaget {
+  0%,
+  46% {
+    opacity: 1;
+  }
+  47%,
+  92% {
+    opacity: 0;
+  }
+  93%,
+  100% {
+    opacity: 1;
+  }
+}
+@keyframes stage-face-senyum {
+  0%,
+  46% {
+    opacity: 0;
+  }
+  47%,
+  59.5% {
+    opacity: 1;
+  }
+  60%,
+  63% {
+    opacity: 0;
+  }
+  63.5%,
+  69% {
+    opacity: 1;
+  }
+  70%,
+  100% {
+    opacity: 0;
+  }
+}
+@keyframes stage-face-kedip {
+  0%,
+  59.5% {
+    opacity: 0;
+  }
+  60%,
+  63% {
+    opacity: 1;
+  }
+  63.5%,
+  100% {
+    opacity: 0;
+  }
+}
+@keyframes stage-face-tawa {
+  0%,
+  69% {
+    opacity: 0;
+  }
+  70%,
+  92% {
+    opacity: 1;
+  }
+  93%,
+  100% {
+    opacity: 0;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
+  }
+  .stage-cameo {
+    display: none;
   }
   *,
   *::before,

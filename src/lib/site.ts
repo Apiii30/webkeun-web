@@ -14,12 +14,19 @@ export function waLink(message = "Halo Webkeun, aku mau tanya-tanya soal pembuat
   return `https://wa.me/${site.whatsapp}?text=${encodeURIComponent(message)}`;
 }
 
+// Menu utama. "Layanan" punya dropdown sendiri (lihat layananMenu di bawah).
 export const navLinks = [
-  { href: "#layanan", label: "Layanan", icon: "layers" },
-  { href: "#contoh", label: "Contoh", icon: "browser" },
-  { href: "#harga", label: "Harga", icon: "tag" },
-  { href: "#cara-kerja", label: "Cara kerja", icon: "steps" },
-  { href: "#faq", label: "FAQ", icon: "help" },
+  { href: "/template", label: "Template", icon: "browser" },
+  { href: "/#harga", label: "Harga", icon: "tag" },
+  { href: "/#faq", label: "FAQ", icon: "help" },
+] as const;
+
+// Isi dropdown "Layanan": subjudul di landing page
+export const aboutLinks = [
+  { href: "/#kenapa", label: "Kenapa Webkeun", desc: "Yang bikin kami beda", icon: "zap" },
+  { href: "/#fitur", label: "Fitur yang termasuk", desc: "Domain, hosting, SEO dasar, dll.", icon: "check" },
+  { href: "/#cara-kerja", label: "Cara kerja", desc: "Dari ngobrol sampai online", icon: "steps" },
+  { href: "/#faq", label: "Pertanyaan umum", desc: "Yang sering ditanyain", icon: "help" },
 ] as const;
 
 // Ringkasan singkat di bawah hero
@@ -76,28 +83,36 @@ export const features = [
 export const services = [
   {
     icon: "store",
+    slug: "website-umkm",
     title: "Website UMKM",
+    short: "Buat warung, toko, dan usaha jasa",
     desc: "Biar warung, toko, atau usaha jasa kamu gampang dicari di Google dan kelihatan lebih meyakinkan.",
     fit: "Kafe, laundry, katering, bengkel, toko online kecil",
     price: "mulai 499rb",
   },
   {
     icon: "building",
+    slug: "company-profile",
     title: "Company Profile",
+    short: "Wajah resmi perusahaan kamu",
     desc: "Wajah resmi perusahaan kamu di internet. Profil, layanan, klien, dan kontak dalam satu tempat.",
     fit: "CV, PT, kontraktor, sekolah, klinik",
     price: "mulai 1,49jt",
   },
   {
     icon: "user",
+    slug: "portofolio",
     title: "Portofolio Pribadi",
+    short: "Pamerkan karya & pengalaman",
     desc: "Tunjukin karya dan pengalaman kamu dengan cara yang lebih keren daripada PDF.",
     fit: "Desainer, fotografer, freelancer, pencari kerja",
     price: "mulai 499rb",
   },
   {
     icon: "sliders",
+    slug: "custom",
     title: "Custom",
+    short: "Toko online, booking, dashboard",
     desc: "Punya ide yang lebih spesifik? Toko online, sistem booking, atau dashboard. Kita obrolin bareng.",
     fit: "Kebutuhan khusus sesuai request",
     price: "ngobrol dulu",
@@ -198,17 +213,18 @@ export const faqs = [
   },
 ];
 
-// Gambar di /public/contoh adalah screenshot dari halaman demo di /contoh/*.
-// Kalau tampilan demonya diubah, ambil ulang screenshot-nya.
-export const demos = [
+// Template website. Halaman demonya ada di /template/<slug>.
+// Gambar di /public/preview adalah screenshot dari halaman demo itu; kalau tampilannya diubah, ambil ulang.
+export const templates = [
   {
     slug: "kopi-senja",
     name: "Kopi Senja",
     kind: "Website UMKM",
     url: "kopisenja.id",
     desc: "Kedai kopi di Bandung: menu lengkap dengan harga, jam buka, dan alamat. Pelanggan bisa langsung pesan antar.",
-    laptop: "/contoh/laptop-kopi-senja.webp",
-    phone: "/contoh/hp-kopi-senja-1.webp",
+    laptop: "/preview/laptop-kopi-senja.webp",
+    phone: "/preview/hp-kopi-senja-1.webp",
+    includes: ["Menu & harga", "Jam buka", "Lokasi", "Tombol pesan antar"],
   },
   {
     slug: "arunika-konstruksi",
@@ -216,8 +232,9 @@ export const demos = [
     kind: "Company Profile",
     url: "arunikakonstruksi.co.id",
     desc: "Kontraktor umum: profil perusahaan, layanan, dan proyek terbaru, dibuat tegas supaya calon klien langsung percaya.",
-    laptop: "/contoh/laptop-arunika-konstruksi.webp",
-    phone: "/contoh/hp-arunika-1.webp",
+    laptop: "/preview/laptop-arunika-konstruksi.webp",
+    phone: "/preview/hp-arunika-1.webp",
+    includes: ["Profil perusahaan", "Layanan", "Proyek terbaru", "Kontak"],
   },
   {
     slug: "nadia-putri",
@@ -225,14 +242,32 @@ export const demos = [
     kind: "Portofolio",
     url: "nadiaputri.com",
     desc: "Desainer grafis: karya pilihan ditata bersih dan lega, jadi hasil kerjanya yang paling menonjol.",
-    laptop: "/contoh/laptop-nadia-putri.webp",
-    phone: "/contoh/hp-nadia-1.webp",
+    laptop: "/preview/laptop-nadia-putri.webp",
+    phone: "/preview/hp-nadia-1.webp",
+    includes: ["Karya pilihan", "Tentang saya", "Kontak"],
   },
 ];
 
-// Potongan layar HP dari demo, untuk kolom bergerak di hero
-export const heroShots = [
-  ["/contoh/hp-kopi-senja-1.webp", "/contoh/hp-arunika-2.webp", "/contoh/hp-nadia-2.webp"],
-  ["/contoh/hp-arunika-1.webp", "/contoh/hp-kopi-senja-2.webp", "/contoh/hp-nadia-1.webp"],
-  ["/contoh/hp-nadia-1.webp", "/contoh/hp-arunika-3.webp", "/contoh/hp-kopi-senja-1.webp"],
-];
+// Potongan layar desktop & HP dari demo, untuk kolom bergerak di hero
+const kopi = "kopisenja.id";
+const arunika = "arunikakonstruksi.co.id";
+const nadia = "nadiaputri.com";
+export const heroShots = {
+  desktop: [
+    { src: "/preview/laptop-kopi-senja.webp", url: kopi },
+    { src: "/preview/web-arunika-2.webp", url: arunika },
+    { src: "/preview/laptop-nadia-putri.webp", url: nadia },
+    { src: "/preview/web-kopi-senja-2.webp", url: kopi },
+    { src: "/preview/laptop-arunika-konstruksi.webp", url: arunika },
+    { src: "/preview/web-nadia-2.webp", url: nadia },
+    { src: "/preview/web-arunika-3.webp", url: arunika },
+  ],
+  phone: [
+    { src: "/preview/hp-arunika-1.webp", url: arunika },
+    { src: "/preview/hp-kopi-senja-1.webp", url: kopi },
+    { src: "/preview/hp-nadia-1.webp", url: nadia },
+    { src: "/preview/hp-arunika-2.webp", url: arunika },
+    { src: "/preview/hp-kopi-senja-2.webp", url: kopi },
+    { src: "/preview/hp-nadia-2.webp", url: nadia },
+  ],
+};

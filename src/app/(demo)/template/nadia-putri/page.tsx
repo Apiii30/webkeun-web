@@ -5,7 +5,7 @@ import { DemoBanner } from "@/components/demo-banner";
 const instrument = Instrument_Serif({ subsets: ["latin"], weight: "400", variable: "--font-instrument" });
 
 export const metadata: Metadata = {
-  title: "Demo: Nadia Putri",
+  title: "Template: Nadia Putri",
   robots: { index: false },
 };
 
@@ -54,7 +54,7 @@ export default function NadiaPutri() {
         </div>
       </section>
 
-      <DemoBanner name="portofolio Nadia Putri" />
+      <DemoBanner name="Nadia Putri" />
     </div>
   );
 }

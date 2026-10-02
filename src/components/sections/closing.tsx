@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { navLinks, services, site, waLink } from "@/lib/site";
+import { aboutLinks, navLinks, services, site, waLink } from "@/lib/site";
 import { PillLink } from "../brand";
 import { Icon } from "../icons";
 import { Mascot } from "../mascot";
@@ -53,8 +53,8 @@ export function Footer() {
           <h2 className="text-sm font-bold">Layanan</h2>
           <ul className="mt-4 space-y-2.5 text-sm text-ink/65">
             {services.map((s) => (
-              <li key={s.title}>
-                <Link href="/#layanan" className="hover:text-brand">
+              <li key={s.slug}>
+                <Link href={`/#${s.slug}`} className="hover:text-brand">
                   {s.title}
                 </Link>
               </li>
@@ -65,9 +65,9 @@ export function Footer() {
         <div>
           <h2 className="text-sm font-bold">Menu</h2>
           <ul className="mt-4 space-y-2.5 text-sm text-ink/65">
-            {navLinks.map((l) => (
+            {[...navLinks, ...aboutLinks.slice(0, 3)].map((l) => (
               <li key={l.href}>
-                <Link href={`/${l.href}`} className="hover:text-brand">
+                <Link href={l.href} className="hover:text-brand">
                   {l.label}
                 </Link>
               </li>

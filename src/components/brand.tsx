@@ -1,3 +1,4 @@
+import Link from "next/link";
 import type { ReactNode } from "react";
 import { Icon, type IconName } from "./icons";
 
@@ -100,14 +101,11 @@ export function PillLink({
   size?: "md" | "lg";
   className?: string;
 }) {
-  return (
-    <a
-      href={href}
-      {...(external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
-      className={`group inline-flex items-center justify-between gap-3 rounded-full font-semibold transition-colors ${
-        size === "lg" ? "py-2 pr-2 pl-6 text-base sm:text-lg" : "py-1.5 pr-1.5 pl-5 text-[15px]"
-      } ${pillTone[tone]} ${className}`}
-    >
+  const classes = `group inline-flex items-center justify-between gap-3 rounded-full font-semibold transition-colors ${
+    size === "lg" ? "py-2 pr-2 pl-6 text-base sm:text-lg" : "py-1.5 pr-1.5 pl-5 text-[15px]"
+  } ${pillTone[tone]} ${className}`;
+  const content = (
+    <>
       {children}
       <span
         className={`grid shrink-0 place-items-center rounded-full transition-transform group-hover:translate-x-0.5 ${
@@ -116,6 +114,16 @@ export function PillLink({
       >
         <Icon name={icon} className={size === "lg" ? "size-5" : "size-4"} strokeWidth={2.5} />
       </span>
+    </>
+  );
+
+  return external ? (
+    <a href={href} target="_blank" rel="noopener noreferrer" className={classes}>
+      {content}
     </a>
+  ) : (
+    <Link href={href} className={classes}>
+      {content}
+    </Link>
   );
 }

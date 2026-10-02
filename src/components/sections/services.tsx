@@ -14,7 +14,7 @@ export function Services() {
 
       <ul className="mt-12 grid gap-4 sm:grid-cols-2">
         {services.map((s) => (
-          <li key={s.title}>
+          <li key={s.slug} id={s.slug}>
             <a
               href={waLink(`Halo Webkeun! Aku tertarik bikin ${s.title}. Bisa dibantu?`)}
               target="_blank"
