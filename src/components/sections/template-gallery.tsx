@@ -7,6 +7,7 @@ import { templateCategories, templates, waLink } from "@/lib/site";
 import { PillLink } from "../brand";
 import { Icon } from "../icons";
 import { Mascot } from "../mascot";
+import { PhoneTrio } from "../phone-trio";
 
 const categories = [{ slug: null, label: "Semua" }, ...templateCategories];
 
@@ -17,9 +18,11 @@ export function TemplateGallery() {
   const shown = filter ? templates.filter((t) => t.category === filter) : templates;
 
   // Kartu "custom" mengisi sisa kolom di baris terakhir supaya grid selalu penuh
-  const lgSpan = ["lg:col-span-3 lg:flex-row lg:items-center lg:px-10", "lg:col-span-2 lg:flex-row lg:items-center", ""][
-    shown.length % 3
-  ];
+  const lgSpan = [
+    "lg:col-span-3 lg:flex-row lg:items-center lg:px-10",
+    "lg:col-span-2 lg:flex-row lg:items-center",
+    "",
+  ][shown.length % 3];
   const mdSpan = shown.length % 2 === 0 ? "md:col-span-2" : "";
   const wide = shown.length % 3 !== 2;
 
@@ -46,41 +49,57 @@ export function TemplateGallery() {
 
       <ul className="mt-8 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
         {shown.map((t) => (
-          <li key={t.slug} className="flex animate-rise flex-col overflow-hidden rounded-3xl bg-white ring-1 ring-ink/8">
-            <Link
-              href={`/template/${t.slug}`}
-              className="group relative block bg-lilac p-5 pb-8"
-              aria-label={`Lihat demo template ${t.name}`}
-            >
-              <div className="overflow-hidden rounded-xl bg-white shadow-[0_20px_40px_-24px_rgb(21_19_43/0.5)] transition-transform duration-500 group-hover:-translate-y-1">
-                <div className="flex items-center gap-1.5 border-b border-ink/10 px-3 py-2">
-                  <span className="size-2 rounded-full bg-[#ff6159]" />
-                  <span className="size-2 rounded-full bg-[#ffbd2e]" />
-                  <span className="size-2 rounded-full bg-[#28c840]" />
-                  <span className="ml-1.5 truncate rounded-full bg-lilac-soft px-2 py-0.5 text-[11px] text-ink/50">
-                    {t.url}
-                  </span>
+          <li
+            key={t.slug}
+            className="flex animate-rise flex-col overflow-hidden rounded-3xl bg-white ring-1 ring-ink/8"
+          >
+            {t.screens && t.tone ? (
+              <Link href={`/template/${t.slug}`} className="group block" aria-label={`Lihat demo template ${t.name}`}>
+                <PhoneTrio
+                  name={t.name}
+                  cover={t.phone}
+                  screens={t.screens}
+                  tone={t.tone}
+                  width={140}
+                  className="h-[21rem]"
+                />
+              </Link>
+            ) : (
+              <Link
+                href={`/template/${t.slug}`}
+                className="group relative block bg-lilac p-5 pb-8"
+                aria-label={`Lihat demo template ${t.name}`}
+              >
+                <div className="overflow-hidden rounded-xl bg-white shadow-[0_20px_40px_-24px_rgb(21_19_43/0.5)] transition-transform duration-500 group-hover:-translate-y-1">
+                  <div className="flex items-center gap-1.5 border-b border-ink/10 px-3 py-2">
+                    <span className="size-2 rounded-full bg-[#ff6159]" />
+                    <span className="size-2 rounded-full bg-[#ffbd2e]" />
+                    <span className="size-2 rounded-full bg-[#28c840]" />
+                    <span className="ml-1.5 truncate rounded-full bg-lilac-soft px-2 py-0.5 text-[11px] text-ink/50">
+                      {t.url}
+                    </span>
+                  </div>
+                  <Image
+                    src={t.laptop}
+                    alt={`Tampilan laptop template ${t.name}`}
+                    width={1280}
+                    height={800}
+                    sizes="(min-width: 1024px) 340px, (min-width: 768px) 45vw, 90vw"
+                    className="w-full"
+                  />
                 </div>
-                <Image
-                  src={t.laptop}
-                  alt={`Tampilan laptop template ${t.name}`}
-                  width={1280}
-                  height={800}
-                  sizes="(min-width: 1024px) 340px, (min-width: 768px) 45vw, 90vw"
-                  className="w-full"
-                />
-              </div>
-              <div className="absolute right-4 bottom-3 w-[24%] rotate-[4deg] overflow-hidden rounded-2xl bg-white p-1 shadow-xl transition-transform duration-500 group-hover:rotate-0">
-                <Image
-                  src={t.phone}
-                  alt={`Tampilan HP template ${t.name}`}
-                  width={480}
-                  height={960}
-                  sizes="100px"
-                  className="w-full rounded-xl"
-                />
-              </div>
-            </Link>
+                <div className="absolute right-4 bottom-3 w-[24%] rotate-[4deg] overflow-hidden rounded-2xl bg-white p-1 shadow-xl transition-transform duration-500 group-hover:rotate-0">
+                  <Image
+                    src={t.phone}
+                    alt={`Tampilan HP template ${t.name}`}
+                    width={480}
+                    height={960}
+                    sizes="100px"
+                    className="w-full rounded-xl"
+                  />
+                </div>
+              </Link>
+            )}
 
             <div className="flex flex-1 flex-col p-6">
               <p className="text-sm font-semibold text-brand">{t.kind}</p>
@@ -109,7 +128,9 @@ export function TemplateGallery() {
           </li>
         ))}
 
-        <li className={`flex flex-col items-start justify-between gap-8 rounded-3xl bg-brand p-7 text-white ${mdSpan} ${lgSpan}`}>
+        <li
+          className={`flex flex-col items-start justify-between gap-8 rounded-3xl bg-brand p-7 text-white ${mdSpan} ${lgSpan}`}
+        >
           <div className={wide ? "lg:flex lg:items-center lg:gap-8" : ""}>
             <Mascot mood="kedip" className="w-20 shrink-0 -rotate-6" />
             <div className={wide ? "mt-6 lg:mt-0" : "mt-6"}>

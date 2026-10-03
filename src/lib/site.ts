@@ -234,6 +234,8 @@ export const templateCategories = [
 
 // Template website & undangan. Halaman demonya ada di /template/<slug>.
 // Gambar di /public/preview adalah screenshot dari halaman demo itu; kalau tampilannya diubah, ambil ulang.
+// Undangan khusus tampilan HP, jadi tidak punya screenshot laptop: kartunya memakai 3 layar HP (phone = sampul,
+// screens = mempelai & acara) di atas warna temanya (tone).
 export const templates = [
   {
     slug: "kopi-senja",
@@ -275,8 +277,9 @@ export const templates = [
     category: "undangan",
     url: "faraaditya.my.id",
     desc: "Tema Biru Porselen: biru kobalt & putih gading seperti lukisan porselen, dengan batik kawung dan jendela gunungan. Dibuka dengan pintu batik yang terbelah, rimbun emas yang tersibak, lalu kamera menembus jendela ke danau & air terjun. Galeri carousel cincin 3D dan kisah cinta berupa perjalanan horizontal. Khusus tampilan HP.",
-    laptop: "/preview/laptop-undangan-porselen.webp",
     phone: "/preview/hp-undangan-porselen-1.webp",
+    screens: ["/preview/hp-undangan-porselen-2.webp", "/preview/hp-undangan-porselen-3.webp"],
+    tone: { bg: "#dfe6f1", accent: "#27427a" },
     includes: ["Pembuka jendela gunungan", "Galeri carousel cincin 3D", "Kisah cinta horizontal", "Parallax penuh"],
   },
   {
@@ -286,8 +289,9 @@ export const templates = [
     category: "undangan",
     url: "faraaditya.my.id",
     desc: "Tema Garden Premium: taman bergaya cetakan toile teal dengan gapura bertiang, air mancur, merak, peony, dan wisteria. Dibuka dengan animasi kamera mundur berlapis dari balik bunga sampai seluruh gapura terlihat. Khusus tampilan HP.",
-    laptop: "/preview/laptop-undangan-garden.webp",
     phone: "/preview/hp-undangan-garden-1.webp",
+    screens: ["/preview/hp-undangan-garden-2.webp", "/preview/hp-undangan-garden-3.webp"],
+    tone: { bg: "#e2ebe7", accent: "#2f5d62" },
     includes: ["Pembuka kamera mundur berlapis", "Kartu acara berpintu taman", "Galeri pigura emas", "RSVP & amplop digital"],
   },
   {
@@ -297,8 +301,9 @@ export const templates = [
     category: "undangan",
     url: "friscaarif.my.id",
     desc: "Undangan nuansa rose & plum dengan motif geometri Islami dan sentuhan Sunda: foto berbingkai lengkung, love story bergaris waktu, kartu acara bertumpuk, galeri coverflow, musik latar, RSVP, dan amplop digital bergaya kartu ATM. Khusus tampilan HP.",
-    laptop: "/preview/laptop-undangan-frisca.webp",
     phone: "/preview/hp-undangan-frisca-1.webp",
+    screens: ["/preview/hp-undangan-frisca-2.webp", "/preview/hp-undangan-frisca-3.webp"],
+    tone: { bg: "#f4e6e2", accent: "#9c7880" },
     includes: ["Musik latar piringan hitam", "Love story bergaris waktu", "Galeri coverflow", "RSVP & amplop kartu ATM"],
   },
   {
@@ -308,8 +313,9 @@ export const templates = [
     category: "undangan",
     url: "faraaditya.my.id",
     desc: "Tema Luxury: gaya majalah mewah ivory, taupe & emas. Foto besar bersudut lengkung, galeri carousel 3D, dan kisah cinta berbentuk bab-bab editorial. Khusus tampilan HP.",
-    laptop: "/preview/laptop-undangan-luxury.webp",
     phone: "/preview/hp-undangan-luxury-1.webp",
+    screens: ["/preview/hp-undangan-luxury-2.webp", "/preview/hp-undangan-luxury-3.webp"],
+    tone: { bg: "#efe7dc", accent: "#8b6f4e" },
     includes: ["Sampul tirai terangkat", "Galeri carousel 3D", "Kisah cinta per bab", "Amplop kartu hitam metalik"],
   },
   {
@@ -319,8 +325,9 @@ export const templates = [
     category: "undangan",
     url: "faraaditya.my.id",
     desc: "Tema Art Sunda: pintu bermotif mega mendung yang terbuka, Gedung Sate, kujang, siger, dan bunga melati-kenanga di atas kertas krem. Khusus tampilan HP.",
-    laptop: "/preview/laptop-undangan-sunda.webp",
     phone: "/preview/hp-undangan-sunda-1.webp",
+    screens: ["/preview/hp-undangan-sunda-2.webp", "/preview/hp-undangan-sunda-3.webp"],
+    tone: { bg: "#f3ead9", accent: "#8a3f2b" },
     includes: ["Sampul pintu mega mendung", "Ornamen kujang & aksara Sunda", "Galeri layar penuh", "RSVP & amplop digital"],
   },
   {
@@ -330,8 +337,9 @@ export const templates = [
     category: "undangan",
     url: "faraaditya.my.id",
     desc: "Tema Rimba: hutan berkabut dari lukisan klasik, bunga ilustrasi botani, dan bingkai emas. Khusus tampilan HP, dengan animasi masuk yang beragam dan galeri yang membesar saat diketuk.",
-    laptop: "/preview/laptop-undangan-rimba.webp",
     phone: "/preview/hp-undangan-rimba-1.webp",
+    screens: ["/preview/hp-undangan-rimba-2.webp", "/preview/hp-undangan-rimba-3.webp"],
+    tone: { bg: "#1d2b22", accent: "#d8b56e" },
     includes: ["Sampul buka undangan", "Ayat & salam", "Galeri layar penuh", "RSVP & amplop digital"],
   },
 ];
@@ -346,7 +354,6 @@ export const heroShots = {
     { src: "/preview/laptop-kopi-senja.webp", url: kopi },
     { src: "/preview/web-arunika-2.webp", url: arunika },
     { src: "/preview/laptop-nadia-putri.webp", url: nadia },
-    { src: "/preview/laptop-undangan-rimba.webp", url: faraAditya },
     { src: "/preview/web-kopi-senja-2.webp", url: kopi },
     { src: "/preview/laptop-arunika-konstruksi.webp", url: arunika },
     { src: "/preview/web-nadia-2.webp", url: nadia },
