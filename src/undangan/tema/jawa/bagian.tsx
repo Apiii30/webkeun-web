@@ -1,116 +1,70 @@
 "use client";
 
-import { motion, type Variants } from "motion/react";
+import { motion } from "motion/react";
+import Image from "next/image";
 import { Fragment, type ReactNode } from "react";
 import { calendarLink } from "../../pakai";
 import type { Undangan } from "../../types";
-import { RUMPUN_DASAR, RUMPUN_KANAN, RUMPUN_KIRI, SUDUT_KANAN, SUDUT_KIRI } from "./aset";
-import { Amplop, Countdown, Galeri, Ucapan, tombolHijau } from "./interaktif";
-import { Aksara, BingkaiKori, Bukit, Burung, Gunung, Gunungan, Janur, Kabut, KelopakJatuh, KembangKawung, Langit, Matahari, Pemisah, Rumpun, Rumput, Tepi } from "./ornamen";
+import { ASET, BINGKAI_KANAN, BINGKAI_KIRI, KARTU_KANAN, KARTU_KIRI, SISI, SISI_TERATAI, SUDUT_ATAS, SUDUT_BAWAH } from "./aset";
+import { Amplop, Countdown, Galeri, Ucapan, tombolPlum } from "./interaktif";
+import { BingkaiUkir, Burung, Gambar, Gapura, Gunung, Gunungan, Janur, KelopakJatuh, Kupu, LENTUR, Monogram, Pohon, Rumpun, Sambung, Tumbuh, Wayang, cinzel, kaushan } from "./ornamen";
 import s from "./jawa.module.css";
 
-// Isi undangan tema Jawa Klasik.
-// - Efek yang mengikuti scroll (parallax) memakai CSS scroll-driven animation lewat kelas di jawa.module.css.
-//   Lanskap beranda & penutup disusun berlapis (langit, gunung, bukit, rumput) yang bergeser dengan kecepatan berbeda.
-// - Efek "muncul" memakai motion dengan `transform` utuh + opacity, yang diserahkan ke mesin animasi browser
-//   (WAAPI) sehingga tidak tertinggal dari scroll. Clip-path dipakai hanya untuk efek sekali jalan.
+// Isi undangan tema Jawa Klasik, mengikuti alur & gerak undangan referensi:
+// ornamen (gapura, janur, pohon, bunga, wayang) tumbuh dari sudutnya dengan jeda bertahap sehingga muncul bertumpuk,
+// foto membesar pelan, teks naik perlahan. Tiap bagian saling menumpuk di sambungannya: rumah joglo menimpa
+// lengkung gapura berikutnya, rumpun bunga menutup garis pertemuan dua bagian.
+// Di atasnya ada parallax berlapis (lihat jawa.module.css): latar jauh lebih lambat, bunga depan lebih cepat.
 
-const ease = [0.22, 1, 0.36, 1] as const;
-const marcellus = "font-[family-name:var(--font-marcellus)]";
-const script = "font-[family-name:var(--font-corinthia)]";
-const hijau = "text-[#3d5243]";
-const HIJAU = "#3d5243";
-const KERTAS = "#eef0e6";
-// Isi beranda mulai bergerak saat sampul sedang memudar (lihat Sampul di shell.tsx)
-const BUKA = 1.2;
+const PLUM = "text-[#5b3b47]";
 
-/* ───────── pembantu animasi ───────── */
+/* ───────── pembantu ───────── */
 
-const gaya = {
-  naik: { hidden: { opacity: 0, transform: "translateY(40px)" }, show: { opacity: 1, transform: "translateY(0px)" } },
-  lembut: { hidden: { opacity: 0, transform: "translateY(16px) scale(0.97)" }, show: { opacity: 1, transform: "translateY(0px) scale(1)" } },
-  kiri: { hidden: { opacity: 0, transform: "translateX(-60px) rotate(-4deg)" }, show: { opacity: 1, transform: "translateX(0px) rotate(0deg)" } },
-  kanan: { hidden: { opacity: 0, transform: "translateX(60px) rotate(4deg)" }, show: { opacity: 1, transform: "translateX(0px) rotate(0deg)" } },
-  zoom: { hidden: { opacity: 0, transform: "scale(0.8)" }, show: { opacity: 1, transform: "scale(1)" } },
-} satisfies Record<string, Variants>;
-
-function Muncul({ as = "naik", delay = 0, className, children }: { as?: keyof typeof gaya; delay?: number; className?: string; children: ReactNode }) {
+// Teks naik pelan saat terlihat (seperti fadeInUp di referensi)
+function Naik({ jeda = 0, className, children }: { jeda?: number; className?: string; children: ReactNode }) {
   return (
-    <motion.div className={className} variants={gaya[as]} initial="hidden" whileInView="show" viewport={{ once: true, amount: 0.3 }} transition={{ duration: 1, ease, delay }}>
+    <motion.div
+      className={className}
+      initial={{ opacity: 0, transform: "translateY(40px)" }}
+      whileInView={{ opacity: 1, transform: "translateY(0px)" }}
+      viewport={{ once: true, amount: 0.3 }}
+      transition={{ duration: 1.3, ease: LENTUR, delay: jeda }}
+    >
       {children}
     </motion.div>
   );
 }
 
-// Teks yang hurufnya naik satu per satu. Pemicunya diwarisi dari elemen motion di atasnya.
-function Huruf({ teks, jeda = 0, cepat = 0.04 }: { teks: string; jeda?: number; cepat?: number }) {
-  const kata = teks.split(" ");
-  let n = 0;
+// Judul bagian bertulisan kuas, membesar dari tengah dan sedikit mendahului halaman saat digulir
+function Judul({ children, className = "" }: { children: string; className?: string }) {
   return (
-    <motion.span variants={{ hidden: {}, show: { transition: { staggerChildren: cepat, delayChildren: jeda } } }} aria-label={teks} role="text">
-      {/* spasi diletakkan di luar kata (inline-block), karena spasi di ujung inline-block ikut terpangkas */}
-      {kata.map((k, ki) => (
-        <Fragment key={ki}>
-          <span className="inline-block whitespace-nowrap" aria-hidden="true">
-            {[...k].map((h) => (
-              <motion.span
-                key={n++}
-                className="inline-block"
-                variants={{
-                  hidden: { opacity: 0, transform: "translateY(0.6em) rotate(8deg)" },
-                  show: { opacity: 1, transform: "translateY(0em) rotate(0deg)", transition: { duration: 0.7, ease } },
-                }}
-              >
-                {h}
-              </motion.span>
-            ))}
-          </span>
-          {ki < kata.length - 1 && " "}
-        </Fragment>
+    <div className={`${s.pJudul} relative z-10 ${className}`}>
+      <Tumbuh awal={0.5} durasi={1.6} className="text-center">
+        <h2 className={`${kaushan} text-[2.5rem] leading-tight ${PLUM}`}>{children}</h2>
+      </Tumbuh>
+    </div>
+  );
+}
+
+// Bunga kecil delapan kelopak yang berputar pelan (hiasan di atas hitung mundur)
+function KembangPutar({ className = "" }: { className?: string }) {
+  return (
+    <svg viewBox="-30 -30 60 60" className={`${s.putar} ${className}`} aria-hidden="true">
+      {[0, 45, 90, 135, 180, 225, 270, 315].map((r) => (
+        <path key={r} d="M0 -4 C6 -10 6 -20 0 -27 C-6 -20 -6 -10 0 -4 Z" transform={`rotate(${r})`} fill={r % 90 ? "#d9b7c2" : "#7b5563"} stroke="#5b3b47" strokeWidth=".8" />
       ))}
-    </motion.span>
+      <circle r="5" fill="#e2c070" stroke="#5b3b47" strokeWidth=".8" />
+    </svg>
   );
 }
 
-// Tulisan sambung muncul dari kiri ke kanan seperti sedang ditulis
-const tulis = (duration = 1.4): Variants => ({
-  hidden: { clipPath: "inset(0% 100% 0% 0%)" },
-  show: { clipPath: "inset(0% 0% 0% 0%)", transition: { duration, ease: "easeInOut" } },
-});
-
-// Judul bagian: tulisan sambung kecil, judul besar huruf demi huruf, lalu pembatas kawung yang melebar.
-function Judul({ kecil, children, terang = false, gerak = true }: { kecil?: string; children: string; terang?: boolean; gerak?: boolean }) {
+// Rumpun bunga di kedua tepi (menutupi pilar gapura), bergerak lebih cepat dari halaman
+function TepiBunga({ items = SISI, className = "", jeda = 0 }: { items?: typeof SISI; className?: string; jeda?: number }) {
   return (
-    <motion.div className={`${gerak ? s.pJudul : ""} text-center`} initial="hidden" whileInView="show" viewport={{ once: true, amount: 0.7 }}>
-      {kecil && (
-        <motion.p variants={tulis(1.3)} className={`${script} inline-block px-3 text-[2.4rem] leading-tight ${terang ? "text-[#e3c98a]" : "text-[#b08a4a]"}`}>
-          {kecil}
-        </motion.p>
-      )}
-      <h2 className={`${marcellus} text-[1.75rem] leading-tight tracking-[0.08em] uppercase ${terang ? "text-[#f4f1e4]" : hijau}`}>
-        <Huruf teks={children} jeda={kecil ? 0.5 : 0} />
-      </h2>
-      <motion.div variants={{ hidden: { opacity: 0, transform: "scaleX(0.2)" }, show: { opacity: 1, transform: "scaleX(1)", transition: { duration: 1, ease, delay: 0.8 } } }}>
-        <Pemisah terang={terang} className="mt-3" />
-      </motion.div>
-    </motion.div>
-  );
-}
-
-// Foto naik dari dasar seperti pintu yang terangkat. Pemicu "terlihat" di pembungkus luar: elemen yang terpotong
-// penuh oleh clip-path dianggap tidak terlihat, jadi animasinya tak akan mulai kalau pemicunya di elemen itu sendiri.
-function BukaKori({ children, className = "", delay = 0 }: { children: ReactNode; className?: string; delay?: number }) {
-  return (
-    <motion.div className={className} initial="hidden" whileInView="show" viewport={{ once: true, amount: 0.3 }}>
-      <motion.div
-        variants={{
-          hidden: { clipPath: "inset(100% 0% 0% 0% round 50% 50% 0 0)" },
-          show: { clipPath: "inset(0% 0% 0% 0% round 0% 0% 0 0)", transition: { duration: 1.6, ease: [0.65, 0, 0.35, 1], delay } },
-        }}
-      >
-        {children}
-      </motion.div>
-    </motion.div>
+    <>
+      <Rumpun items={items} dari="l" jeda={jeda} className={`${s.pDekat} left-0 aspect-[1/1.35] w-[19%] ${className}`} />
+      <Rumpun items={items} dari="l" jeda={jeda + 0.15} cermin className={`${s.pDekat} right-0 aspect-[1/1.35] w-[19%] ${className}`} />
+    </>
   );
 }
 
@@ -119,477 +73,434 @@ function hariTanggal(tanggal: string) {
   return { hari: hari.trim(), tgl: rest.join(",").trim() };
 }
 
-/* ───────── 1. Beranda: lanskap pagi berlapis, gunungan & nama di langit ───────── */
+/* ───────── 1. Beranda ───────── */
 
+// Saat digulir keluar, tiap lapisan pergi dengan kecepatan berbeda: gunung & kabut turun pelan (jauh),
+// bingkai & nama tenggelam memudar, janur naik lebih cepat, bunga di depan ikut halaman.
 function Beranda({ u, opened }: { u: Undangan; opened: boolean }) {
-  const tampil = opened ? "show" : "hidden";
-  const muncul = (d: number, dari = "translateY(24px)") => ({
-    initial: { opacity: 0, transform: dari },
-    animate: opened ? { opacity: 1, transform: "translateY(0px)" } : {},
-    transition: { duration: 1.2, ease, delay: BUKA + d },
-  });
+  const t = opened;
   return (
-    <section id="beranda" className={`${s.sek} relative h-svh min-h-[40rem] overflow-hidden`}>
-      <div className={`${s.lapisLangit} absolute inset-0`}>
-        <Langit />
-        <Matahari className="top-[12%] right-[14%] w-14" />
-        <Burung className="top-[22%] left-0" delay={-7} />
-        <Burung className="top-[31%] left-0" delay={-22} size={15} />
-      </div>
-      <div className={`${s.lapisJauh} absolute inset-0`}>
-        <Gunung preload className="inset-x-0 bottom-[15%] h-[46%]" sizes="(min-width: 1024px) 440px, 100vw" />
-        <Kabut className="bottom-[20%] h-24" />
-      </div>
-      <div className={`${s.lapisTengah} absolute inset-0`}>
-        <Bukit lapis="tengah" className="inset-x-0 bottom-[6%] h-[20%]" />
-        <Kabut balik className="bottom-[7%] h-20 opacity-70" />
-      </div>
-      <div className={`${s.lapisDekat} absolute inset-0 origin-bottom`}>
-        <Bukit lapis="depan" className="inset-x-0 bottom-0 h-[12%]" />
-        <Rumput className="inset-x-0 bottom-[5%] h-10" />
-        <Rumpun items={[...RUMPUN_KIRI, ...RUMPUN_KANAN]} tampil={opened} jeda={BUKA + 0.3} className="inset-x-0 bottom-[calc(-3%+var(--demo-h,0px))] aspect-[1/0.5]" />
+    <section id="beranda" className={`${s.sek} relative h-svh min-h-[46rem] overflow-hidden`}>
+      {/* lapisan jauh dipudarkan di dasar beranda (wadah diam, bukan lapisan yang bergeser), supaya gunung yang
+          turun saat digulir tidak terpotong garis lurus di batas bagian */}
+      <div className="absolute inset-0 [mask-image:linear-gradient(to_bottom,black_72%,transparent_96%)]">
+        <div className={`${s.keluarPelan} absolute inset-0`}>
+          <div className={`${s.kabut} absolute inset-x-[-10%] top-0 h-[62%] opacity-30 [mask-image:linear-gradient(to_bottom,black_45%,transparent)]`}>
+            <Image src={ASET.kabut.src} alt="" fill preload sizes="480px" className="object-cover" />
+          </div>
+          <Gunung tampil={t} jeda={0.2} className="inset-x-[-14%] bottom-[16%]" preload />
+          <Burung className="top-[13%] left-0" delay={-5} />
+          <Burung className="top-[16%] left-0" delay={-9} size={11} />
+        </div>
       </div>
 
-      <div className={`${s.lapisIsi} relative flex h-full flex-col items-center px-6 pt-[9svh] text-center`}>
-        <motion.div
-          initial={{ opacity: 0, transform: "translateY(-20px) rotateY(90deg) scale(0.7)" }}
-          animate={opened ? { opacity: 1, transform: "translateY(0px) rotateY(0deg) scale(1)" } : {}}
-          transition={{ duration: 1.4, ease, delay: BUKA }}
-        >
-          <div className={s.dalang}>
-            <Gunungan className="w-12" />
-          </div>
-        </motion.div>
-        <motion.div {...muncul(0.3)}>
-          <Aksara className="mt-3 text-lg leading-[2.2] text-[#3d5243]/80">ꦥꦮꦶꦮꦲꦤ꧀</Aksara>
-          <p className="text-[11px] tracking-[0.4em] text-[#3d5243]/80 uppercase">The Wedding Of</p>
-        </motion.div>
-        <motion.h1 initial="hidden" animate={tampil} className={`${script} mt-2 text-[4.6rem] leading-[0.85] text-[#2f3d33]`}>
-          <span className="block">
-            <Huruf teks={u.wanita.panggilan} jeda={BUKA + 0.5} cepat={0.07} />
-          </span>
-          <motion.span
-            className="block text-[3rem] text-[#b08a4a]"
-            variants={{ hidden: { opacity: 0, transform: "scale(0.3) rotate(-30deg)" }, show: { opacity: 1, transform: "scale(1) rotate(0deg)", transition: { duration: 1, ease: [0.34, 1.56, 0.64, 1], delay: BUKA + 0.9 } } }}
-          >
-            &amp;
-          </motion.span>
-          <span className="block">
-            <Huruf teks={u.pria.panggilan} jeda={BUKA + 1.1} cepat={0.07} />
-          </span>
-        </motion.h1>
-        <motion.div {...muncul(1.7)} className="mt-4">
-          <Pemisah />
-          <p className={`${marcellus} mt-2 text-sm tracking-[0.25em] text-[#3d5243] uppercase`}>{u.tanggal}</p>
-        </motion.div>
+      <div className={`${s.keluarNaik} absolute inset-0`}>
+        <Janur sisi="kiri" tampil={t} jeda={0.9} className="top-[2%] left-0 w-[31%]" />
+        <Janur sisi="kanan" tampil={t} jeda={1} className="top-[2%] right-0 w-[31%]" />
       </div>
+
+      <div className={`${s.keluarTurun} absolute inset-0`}>
+        <Tumbuh dari="t" tampil={t} jeda={0.3} className="absolute inset-x-0 top-[5%] text-center">
+          <Monogram a={u.wanita.panggilan[0]} b={u.pria.panggilan[0]} className="text-[2.7rem]" />
+          <p className={`mt-1 text-[15px] ${PLUM}`}>Wedding Invitation</p>
+        </Tumbuh>
+
+        <Tumbuh tampil={t} jeda={0.5} className="absolute top-[17%] left-[25%] w-[50%]">
+          <BingkaiUkir src={u.foto.sampul} alt={`${u.wanita.panggilan} & ${u.pria.panggilan}`} sizes="230px" preload />
+          <Rumpun lebih={15} items={BINGKAI_KIRI} tampil={t} jeda={1.6} className="inset-x-[-22%] bottom-0 aspect-[1/0.55]" />
+          <Rumpun lebih={15} items={BINGKAI_KANAN} tampil={t} jeda={1.8} className="inset-x-[-22%] bottom-0 aspect-[1/0.55]" />
+        </Tumbuh>
+
+        <Tumbuh tampil={t} jeda={1} className="absolute inset-x-0 top-[57%] text-center">
+          <h1 className={`${kaushan} text-[2.9rem] leading-[1.02] ${PLUM} [text-shadow:0_2px_12px_rgb(243_235_229/0.9)]`}>
+            {u.wanita.panggilan}
+            <br />
+            &amp;
+            <br />
+            {u.pria.panggilan}
+          </h1>
+        </Tumbuh>
+      </div>
+
+      <Pohon sisi="kiri" tampil={t} jeda={1.2} className="bottom-[10%] left-0 w-[28%]" />
+      <Pohon sisi="kanan" tampil={t} jeda={1.3} className="right-0 bottom-[10%] w-[28%]" />
+      <Rumpun items={SUDUT_BAWAH} tampil={t} jeda={1.4} className="bottom-[var(--demo-h,0px)] left-0 aspect-[1/0.7] w-[44%]" />
+      <Rumpun items={SUDUT_BAWAH} tampil={t} jeda={1.5} cermin className="right-0 bottom-[var(--demo-h,0px)] aspect-[1/0.7] w-[44%]" />
+      {t && <Kupu className="top-[48%] left-[5%]" delay={-2} />}
     </section>
   );
 }
 
-/* ───────── 2. Ayat: blok hijau bermotif truntum, gunungan samar di belakang ───────── */
+/* ───────── 2. Ayat ───────── */
 
 function Ayat({ u }: { u: Undangan }) {
   if (!u.ayat) return null;
-  const words = u.ayat.teks.split(" ");
   return (
-    <section className={`${s.hijau} relative px-8 pt-16 pb-24 text-center text-[#f4f1e4]`}>
-      <Tepi warna={HIJAU} className="absolute inset-x-0 -top-10" />
-      <div className={`${s.truntum} absolute inset-0 opacity-[0.13]`} />
-      <div className={`${s.pJauh} pointer-events-none absolute inset-x-0 top-6 flex justify-center opacity-[0.14]`}>
-        <Gunungan className="w-56" />
-      </div>
-      <KembangKawung className={`${s.putar} absolute top-10 left-6 size-10 opacity-40`} warna="#e3c98a" />
-      <KembangKawung className={`${s.putar} absolute right-6 bottom-20 size-12 opacity-30`} warna="#e3c98a" />
-
-      <motion.div className="relative mx-auto w-16" initial="hidden" whileInView="show" viewport={{ once: true, amount: 0.8 }}>
-        <motion.div variants={{ hidden: { opacity: 0, transform: "rotateY(180deg) scale(0.5)" }, show: { opacity: 1, transform: "rotateY(0deg) scale(1)", transition: { duration: 1.4, ease } } }}>
-          <div className={s.dalang}>
-            <Gunungan className="w-full" />
+    <section className="relative px-8 pt-24 pb-28 text-center">
+      <Rumpun items={SUDUT_ATAS} atas className={`${s.pJauh} top-0 left-0 aspect-[1/0.6] w-[44%]`} />
+      <Rumpun items={SUDUT_ATAS} atas cermin jeda={0.2} className={`${s.pJauh} top-0 right-0 aspect-[1/0.6] w-[44%]`} />
+      <div className="relative mx-auto mt-10 w-[90%]">
+        <Tumbuh awal={0.7} className="relative aspect-[4/3] overflow-hidden rounded-xl shadow-[0_14px_30px_-18px_rgb(91_59_71/0.8)]">
+          <div className={`${s.zoomKeluar} absolute inset-0`}>
+            <Image src={u.foto.kutipan} alt="" fill sizes="380px" className="object-cover" />
           </div>
-        </motion.div>
-      </motion.div>
-
-      <motion.blockquote className="relative mt-8" initial="hidden" whileInView="show" viewport={{ once: true, amount: 0.4 }} transition={{ staggerChildren: 0.035 }}>
-        <p className="text-[15px] leading-relaxed text-[#f4f1e4]/90">
-          “
-          {words.map((w, i) => (
-            <Fragment key={i}>
-              <motion.span
-                className="inline-block"
-                variants={{ hidden: { opacity: 0, transform: "translateY(12px)" }, show: { opacity: 1, transform: "translateY(0px)", transition: { duration: 0.7, ease } } }}
-              >
-                {w}
-              </motion.span>
-              {i < words.length - 1 && " "}
-            </Fragment>
-          ))}
-          ”
-        </p>
-        <motion.footer variants={gaya.zoom} className={`${marcellus} mt-5 text-lg tracking-wide text-[#e3c98a]`}>
-          ({u.ayat.sumber})
-        </motion.footer>
-      </motion.blockquote>
-      <Tepi warna={KERTAS} className="absolute inset-x-0 -bottom-px" />
+        </Tumbuh>
+        <Rumpun lebih={4} items={BINGKAI_KIRI} jeda={0.6} className={`${s.pSedang} inset-x-[-10%] -bottom-2 aspect-[1/0.4]`} />
+        <Rumpun lebih={4} items={BINGKAI_KANAN} jeda={0.8} className={`${s.pSedang} inset-x-[-10%] -bottom-2 aspect-[1/0.4]`} />
+      </div>
+      <Naik jeda={0.3} className="mt-10">
+        <p className={`text-[15px] leading-relaxed ${PLUM}`}>“{u.ayat.teks}”</p>
+        <p className={`mt-3 text-sm ${PLUM}`}>~ {u.ayat.sumber} ~</p>
+      </Naik>
+      <Kupu a="kupu2" className="top-[10%] left-[40%]" delay={-6} w={30} />
     </section>
   );
 }
 
-/* ───────── 3. Salam & mempelai: foto dalam bingkai kori yang terangkat ───────── */
+/* ───────── 3. Salam & mempelai, di dalam gapura ───────── */
 
 function Mempelai({ u }: { u: Undangan }) {
-  const orang = [
-    { p: u.wanita, hias: SUDUT_KIRI },
-    { p: u.pria, hias: SUDUT_KANAN },
-  ];
+  const orang = [u.wanita, u.pria];
   return (
-    <section id="mempelai" className="relative overflow-x-clip px-6 pt-12 pb-20 text-center">
-      <div className={`${s.kawung} pointer-events-none absolute inset-x-0 top-0 h-72 opacity-[0.12] [mask-image:linear-gradient(to_bottom,black,transparent)]`} />
-      <motion.div className="relative" initial="hidden" whileInView="show" viewport={{ once: true }}>
-        <motion.div variants={gaya.lembut} transition={{ duration: 1 }}>
-          <Aksara className="text-xl leading-[2.2] text-[#3d5243]/80">ꦱꦸꦒꦼꦁꦫꦮꦸꦃ</Aksara>
-          <p className="mt-1 text-[11px] tracking-[0.4em] text-[#3d5243]/70 uppercase">Sugeng Rawuh</p>
-        </motion.div>
-        {u.salam && (
-          <motion.p variants={tulis(1.8)} className={`${script} mt-3 px-2 text-[2.3rem] leading-tight whitespace-nowrap text-[#b08a4a]`}>
-            {u.salam.buka}
-          </motion.p>
-        )}
-      </motion.div>
-      <Muncul as="lembut" delay={0.3}>
-        <p className="mx-auto mt-3 max-w-xs text-[15px] leading-relaxed text-[#2f3d33]/85">{u.pembuka}</p>
-      </Muncul>
+    <section id="mempelai" className="relative isolate px-[17%] pt-[30%] pb-[46%] text-center">
+      <Gapura />
+      {u.salam && (
+        <Tumbuh awal={0.5} durasi={1.6} jeda={0.4}>
+          <p className={`${kaushan} text-[1.3rem] whitespace-nowrap ${PLUM}`}>{u.salam.buka}</p>
+        </Tumbuh>
+      )}
+      <Naik jeda={0.6}>
+        <p className={`mt-2 text-[14px] leading-relaxed ${PLUM}`}>{u.pembuka}</p>
+      </Naik>
 
-      {orang.map(({ p, hias }, i) => (
+      {orang.map((p, i) => (
         <div key={p.nama} className="relative">
           {i === 1 && (
-            <motion.p
-              initial={{ opacity: 0, transform: "scale(0.3) rotate(-40deg)" }}
-              whileInView={{ opacity: 1, transform: "scale(1) rotate(0deg)" }}
-              viewport={{ once: true, amount: 0.8 }}
-              transition={{ duration: 1, ease: [0.34, 1.56, 0.64, 1] }}
-              className={`${script} my-6 text-7xl text-[#b08a4a]`}
-            >
-              &amp;
-            </motion.p>
+            <Tumbuh awal={0.3} durasi={1.4} className="my-4">
+              <p className={`${kaushan} text-5xl ${PLUM}`}>&amp;</p>
+            </Tumbuh>
           )}
-          <div className={`relative mx-auto w-[64%] ${i === 0 ? "mt-12" : ""}`}>
-            <BukaKori>
-              <BingkaiKori src={p.foto} alt={p.nama} className="w-full" sizes="280px" posisi="50% 20%" fotoClass={s.geserLambat} />
-            </BukaKori>
-            <Rumpun items={hias} className="inset-x-[-16%] bottom-0 aspect-[1/0.6]" jeda={0.8} lebar={300} />
+          <div className={`relative mx-auto w-[92%] ${i === 0 ? "mt-8" : ""}`}>
+            <Tumbuh awal={0.7}>
+              <BingkaiUkir src={p.foto} alt={p.nama} sizes="260px" posisi="50% 20%" />
+            </Tumbuh>
+            <Rumpun lebih={7} items={BINGKAI_KIRI} jeda={0.5} className={`${s.pSedang} inset-x-[-20%] bottom-0 aspect-[1/0.5]`} />
+            <Rumpun lebih={7} items={BINGKAI_KANAN} jeda={0.7} className={`${s.pSedang} inset-x-[-20%] bottom-0 aspect-[1/0.5]`} />
           </div>
-          <motion.div initial="hidden" whileInView="show" viewport={{ once: true, amount: 0.6 }}>
-            <h3 className={`${marcellus} mt-8 text-[1.5rem] leading-snug ${hijau}`}>
-              <Huruf teks={p.nama} jeda={0.2} cepat={0.03} />
-            </h3>
-            <motion.p
-              variants={{ hidden: { opacity: 0, transform: "translateY(12px)" }, show: { opacity: 1, transform: "translateY(0px)", transition: { duration: 0.9, delay: 0.8 } } }}
-              className="mx-auto mt-1 max-w-[17rem] text-sm leading-relaxed text-[#2f3d33]/80"
-            >
-              {p.keterangan}
-            </motion.p>
-          </motion.div>
+          <Tumbuh awal={0.5} durasi={1.6} className="relative z-10 mt-10">
+            <h3 className={`${kaushan} text-[1.75rem] leading-tight ${PLUM}`}>{p.nama}</h3>
+          </Tumbuh>
+          <Naik jeda={0.3} className="relative z-10">
+            <p className={`mt-1 text-[13px] leading-relaxed ${PLUM}`}>{p.keterangan}</p>
+          </Naik>
         </div>
       ))}
+      <Rumpun items={SUDUT_BAWAH} className={`${s.pSedang} bottom-0 left-0 aspect-[1/0.75] w-[38%]`} />
+      <Rumpun items={SUDUT_BAWAH} cermin jeda={0.2} className={`${s.pSedang} right-0 bottom-0 aspect-[1/0.75] w-[38%]`} />
     </section>
   );
 }
 
-/* ───────── 4. Hitung mundur & 5. Acara: blok hijau dengan janur melengkung ───────── */
+/* ───────── Pembatas: rumah joglo diapit wayang, menimpa ujung bagian sebelumnya & lengkung gapura berikutnya ───────── */
 
-function HitungMundur({ u }: { u: Undangan }) {
+function PembatasJoglo() {
   return (
-    <div className="relative px-6 pt-36 pb-6">
-      <motion.div
-        initial={{ opacity: 0, transform: "translateY(70px) scale(0.94)" }}
-        whileInView={{ opacity: 1, transform: "translateY(0px) scale(1)" }}
-        viewport={{ once: true, amount: 0.25 }}
-        transition={{ duration: 1.3, ease }}
-        className={`${s.kertas} relative rounded-t-[9rem] rounded-b-[2rem] border border-[#c9a35f] p-1.5 shadow-[0_24px_40px_-24px_rgb(0_0_0/0.6)]`}
-      >
-        <div className="relative rounded-t-[8.6rem] rounded-b-[1.6rem] border border-dashed border-[#b08a4a]/45 px-5 pt-12 pb-7 text-center">
-          <motion.div initial="hidden" whileInView="show" viewport={{ once: true, amount: 0.4 }} transition={{ staggerChildren: 0.15, delayChildren: 0.4 }}>
-            <motion.div variants={gaya.zoom}>
-              <KembangKawung className={`${s.putar} mx-auto size-10`} warna="#b08a4a" />
-            </motion.div>
-            <motion.p variants={gaya.lembut} className={`${script} mt-2 text-[2.2rem] leading-tight text-[#b08a4a]`}>
-              Menghitung hari
-            </motion.p>
-            <motion.p variants={gaya.lembut} className="mt-1 text-[15px] leading-relaxed text-[#2f3d33]">
-              Kami akan menikah, dan kami ingin kamu menjadi bagian dari hari istimewa kami!
-            </motion.p>
-            <motion.div variants={gaya.lembut} className="mt-6">
-              <Countdown target={u.mulai} />
-            </motion.div>
-            <motion.p variants={gaya.lembut} className={`${marcellus} mt-6 text-lg tracking-wide ${hijau}`}>
-              {u.tanggal}
-            </motion.p>
-            <motion.div variants={gaya.zoom}>
-              <a href={calendarLink(u)} target="_blank" rel="noopener noreferrer" className={`${tombolHijau} mt-4`}>
-                Simpan Tanggal
-              </a>
-            </motion.div>
-          </motion.div>
-        </div>
-      </motion.div>
+    <div className="pointer-events-none relative z-20 -mt-[12%] -mb-[22%] h-[17rem] overflow-x-clip" aria-hidden="true">
+      <div className="absolute inset-x-0 top-0 h-full opacity-35 [mask-image:linear-gradient(to_bottom,transparent,black_30%,black_60%,transparent)]">
+        <Image src={ASET.kabut.src} alt="" fill sizes="440px" className="object-cover" />
+      </div>
+      <div className={`${s.pJauh} absolute inset-0`}>
+        <Pohon sisi="kiri" className="bottom-8 left-0 w-[32%]" />
+        <Pohon sisi="kanan" jeda={0.1} className="right-0 bottom-8 w-[32%]" />
+      </div>
+      <Tumbuh dari="b" awal={0.6} jeda={0.2} className="absolute bottom-10 left-[15%] w-[70%]">
+        <Gambar a="joglo" sizes="330px" />
+      </Tumbuh>
+      <div className={`${s.pSedang} absolute inset-0`}>
+        <Rumpun items={SUDUT_BAWAH} jeda={0.7} className="bottom-0 left-0 aspect-[1/0.55] w-[40%]" />
+        <Rumpun items={SUDUT_BAWAH} cermin jeda={0.8} className="right-0 bottom-0 aspect-[1/0.55] w-[40%]" />
+      </div>
+      {/* wayang di depan rumpun bunga, mengapit joglo */}
+      <Wayang sisi="kiri" jeda={0.5} className="bottom-12 left-0 w-[26%]" />
+      <Wayang sisi="kanan" jeda={0.6} className="right-0 bottom-12 w-[26%]" />
     </div>
   );
 }
 
-// Kartu acara: lengkung tinggi dengan lanskap gunung kecil di dasarnya. Tidak memakai efek scroll di dalamnya,
-// supaya tetap mulus di Safari.
-function KartuAcara({ u, a, i }: { u: Undangan; a: Undangan["acara"][number]; i: number }) {
+/* ───────── 4. Hitung mundur & acara, masing-masing dibingkai gapura ───────── */
+
+function RincianAcara({ u, a }: { u: Undangan; a: Undangan["acara"][number] }) {
   const { hari, tgl } = hariTanggal(u.tanggal);
-  const isi: Variants = {
-    hidden: { opacity: 0, transform: "translateY(14px)" },
-    show: { opacity: 1, transform: "translateY(0px)", transition: { duration: 0.8, ease } },
-  };
   return (
-    <motion.div initial="hidden" whileInView="show" viewport={{ once: true, amount: 0.3 }} className="flex justify-center">
-      <motion.article
-        variants={{
-          hidden: { opacity: 0, transform: `translateY(56px) scale(0.92) rotate(${i % 2 ? 3 : -3}deg)` },
-          show: { opacity: 1, transform: "translateY(0px) scale(1) rotate(0deg)", transition: { duration: 1.2, ease } },
-        }}
-        className={`${s.kertas} relative w-[88%] rounded-t-full rounded-b-[2rem] border border-[#c9a35f] p-1.5 shadow-[0_24px_40px_-24px_rgb(0_0_0/0.7)]`}
-      >
-        <div className="relative overflow-hidden rounded-t-full rounded-b-[1.6rem] border border-dashed border-[#b08a4a]/45 px-6 pt-16 pb-[44%] text-center">
-          <motion.div variants={{ hidden: {}, show: { transition: { staggerChildren: 0.12, delayChildren: 0.5 } } }} className="relative z-10">
-            <motion.div variants={{ hidden: { opacity: 0, transform: "rotateY(90deg)" }, show: { opacity: 1, transform: "rotateY(0deg)", transition: { duration: 1, ease } } }}>
-              <Gunungan className="mx-auto w-11" />
-            </motion.div>
-            <motion.h3 variants={tulis(1.1)} className={`${script} mt-2 px-2 text-[2.9rem] leading-tight text-[#b08a4a]`}>
-              {a.nama}
-            </motion.h3>
-            <motion.p variants={isi} className="mt-2 text-xs tracking-[0.35em] text-[#3d5243] uppercase">
-              {hari}
-            </motion.p>
-            <motion.p variants={isi} className={`${marcellus} text-[1.6rem] leading-tight ${hijau}`}>
-              {tgl}
-            </motion.p>
-            <motion.p variants={isi} className="mt-1 text-sm text-[#2f3d33]/80">
-              Pukul {a.jam}
-            </motion.p>
-            <motion.div variants={{ hidden: { opacity: 0, transform: "scaleX(0)" }, show: { opacity: 1, transform: "scaleX(1)", transition: { duration: 0.8 } } }} className="mx-auto my-4 flex w-40 items-center gap-3 text-[#b08a4a]">
-              <span className="h-px flex-1 bg-current opacity-60" />
-              <svg viewBox="0 0 24 24" className="size-5" fill="currentColor" aria-hidden="true">
-                <path d="M12 2a7 7 0 0 0-7 7c0 5 7 13 7 13s7-8 7-13a7 7 0 0 0-7-7Zm0 9.5A2.5 2.5 0 1 1 12 6.5a2.5 2.5 0 0 1 0 5Z" />
-              </svg>
-              <span className="h-px flex-1 bg-current opacity-60" />
-            </motion.div>
-            <motion.p variants={isi} className="font-semibold text-[#2f3d33]">
-              {u.lokasi.nama}
-            </motion.p>
-            <motion.p variants={isi} className="mx-auto mt-1 max-w-[15rem] text-sm text-[#2f3d33]/75">
-              {u.lokasi.alamat}
-            </motion.p>
-            <motion.div variants={gaya.zoom} transition={{ duration: 0.8, ease }}>
-              <a href={u.lokasi.maps} target="_blank" rel="noopener noreferrer" className={`${tombolHijau} mt-5`}>
-                Lihat Lokasi
-              </a>
-            </motion.div>
-          </motion.div>
-          {/* lanskap mini di dasar kartu */}
-          <div className="absolute inset-x-0 bottom-0 h-[42%]">
-            <Gunung className="inset-x-0 bottom-[16%] h-[80%] opacity-80" sizes="380px" posisi={i % 2 ? "56% 100%" : "45% 100%"} />
-            <Kabut className="bottom-[14%] h-14" balik={i % 2 === 1} />
-            <Bukit lapis="tengah" className="inset-x-0 bottom-0 h-[32%]" />
-          </div>
+    <div className="relative">
+      {/* gunungan wayang samar di belakang nama acara, seperti di referensi */}
+      <div className={`${s.pJauh} absolute inset-x-[2%] -top-6 -z-[5]`}>
+        <Gunungan className="relative! opacity-40" />
+      </div>
+      <Tumbuh awal={0.5} durasi={1.6}>
+        <h3 className={`${kaushan} text-[2.3rem] leading-tight ${PLUM}`}>{a.nama}</h3>
+      </Tumbuh>
+      <Naik jeda={0.2}>
+        <p className={`${cinzel} mt-1 text-lg font-bold ${PLUM}`}>{hari.toUpperCase()}</p>
+        <p className={`${cinzel} text-lg leading-tight font-bold ${PLUM}`}>{tgl.toUpperCase()}</p>
+        <p className={`mt-1 text-sm ${PLUM}`}>Pukul {a.jam}</p>
+      </Naik>
+      <Naik jeda={0.35}>
+        <div className={`mx-auto my-3 flex w-36 items-center gap-2 ${PLUM}`}>
+          <span className="h-px flex-1 bg-current opacity-60" />
+          <svg viewBox="0 0 24 24" className="size-5" fill="currentColor" aria-hidden="true">
+            <path d="M12 2a7 7 0 0 0-7 7c0 5 7 13 7 13s7-8 7-13a7 7 0 0 0-7-7Zm0 9.5A2.5 2.5 0 1 1 12 6.5a2.5 2.5 0 0 1 0 5Z" />
+          </svg>
+          <span className="h-px flex-1 bg-current opacity-60" />
         </div>
-        <Rumpun items={RUMPUN_DASAR} muncul={false} className="inset-x-[-4%] -bottom-6 aspect-[1/0.42]" lebar={380} />
-      </motion.article>
-    </motion.div>
+        <p className={`text-sm font-semibold ${PLUM}`}>{u.lokasi.nama}</p>
+        <p className={`text-sm ${PLUM}`}>{u.lokasi.alamat}</p>
+      </Naik>
+      <Tumbuh awal={0.6} durasi={1.2} jeda={0.4} className="mt-4">
+        <a href={u.lokasi.maps} target="_blank" rel="noopener noreferrer" className={tombolPlum}>
+          <svg viewBox="0 0 24 24" className="size-4" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
+            <circle cx="11" cy="11" r="6" />
+            <path d="m20 20-4.5-4.5" />
+          </svg>
+          Lihat Maps
+        </a>
+      </Tumbuh>
+    </div>
   );
 }
 
-function BlokAcara({ u }: { u: Undangan }) {
+// Kartu-kartu acara yang saling menumpuk saat digulir: tiap kartu menempel di layar (sticky), kartu berikutnya
+// naik sambil sedikit miring lalu menimpanya, dan kartu di bawahnya mengecil & meredup.
+// Gerak mengecilnya mengikuti penanda tak terlihat tepat sebelum kartu berikutnya (view timeline bernama),
+// jadi tetap murni CSS seperti parallax lainnya. Tanpa dukungan browser, kartu tetap menumpuk, hanya tanpa mengecil.
+function TumpukanAcara({ u }: { u: Undangan }) {
+  const n = u.acara.length;
+  const nama = (i: number) => `--jw-kartu-${i}`;
   return (
-    <section className={`${s.hijau} relative overflow-x-clip pt-6 pb-24`}>
-      <Tepi warna={HIJAU} className="absolute inset-x-0 -top-10" />
-      <div className={`${s.kawung} absolute inset-0 opacity-[0.1]`} />
-      {/* janur kuning melengkung mengapit, tanda ada hajat pernikahan */}
-      <Muncul as="naik" className="absolute top-2 -left-2 h-64">
-        <Janur className="h-full" />
-      </Muncul>
-      <Muncul as="naik" delay={0.2} className="absolute top-2 -right-2 h-64 -scale-x-100">
-        <Janur className="h-full" style={{ animationDelay: "-2s" }} />
-      </Muncul>
-      <HitungMundur u={u} />
-      <div id="acara" className="pt-16">
-        <Judul kecil="Save the date" terang>
-          Akad & Resepsi
-        </Judul>
-        <div className="mt-10 space-y-16 px-4">
-          {u.acara.map((a, i) => (
-            <KartuAcara key={a.nama} u={u} a={a} i={i} />
-          ))}
-        </div>
+    <div className="relative px-5 pb-[14svh]" style={{ timelineScope: u.acara.map((_, i) => nama(i)).join(", ") }}>
+      {u.acara.map((a, i) => {
+        const berikut = i < n - 1 ? nama(i + 1) : null;
+        return (
+          // Fragment, bukan div: kartu sticky harus anak langsung dari wadah yang tinggi supaya bisa menempel
+          <Fragment key={a.nama}>
+            {i > 0 && <div className="h-px" style={{ viewTimelineName: nama(i) }} aria-hidden="true" />}
+            <div className={`sticky ${i < n - 1 ? "mb-[34svh]" : ""}`} style={{ top: `calc(9svh + ${i * 22}px)` }}>
+              <div className={berikut ? s.kartuMundur : ""} style={berikut ? { animationTimeline: berikut } : undefined}>
+                <div className={`relative ${i % 2 ? s.kartuMasukKanan : s.kartuMasukKiri}`}>
+                  <KartuAcara u={u} a={a} ke={i} />
+                  {berikut && (
+                    <div className={`${s.kartuRedup} pointer-events-none absolute inset-0 rounded-t-[12rem] rounded-b-3xl bg-[#3b2630]`} style={{ animationTimeline: berikut }} aria-hidden="true" />
+                  )}
+                </div>
+              </div>
+            </div>
+          </Fragment>
+        );
+      })}
+    </div>
+  );
+}
+
+// Satu kartu acara: berbentuk lengkung gapura, berbingkai plum ganda, gunungan samar & bunga di sudut bawahnya
+function KartuAcara({ u, a, ke }: { u: Undangan; a: Undangan["acara"][number]; ke: number }) {
+  return (
+    <div className="relative isolate overflow-hidden rounded-t-[12rem] rounded-b-3xl border-2 border-[#5b3b47]/75 bg-[#f7efe9] px-8 pt-16 pb-28 text-center shadow-[0_28px_44px_-26px_rgb(59_38_48/0.85)]">
+      <div className="pointer-events-none absolute inset-2 rounded-t-[11.5rem] rounded-b-[1.2rem] border border-dashed border-[#b8935a]/70" aria-hidden="true" />
+      <div className="pointer-events-none absolute inset-x-0 top-0 h-[38%] opacity-[0.22] [mask-image:linear-gradient(to_bottom,black,transparent)]" aria-hidden="true">
+        <Image src={ASET.kabut.src} alt="" fill sizes="400px" className="object-cover" />
       </div>
-      <Tepi warna={KERTAS} className="absolute inset-x-0 -bottom-px" />
+      <Tumbuh durasi={1.4} awal={0.3} className="mx-auto mb-2 w-fit">
+        <KembangPutar className="size-11" />
+      </Tumbuh>
+      <Naik>
+        <p className={`${cinzel} text-[11px] font-bold tracking-[0.3em] ${PLUM} opacity-70`}>ACARA {ke + 1}</p>
+      </Naik>
+      <div className="mt-2">
+        <RincianAcara u={u} a={a} />
+      </div>
+      <Rumpun items={KARTU_KIRI} jeda={0.4} className="bottom-0 left-0 aspect-[1/0.62] w-[40%]" />
+      <Rumpun items={KARTU_KANAN} jeda={0.55} cermin className="right-0 bottom-0 aspect-[1/0.62] w-[40%]" />
+    </div>
+  );
+}
+
+function Acara({ u }: { u: Undangan }) {
+  return (
+    <section id="acara">
+      <div className="relative isolate px-[17%] pt-[32%] pb-[34%] text-center">
+        <Gapura />
+        <Tumbuh durasi={1.6} jeda={0.5}>
+          <KembangPutar className="mx-auto size-14" />
+        </Tumbuh>
+        <Naik jeda={0.6}>
+          <p className={`mt-3 text-[15px] leading-relaxed ${PLUM}`}>Kami akan menikah, dan kami ingin Anda menjadi bagian dari hari istimewa kami!</p>
+        </Naik>
+        <div className="mt-5">
+          <Countdown target={u.mulai} />
+        </div>
+        <Tumbuh awal={0.6} durasi={1.2} jeda={0.5} className="mt-5">
+          <a href={calendarLink(u)} target="_blank" rel="noopener noreferrer" className={tombolPlum}>
+            <svg viewBox="0 0 24 24" className="size-4" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
+              <rect x="4" y="5" width="16" height="15" rx="2" />
+              <path d="M8 3v4M16 3v4M4 10h16" />
+            </svg>
+            Save The Date
+          </a>
+        </Tumbuh>
+        <TepiBunga className="top-[30%]" jeda={0.6} />
+        <Rumpun items={SUDUT_BAWAH} className={`${s.pSedang} bottom-0 left-0 aspect-[1/0.75] w-[38%]`} />
+        <Rumpun items={SUDUT_BAWAH} cermin jeda={0.2} className={`${s.pSedang} right-0 bottom-0 aspect-[1/0.75] w-[38%]`} />
+      </div>
+      <Judul className="mt-6 mb-8">Rangkaian Acara</Judul>
+      <TumpukanAcara u={u} />
     </section>
   );
 }
 
-/* ───────── 6. Galeri ───────── */
+/* ───────── 5. Galeri ───────── */
 
 function BagianGaleri({ u }: { u: Undangan }) {
   return (
-    <section id="galeri" className="relative px-5 pt-14 pb-16">
-      <div className={s.pJudul}>
-        <Judul kecil="Momen berharga" gerak={false}>
-          Galeri
-        </Judul>
-        <Muncul as="lembut" delay={0.6}>
-          <p className="mt-3 text-center text-xs tracking-wide text-[#2f3d33]/60">Ketuk foto untuk melihat lebih besar</p>
-        </Muncul>
+    <section id="galeri" className="relative px-5 pt-[30%] pb-28">
+      <div className="relative">
+        <Judul>Galeri</Judul>
+        <Rumpun items={SISI_TERATAI} dari="l" className={`${s.pDekat} -top-12 -left-5 aspect-[1/1.35] w-[22%]`} />
+        <Rumpun items={SISI_TERATAI} dari="l" cermin jeda={0.15} className={`${s.pDekat} -top-12 -right-5 aspect-[1/1.35] w-[22%]`} />
       </div>
-      <div className="h-8" />
-      <Galeri photos={u.foto.galeri} />
+      <div className="mt-8">
+        <Galeri photos={u.foto.galeri} />
+      </div>
+      <Kupu className="top-[40%] left-2" delay={-8} w={30} />
+      <Kupu a="kupu2" className="top-[70%] left-[30%]" delay={-1} w={28} />
     </section>
   );
 }
 
-/* ───────── 7. Kisah: blok hijau dengan garis keemasan yang tumbuh ───────── */
+/* ───────── 6. Kisah cinta ───────── */
 
 function Kisah({ u }: { u: Undangan }) {
   const foto = u.foto.galeri[1] ?? u.foto.galeri[0];
   return (
-    <section id="cerita" className={`${s.hijau} relative px-6 pt-14 pb-24 text-[#f4f1e4]`}>
-      <Tepi warna={HIJAU} className="absolute inset-x-0 -top-10" />
-      <div className={`${s.truntum} absolute inset-0 opacity-[0.1]`} />
-      <BukaKori className="relative mx-auto w-[56%]">
-        <BingkaiKori src={foto.src} alt={foto.alt} className="w-full" sizes="250px" terang fotoClass={s.geserLambat} />
-      </BukaKori>
-      <div className="relative mt-8">
-        <Judul kecil="Perjalanan kami" terang>
-          Kisah Cinta
-        </Judul>
+    <section id="cerita" className="relative px-6 pt-[30%] pb-28">
+      <Judul>Kisah Cinta</Judul>
+      <div className="relative mx-auto mt-8 w-full">
+        <Tumbuh awal={0.7} className="relative aspect-[4/3] overflow-hidden rounded-xl shadow-[0_14px_30px_-18px_rgb(91_59_71/0.8)]">
+          <div className={`${s.geserLambat} absolute inset-x-0 inset-y-[-10%]`}>
+            <Image src={foto.src} alt={foto.alt} fill sizes="400px" className="object-cover" />
+          </div>
+        </Tumbuh>
+        <Rumpun lebih={0} items={BINGKAI_KIRI} jeda={0.5} className={`${s.pSedang} inset-x-[-7%] -bottom-3 aspect-[1/0.42]`} />
+        <Rumpun lebih={0} items={BINGKAI_KANAN} jeda={0.7} className={`${s.pSedang} inset-x-[-7%] -bottom-3 aspect-[1/0.42]`} />
       </div>
-      <ol className={`${s.sek} relative mt-10 space-y-9 pl-11`}>
-        <span className="absolute top-2 bottom-2 left-[13px] w-px bg-[#e3c98a]/25" aria-hidden="true" />
-        <span className={`${s.tumbuhGaris} absolute top-2 bottom-2 left-[13px] w-px origin-top bg-[#e3c98a]`} aria-hidden="true" />
+      <ol className={`${s.sek} relative mt-10 space-y-6 pl-8`}>
+        <span className={`${s.tumbuhGaris} absolute top-1 bottom-1 left-[7px] w-px origin-top bg-[#5b3b47]/50`} aria-hidden="true" />
         {u.cerita.map((c, i) => (
           <li key={c.tahun} className="relative">
-            <motion.span
-              initial={{ opacity: 0, transform: "scale(0) rotate(-90deg)" }}
-              whileInView={{ opacity: 1, transform: "scale(1) rotate(0deg)" }}
-              viewport={{ once: true, amount: 1 }}
-              transition={{ duration: 0.7, ease: [0.34, 1.56, 0.64, 1] }}
-              className="absolute top-0 -left-11 grid size-7 place-items-center rounded-t-full rounded-b-md bg-[#e3c98a] text-[#3d5243]"
-              aria-hidden="true"
-            >
-              <svg viewBox="0 0 24 24" className={`${s.detak} size-3.5`} fill="currentColor" style={{ animationDelay: `${-i * 0.4}s` }}>
+            <Tumbuh awal={0} durasi={0.8} jeda={0.1} className="absolute top-0.5 -left-8 grid size-4 place-items-center rounded-full bg-[#5b3b47]">
+              <svg viewBox="0 0 24 24" className={`${s.detak} size-2.5 text-[#f7efe9]`} fill="currentColor" style={{ animationDelay: `${-i * 0.4}s` }} aria-hidden="true">
                 <path d="M12 21s-8-5-8-11a4.5 4.5 0 0 1 8-2.8A4.5 4.5 0 0 1 20 10c0 6-8 11-8 11Z" />
               </svg>
-            </motion.span>
-            <Muncul as={i % 2 ? "kiri" : "kanan"} delay={0.1}>
-              <p className="text-xs tracking-[0.25em] text-[#e3c98a]">{c.tahun}</p>
-              <h3 className={`${marcellus} mt-0.5 text-xl tracking-wide`}>{c.judul}</h3>
-              <p className="mt-1.5 text-sm leading-relaxed text-[#f4f1e4]/80">{c.isi}</p>
-            </Muncul>
+            </Tumbuh>
+            <Naik>
+              <p className={`text-[15px] font-bold ${PLUM}`}>{c.judul}</p>
+              <p className={`text-[13px] leading-relaxed ${PLUM}`}>
+                <span className="font-semibold">Tahun {c.tahun}</span> · {c.isi}
+              </p>
+            </Naik>
           </li>
         ))}
       </ol>
-      <Tepi warna={KERTAS} className="absolute inset-x-0 -bottom-px" />
     </section>
   );
 }
 
-/* ───────── 8. Ucapan & RSVP ───────── */
+/* ───────── 7. Ucapan & RSVP, di bawah lengkung gapura ───────── */
 
 function BagianUcapan({ tamu }: { tamu?: string }) {
   return (
-    <section id="ucapan" className="relative px-5 pt-14 pb-12">
-      <Judul kecil="Doa & restu">Ucapan</Judul>
-      <Muncul as="lembut" delay={0.4}>
-        <p className="mx-auto mt-3 mb-7 max-w-[17rem] text-center text-sm text-[#2f3d33]/75">Berikan ucapan terbaik untuk kedua mempelai & konfirmasi kehadiranmu</p>
-      </Muncul>
-      <Muncul as="naik" delay={0.2}>
+    <section id="ucapan" className="relative isolate px-6 pt-[34%] pb-28">
+      <Gapura lengkung />
+      <Judul>Ucapan &amp; Doa</Judul>
+      <Naik jeda={0.2} className="mx-[11%]">
+        <p className={`mt-2 mb-8 text-center text-sm ${PLUM}`}>Berikan ucapan terbaik untuk kedua mempelai & konfirmasi kehadiran</p>
+      </Naik>
+      <Naik>
         <Ucapan tamu={tamu} />
-      </Muncul>
+      </Naik>
     </section>
   );
 }
 
-/* ───────── 9. Tanda kasih: kartu dengan pita hijau bermotif kawung di kiri ───────── */
+/* ───────── 8. Wedding gift ───────── */
 
 function Kado({ u }: { u: Undangan }) {
   return (
-    <section id="kado" className="relative px-5 pt-6 pb-16">
-      <motion.div initial="hidden" whileInView="show" viewport={{ once: true, amount: 0.4 }}>
-        <motion.div
-          variants={{ hidden: { clipPath: "inset(0% 100% 0% 0% round 1.5rem)" }, show: { clipPath: "inset(0% 0% 0% 0% round 1.5rem)", transition: { duration: 1.3, ease: [0.65, 0, 0.35, 1] } } }}
-          className="relative flex overflow-hidden rounded-3xl border border-[#b08a4a]/40 bg-[#f7f8f1]/80"
-        >
-          <div className={`${s.hijau} relative flex w-14 shrink-0 items-center justify-center`}>
-            <div className={`${s.kawung} absolute inset-0 opacity-20`} />
-            <p className={`${marcellus} relative rotate-180 text-lg tracking-[0.15em] whitespace-nowrap text-[#f4f1e4] uppercase [writing-mode:vertical-rl]`}>Tanda Kasih</p>
-          </div>
-          <div className="relative px-5 py-7 text-center">
-            <KembangKawung className={`${s.putar} absolute -right-4 -bottom-4 size-24 opacity-15`} warna="#3d5243" />
-            <motion.p variants={{ hidden: { opacity: 0 }, show: { opacity: 1, transition: { delay: 0.8, duration: 0.8 } } }} className="relative text-sm leading-relaxed text-[#2f3d33]/85">
-              Doa restumu sudah lebih dari cukup. Namun jika ingin memberi tanda kasih, kamu bisa mengirimkannya lewat tombol di bawah.
-            </motion.p>
-            <motion.div variants={{ hidden: { opacity: 0, transform: "scale(0.8)" }, show: { opacity: 1, transform: "scale(1)", transition: { delay: 1, duration: 0.8, ease } } }} className="relative mt-5">
-              <Amplop amplop={u.amplop} />
-            </motion.div>
-          </div>
-        </motion.div>
-      </motion.div>
+    <section id="kado" className="relative isolate px-[17%] pt-[36%] pb-48 text-center">
+      <Gapura lengkung />
+      <Judul>Wedding Gift</Judul>
+      <Naik jeda={0.2}>
+        <p className={`mt-3 text-sm leading-relaxed ${PLUM}`}>
+          Doa restu Anda merupakan karunia yang sangat berarti bagi kami. Namun jika memberi adalah ungkapan tanda kasih Anda, Anda dapat memberi kado secara cashless.
+        </p>
+      </Naik>
+      <Tumbuh awal={0.6} durasi={1.2} jeda={0.4} className="mt-5">
+        <Amplop amplop={u.amplop} />
+      </Tumbuh>
+      <Wayang sisi="kiri" jeda={0.4} className="bottom-8 left-[2%] w-[24%]" />
+      <Wayang sisi="kanan" jeda={0.5} className="right-[2%] bottom-8 w-[24%]" />
+      <Rumpun items={SUDUT_BAWAH} jeda={0.6} className={`${s.pSedang} bottom-0 left-0 aspect-[1/0.7] w-[44%]`} />
+      <Rumpun items={SUDUT_BAWAH} cermin jeda={0.7} className={`${s.pSedang} right-0 bottom-0 aspect-[1/0.7] w-[44%]`} />
     </section>
   );
 }
 
-/* ───────── 10. Penutup: terima kasih, lalu lanskap senja yang naik dari bawah ───────── */
+/* ───────── 9. Penutup: gapura, janur, gunung, wayang ───────── */
 
 function Penutup({ u }: { u: Undangan }) {
   return (
-    <section className={`${s.sek} relative flex min-h-svh flex-col items-center overflow-hidden px-6 pt-10 pb-[calc(40svh+var(--demo-h,0px))] text-center`}>
-      <div className={`${s.mendekat} relative mt-4 w-[60%]`}>
-        <BukaKori>
-          <BingkaiKori src={u.foto.belakang} alt={`${u.wanita.panggilan} & ${u.pria.panggilan}`} className="w-full" sizes="270px" />
-        </BukaKori>
-        <Rumpun items={SUDUT_KIRI} className="inset-x-[-14%] bottom-0 aspect-[1/0.6]" jeda={0.8} lebar={300} />
+    <section className={`${s.sek} relative isolate overflow-x-clip px-[17%] pt-[30%] pb-[calc(17rem+var(--demo-h,0px))] text-center`}>
+      <Gapura />
+      <div className={`${s.pJauh} absolute inset-0`}>
+        <Gunung jeda={0.2} className="inset-x-[-10%] bottom-[14%]" />
+        <Burung className="top-[34%] left-0" delay={-3} />
+        <Burung className="top-[37%] left-0" delay={-11} size={11} />
       </div>
-      <motion.div className="relative z-10" initial="hidden" whileInView="show" viewport={{ once: true, amount: 0.4 }} transition={{ staggerChildren: 0.25 }}>
-        <motion.p variants={gaya.lembut} className="mx-auto mt-8 max-w-xs text-[15px] leading-relaxed text-[#2f3d33]/85">
-          Atas kehadiran dan doa restu Bapak/Ibu/Saudara/i sekalian, kami mengucapkan terima kasih.
-        </motion.p>
+      <Janur sisi="kiri" jeda={0.3} className="top-[9%] left-[12%] w-[26%]" />
+      <Janur sisi="kanan" jeda={0.4} className="top-[9%] right-[12%] w-[26%]" />
+      <div className={`${s.mendekat} relative`}>
+        <div className="relative mx-auto w-[78%]">
+          <Tumbuh jeda={0.3}>
+            <BingkaiUkir src={u.foto.belakang} alt={`${u.wanita.panggilan} & ${u.pria.panggilan}`} sizes="230px" />
+          </Tumbuh>
+          <Rumpun lebih={15} items={BINGKAI_KIRI} jeda={0.8} className="inset-x-[-20%] bottom-0 aspect-[1/0.5]" />
+          <Rumpun lebih={15} items={BINGKAI_KANAN} jeda={1} className="inset-x-[-20%] bottom-0 aspect-[1/0.5]" />
+        </div>
+        <Naik jeda={0.2} className="relative">
+          <p className={`mt-6 text-sm leading-relaxed ${PLUM}`}>Atas kehadiran dan doa restu dari Bapak/Ibu/Saudara/i sekalian, kami mengucapkan Terima Kasih.</p>
+        </Naik>
         {u.salam && (
-          <motion.p variants={tulis(1.6)} className={`${script} mt-3 px-2 text-[2.2rem] whitespace-nowrap text-[#b08a4a]`}>
-            {u.salam.tutup}
-          </motion.p>
+          <Tumbuh awal={0.5} durasi={1.6} className="relative mt-3">
+            <p className={`${kaushan} text-[1.4rem] ${PLUM}`}>{u.salam.tutup}</p>
+          </Tumbuh>
         )}
-        <motion.div variants={gaya.lembut} className="mt-4">
-          <Aksara className="text-lg leading-[2.2] text-[#3d5243]/80">ꦩꦠꦸꦂꦤꦸꦮꦸꦤ꧀</Aksara>
-          <p className="mt-0.5 text-[11px] tracking-[0.4em] text-[#3d5243]/70 uppercase">Matur Nuwun</p>
-        </motion.div>
-        <motion.p variants={gaya.lembut} className="mt-6 text-sm text-[#2f3d33]/70">
-          Kami yang berbahagia
-        </motion.p>
-        <p className={`${script} mt-1 text-[3.6rem] leading-tight text-[#2f3d33]`}>
-          <Huruf teks={`${u.wanita.panggilan} & ${u.pria.panggilan}`} cepat={0.07} />
-        </p>
-      </motion.div>
-
-      {/* lanskap senja: gunung naik lebih lambat dari bukit di depannya */}
-      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-[48svh] [mask-image:linear-gradient(to_bottom,transparent,black_22%)]">
-        <Langit senja />
-        <Matahari className="top-[22%] left-[14%] w-12" />
-        <Burung className="top-[20%] left-0" delay={-12} size={18} />
-        <div className={`${s.masukJauh} absolute inset-0`}>
-          <Gunung className="inset-x-0 bottom-[10%] h-[80%]" sizes="(min-width: 1024px) 440px, 100vw" posisi="40% 100%" />
-          <Kabut className="bottom-[22%] h-20" balik />
-        </div>
-        <div className={`${s.masukTengah} absolute inset-0`}>
-          <Bukit lapis="tengah" className="inset-x-0 bottom-[var(--demo-h,0px)] h-[26%]" />
-        </div>
-        <Bukit lapis="depan" className="inset-x-0 bottom-[var(--demo-h,0px)] h-[13%]" />
-        <Rumput className="inset-x-0 bottom-[calc(5%+var(--demo-h,0px))] h-10" />
-        <Rumpun items={[...RUMPUN_KIRI, ...RUMPUN_KANAN]} className="inset-x-0 bottom-[calc(-3%+var(--demo-h,0px))] aspect-[1/0.5]" jeda={0.2} />
+        <Naik jeda={0.2} className="relative">
+          <p className={`mt-3 text-sm ${PLUM}`}>Kami yang berbahagia</p>
+        </Naik>
+        <Tumbuh awal={0.4} durasi={1.8} jeda={0.3} className="relative">
+          <p className={`${kaushan} text-[2.8rem] leading-[1.05] ${PLUM} [text-shadow:0_2px_12px_rgb(243_235_229/0.9)]`}>
+            {u.wanita.panggilan}
+            <br />& {u.pria.panggilan}
+          </p>
+        </Tumbuh>
       </div>
-      <KelopakJatuh n={8} />
+      <Pohon sisi="kiri" jeda={0.4} className="bottom-[calc(5rem+var(--demo-h,0px))] left-0 w-[28%]" />
+      <Pohon sisi="kanan" jeda={0.5} className="right-0 bottom-[calc(5rem+var(--demo-h,0px))] w-[28%]" />
+      <Wayang sisi="kiri" jeda={0.8} className="bottom-[calc(3rem+var(--demo-h,0px))] left-[2%] w-[30%]" />
+      <Wayang sisi="kanan" jeda={0.9} className="right-[2%] bottom-[calc(3rem+var(--demo-h,0px))] w-[30%]" />
+      <Rumpun items={SUDUT_BAWAH} jeda={1} className="bottom-[var(--demo-h,0px)] left-0 aspect-[1/0.75] w-[56%]" />
+      <Rumpun items={SUDUT_BAWAH} cermin jeda={1.1} className="right-0 bottom-[var(--demo-h,0px)] aspect-[1/0.75] w-[56%]" />
+      <Kupu className="top-[14%] left-[4%]" delay={-5} />
+      <KelopakJatuh n={6} />
     </section>
   );
 }
@@ -599,12 +510,19 @@ export function Isi({ u, opened, tamu }: { u: Undangan; opened: boolean; tamu?: 
     <>
       <Beranda u={u} opened={opened} />
       <Ayat u={u} />
+      <Sambung />
       <Mempelai u={u} />
-      <BlokAcara u={u} />
+      <PembatasJoglo />
+      <Acara u={u} />
+      <PembatasJoglo />
       <BagianGaleri u={u} />
+      <PembatasJoglo />
       <Kisah u={u} />
+      <PembatasJoglo />
       <BagianUcapan tamu={tamu} />
+      <Sambung items={SISI_TERATAI} />
       <Kado u={u} />
+      <Sambung />
       <Penutup u={u} />
     </>
   );

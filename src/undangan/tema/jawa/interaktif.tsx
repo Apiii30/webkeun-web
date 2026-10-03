@@ -1,50 +1,40 @@
 "use client";
 
-import { AnimatePresence, motion, type Variants } from "motion/react";
+import { AnimatePresence, motion } from "motion/react";
 import Image from "next/image";
 import { type FormEvent, type ReactNode, useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { createPortal } from "react-dom";
 import { useHitungMundur } from "../../pakai";
 import type { Foto, Undangan } from "../../types";
-import { KembangKawung } from "./ornamen";
+import { Tumbuh, cinzel, kaushan } from "./ornamen";
 import s from "./jawa.module.css";
 
 // Bagian tema Jawa Klasik yang butuh state: hitung mundur, galeri + tampilan penuh, amplop digital, RSVP.
 
 const spring = { type: "spring", stiffness: 260, damping: 28 } as const;
 const ease = [0.22, 1, 0.36, 1] as const;
-const marcellus = "font-[family-name:var(--font-marcellus)]";
-export const tombolHijau = `${s.kilau} inline-flex items-center justify-center gap-2 rounded-full border border-[#c9a35f]/60 bg-[linear-gradient(110deg,#3d5243_20%,#5f7b66_40%,#3d5243_60%)] px-6 py-2.5 text-sm font-semibold tracking-wide text-[#f4f1e4] shadow-[0_10px_22px_-12px_rgb(44_61_49/0.9)]`;
-export const tombolEmas = `${s.kilau} inline-flex items-center justify-center gap-2 rounded-full bg-[linear-gradient(110deg,#c9a35f_20%,#f1dea6_40%,#c9a35f_60%)] px-6 py-2.5 text-sm font-semibold tracking-wide text-[#2c3d31] shadow-[0_10px_22px_-12px_rgb(0_0_0/0.7)]`;
+export const tombolPlum = `${s.kilau} inline-flex items-center justify-center gap-2 rounded-full bg-[linear-gradient(110deg,#5b3b47_20%,#8a6070_40%,#5b3b47_60%)] px-5 py-2 text-sm text-[#f7efe9] shadow-[0_8px_18px_-10px_rgb(91_59_71/0.9)]`;
 
-/* ───────── Hitung mundur ───────── */
+/* ───────── Hitung mundur: angka besar yang bergulir ───────── */
 
-// Kotak hijau berujung lengkung yang naik bergantian; angkanya bergulir saat berganti.
 export function Countdown({ target }: { target: string }) {
   const units = useHitungMundur(target);
   return (
-    <motion.dl className="grid grid-cols-4 gap-2" initial="hidden" whileInView="show" viewport={{ once: true, amount: 0.5 }} transition={{ staggerChildren: 0.1, delayChildren: 0.3 }}>
-      {units.map(([n, label]) => (
-        <motion.div
-          key={label}
-          variants={{
-            hidden: { opacity: 0, transform: "translateY(26px) scale(0.85)" },
-            show: { opacity: 1, transform: "translateY(0px) scale(1)", transition: { duration: 0.8, ease } },
-          }}
-          className={`${s.hijau} relative flex flex-col-reverse overflow-hidden rounded-t-[2.2rem] rounded-b-xl border border-[#c9a35f]/50 px-1 pt-5 pb-2 text-center shadow-[0_10px_20px_-12px_rgb(44_61_49/0.9)]`}
-        >
-          <KembangKawung className="absolute -top-3 -right-3 size-10 opacity-20" warna="#e3c98a" />
-          <dt className="relative mt-0.5 text-[10px] tracking-[0.18em] text-[#d9c99a] uppercase">{label}</dt>
-          <dd className={`${marcellus} relative h-9 overflow-hidden text-[1.7rem] leading-9 text-[#f4f1e4] tabular-nums`}>
-            <AnimatePresence mode="popLayout" initial={false}>
-              <motion.span key={n ?? "x"} initial={{ y: "100%" }} animate={{ y: 0 }} exit={{ y: "-100%" }} transition={{ duration: 0.45, ease }} className="block">
-                {n === null ? "–" : String(n).padStart(2, "0")}
-              </motion.span>
-            </AnimatePresence>
+    <dl className="grid grid-cols-4 gap-1">
+      {units.map(([n, label], i) => (
+        <Tumbuh key={label} dari="b" awal={0.4} durasi={1.4} jeda={0.2 + i * 0.15} className="text-center">
+          {/* Angka baru masuk dari bawah lewat animasi CSS, dan kotaknya diberi `contain: strict`:
+              pergantian angka tiap detik tidak memaksa browser mengukur ulang seluruh halaman
+              (di Safari, pengukuran ulang itu membuat scroll tersendat sekali tiap detik). */}
+          <dd className={`${cinzel} relative h-10 overflow-hidden text-[2rem] leading-10 font-semibold text-[#5b3b47] tabular-nums [contain:strict]`}>
+            <span key={n ?? "x"} className={`${s.gulir} block`}>
+              {n === null ? "–" : String(n).padStart(2, "0")}
+            </span>
           </dd>
-        </motion.div>
+          <dt className="text-xs text-[#5b3b47]/80">{label}</dt>
+        </Tumbuh>
       ))}
-    </motion.dl>
+    </dl>
   );
 }
 
@@ -57,19 +47,14 @@ function Lapis({ children }: { children: ReactNode }) {
   return el ? createPortal(children, el) : null;
 }
 
-// Variasi cara foto galeri masuk. Semua memakai `transform` utuh supaya dijalankan mesin animasi browser.
-const MASUK: Variants[] = [
-  { hidden: { opacity: 0, transform: "translateY(50px) rotate(-5deg)" }, show: { opacity: 1, transform: "translateY(0px) rotate(0deg)" } },
-  { hidden: { opacity: 0, transform: "scale(0.8)" }, show: { opacity: 1, transform: "scale(1)" } },
-  { hidden: { opacity: 0, transform: "translateX(40px) rotate(5deg)" }, show: { opacity: 1, transform: "translateX(0px) rotate(0deg)" } },
-  { hidden: { opacity: 0, transform: "translateY(60px)" }, show: { opacity: 1, transform: "translateY(0px)" } },
-];
+/* ───────── Galeri: satu foto lebar lalu dua kolom; tiap foto tumbuh dari sudut berbeda ───────── */
 
-/* ───────── Galeri: dua kolom yang bergeser berlawanan, ketuk foto untuk tampilan penuh ───────── */
+const ASAL = ["tl", "tr", "bl", "br"] as const;
 
 export function Galeri({ photos }: { photos: Foto[] }) {
   const [open, setOpen] = useState<number | null>(null);
-  const kolom = [photos.filter((_, i) => i % 2 === 0), photos.filter((_, i) => i % 2 === 1)];
+  const [utama, ...sisa] = photos;
+  const kolom = [sisa.filter((_, i) => i % 2 === 0), sisa.filter((_, i) => i % 2 === 1)];
 
   useEffect(() => {
     if (open === null) return;
@@ -82,36 +67,29 @@ export function Galeri({ photos }: { photos: Foto[] }) {
     return () => removeEventListener("keydown", onKey);
   }, [open, photos.length]);
 
+  const foto = (p: Foto, i: number, lebar = false) => (
+    <Tumbuh key={p.src} dari={ASAL[i % 4]} jeda={0.1 * (i % 3)} className={lebar ? "mb-2.5" : ""}>
+      <motion.button
+        type="button"
+        onClick={() => setOpen(i)}
+        whileTap={{ scale: 0.97 }}
+        className="relative block w-full overflow-hidden rounded-lg shadow-[0_10px_20px_-14px_rgb(91_59_71/0.8)]"
+        style={{ aspectRatio: lebar ? "4 / 3" : `${p.w} / ${p.h}` }}
+        aria-label={`Lihat foto: ${p.alt}`}
+      >
+        <Image src={p.src} alt={p.alt} fill sizes={lebar ? "400px" : "200px"} className="object-cover" />
+      </motion.button>
+    </Tumbuh>
+  );
+
   return (
     <>
-      <div className="grid grid-cols-2 gap-3">
+      {utama && foto(utama, 0, true)}
+      <div className="grid grid-cols-2 gap-2.5">
         {kolom.map((list, k) => (
-          <div key={k} className={`space-y-3 ${k === 1 ? `${s.pJauh} pt-14` : s.pDekat}`}>
-            {list.map((p) => {
-              const i = photos.indexOf(p);
-              // foto pertama tiap kolom berujung lengkung seperti kori, sisanya sudut membulat
-              const bentuk = i < 2 ? "rounded-t-full rounded-b-xl" : "rounded-xl";
-              return (
-                <motion.button
-                  key={p.src}
-                  type="button"
-                  onClick={() => setOpen(i)}
-                  initial="hidden"
-                  whileInView="show"
-                  viewport={{ once: true, amount: 0.25 }}
-                  variants={MASUK[i % MASUK.length]}
-                  transition={{ duration: 1, ease }}
-                  className="block w-full"
-                  aria-label={`Lihat foto: ${p.alt}`}
-                >
-                  <motion.div layoutId={`jw-foto-${i}`} className={`relative overflow-hidden border border-[#b08a4a]/70 p-1 ${bentuk}`} style={{ aspectRatio: `${p.w} / ${p.h}` }}>
-                    <div className={`relative h-full w-full overflow-hidden ${bentuk}`}>
-                      <Image src={p.src} alt={p.alt} fill sizes="210px" className="object-cover" />
-                    </div>
-                  </motion.div>
-                </motion.button>
-              );
-            })}
+          // kolom kanan bergeser lebih lambat dari kolom kiri (parallax), diberi jarak atas supaya tidak menimpa foto lebar
+          <div key={k} className={`space-y-2.5 ${k === 1 ? `${s.pJauh} pt-14` : s.pSedang}`}>
+            {list.map((p) => foto(p, photos.indexOf(p)))}
           </div>
         ))}
       </div>
@@ -120,7 +98,7 @@ export function Galeri({ photos }: { photos: Foto[] }) {
         <AnimatePresence>
           {open !== null && (
             <motion.div
-              className="fixed inset-0 z-[80] flex items-center justify-center bg-[#1f2b22]/94 p-4"
+              className="fixed inset-0 z-[80] flex items-center justify-center bg-[#2b1c22]/94 p-4"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
@@ -129,32 +107,38 @@ export function Galeri({ photos }: { photos: Foto[] }) {
               aria-modal="true"
               aria-label={photos[open].alt}
             >
-              <motion.div
-                layoutId={`jw-foto-${open}`}
-                className="relative max-h-[78svh] w-full max-w-[420px] overflow-hidden rounded-xl"
-                style={{ aspectRatio: `${photos[open].w} / ${photos[open].h}` }}
-                drag="x"
-                dragSnapToOrigin
-                onDragEnd={(_, info) => {
-                  if (info.offset.x < -70) setOpen((open + 1) % photos.length);
-                  else if (info.offset.x > 70) setOpen((open - 1 + photos.length) % photos.length);
-                }}
-                onClick={(e) => e.stopPropagation()}
-              >
-                <Image src={photos[open].src} alt={photos[open].alt} fill sizes="440px" className="pointer-events-none object-cover" draggable={false} />
-              </motion.div>
-              <div className="absolute inset-x-0 bottom-[calc(1.5rem+var(--demo-h,0px))] flex items-center justify-center gap-6 text-sm text-[#f4f1e4]" onClick={(e) => e.stopPropagation()}>
-                <button type="button" onClick={() => setOpen((open - 1 + photos.length) % photos.length)} className="grid size-10 place-items-center rounded-full border border-[#f4f1e4]/40" aria-label="Foto sebelumnya">
+              <AnimatePresence mode="popLayout" initial={false}>
+                <motion.div
+                  key={open}
+                  initial={{ opacity: 0, transform: "scale(0.9)" }}
+                  animate={{ opacity: 1, transform: "scale(1)" }}
+                  exit={{ opacity: 0, transform: "scale(1.04)" }}
+                  transition={{ duration: 0.45, ease }}
+                  className="relative max-h-[78svh] w-full max-w-[420px] overflow-hidden rounded-xl"
+                  style={{ aspectRatio: `${photos[open].w} / ${photos[open].h}` }}
+                  drag="x"
+                  dragSnapToOrigin
+                  onDragEnd={(_, info) => {
+                    if (info.offset.x < -70) setOpen((open + 1) % photos.length);
+                    else if (info.offset.x > 70) setOpen((open - 1 + photos.length) % photos.length);
+                  }}
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  <Image src={photos[open].src} alt={photos[open].alt} fill sizes="440px" className="pointer-events-none object-cover" draggable={false} />
+                </motion.div>
+              </AnimatePresence>
+              <div className="absolute inset-x-0 bottom-[calc(1.5rem+var(--demo-h,0px))] flex items-center justify-center gap-6 text-sm text-[#f7efe9]" onClick={(e) => e.stopPropagation()}>
+                <button type="button" onClick={() => setOpen((open - 1 + photos.length) % photos.length)} className="grid size-10 place-items-center rounded-full border border-[#f7efe9]/40" aria-label="Foto sebelumnya">
                   ‹
                 </button>
                 <span className="tabular-nums">
                   {open + 1} / {photos.length}
                 </span>
-                <button type="button" onClick={() => setOpen((open + 1) % photos.length)} className="grid size-10 place-items-center rounded-full border border-[#f4f1e4]/40" aria-label="Foto berikutnya">
+                <button type="button" onClick={() => setOpen((open + 1) % photos.length)} className="grid size-10 place-items-center rounded-full border border-[#f7efe9]/40" aria-label="Foto berikutnya">
                   ›
                 </button>
               </div>
-              <button type="button" onClick={() => setOpen(null)} className="absolute top-4 right-4 grid size-10 place-items-center rounded-full bg-[#f4f1e4]/15 text-xl text-[#f4f1e4]" aria-label="Tutup">
+              <button type="button" onClick={() => setOpen(null)} className="absolute top-4 right-4 grid size-10 place-items-center rounded-full bg-[#f7efe9]/15 text-xl text-[#f7efe9]" aria-label="Tutup">
                 ×
               </button>
             </motion.div>
@@ -165,13 +149,13 @@ export function Galeri({ photos }: { photos: Foto[] }) {
   );
 }
 
-/* ───────── Amplop digital: lembar yang naik dari bawah ───────── */
+/* ───────── Amplop digital ───────── */
 
 export function Amplop({ amplop }: { amplop: Undangan["amplop"] }) {
   const [open, setOpen] = useState(false);
   return (
     <>
-      <motion.button type="button" whileTap={{ scale: 0.95 }} onClick={() => setOpen(true)} className={tombolHijau}>
+      <motion.button type="button" whileTap={{ scale: 0.95 }} onClick={() => setOpen(true)} className={tombolPlum}>
         <svg viewBox="0 0 24 24" className={`${s.goyangKado} size-4`} fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
           <rect x="4" y="9" width="16" height="11" rx="1.5" />
           <path d="M3 9h18M12 9v11M12 9S10 4 7.5 5 9 9 12 9Zm0 0s2-5 4.5-4S15 9 12 9Z" />
@@ -182,7 +166,7 @@ export function Amplop({ amplop }: { amplop: Undangan["amplop"] }) {
       <Lapis>
         <AnimatePresence>
           {open && (
-            <motion.div className="fixed inset-0 z-[80] flex items-end justify-center bg-[#1f2b22]/70" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setOpen(false)}>
+            <motion.div className="fixed inset-0 z-[80] flex items-end justify-center bg-[#2b1c22]/70" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setOpen(false)}>
               <motion.div
                 role="dialog"
                 aria-modal="true"
@@ -192,11 +176,11 @@ export function Amplop({ amplop }: { amplop: Undangan["amplop"] }) {
                 exit={{ y: "100%" }}
                 transition={spring}
                 onClick={(e) => e.stopPropagation()}
-                className={`${s.kertas} relative max-h-[80svh] w-full max-w-[440px] overflow-y-auto rounded-t-[2rem] px-6 pt-4 pb-[calc(2rem+var(--demo-h,0px))] text-center text-[#2f3d33]`}
+                className={`${s.kertas} max-h-[80svh] w-full max-w-[440px] overflow-y-auto rounded-t-[2rem] px-6 pt-4 pb-[calc(2rem+var(--demo-h,0px))] text-center text-[#4a3a40]`}
               >
-                <span className="mx-auto block h-1 w-10 rounded-full bg-[#2f3d33]/25" />
-                <p className={`${marcellus} mt-5 text-2xl text-[#3d5243]`}>Amplop Digital</p>
-                <p className="mt-2 text-sm text-[#2f3d33]/75">Silakan kirim tanda kasih melalui rekening berikut.</p>
+                <span className="mx-auto block h-1 w-10 rounded-full bg-[#5b3b47]/25" />
+                <p className={`${kaushan} mt-5 text-3xl text-[#5b3b47]`}>Wedding Gift</p>
+                <p className="mt-2 text-sm text-[#4a3a40]/75">Silakan transfer hadiah melalui rekening berikut.</p>
                 <div className="mt-6 space-y-3">
                   {amplop.map((a, i) => (
                     <motion.div
@@ -204,19 +188,18 @@ export function Amplop({ amplop }: { amplop: Undangan["amplop"] }) {
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: 0.15 + i * 0.08 }}
-                      className={`${s.hijau} relative overflow-hidden rounded-2xl p-5 text-left text-[#f4f1e4]`}
+                      className="rounded-2xl border border-[#5b3b47]/25 bg-white/70 p-5 text-left"
                     >
-                      <div className={`${s.kawung} absolute inset-y-0 right-0 w-1/2 opacity-20 [mask-image:linear-gradient(to_left,black,transparent)]`} />
-                      <p className="relative text-xs font-semibold tracking-[0.2em] text-[#e3c98a] uppercase">{a.bank}</p>
-                      <div className="relative mt-2 flex items-center justify-between gap-3">
-                        <p className={`${marcellus} text-2xl tracking-wide tabular-nums`}>{a.nomor}</p>
+                      <p className={`${cinzel} text-xs font-semibold tracking-[0.2em] text-[#7b5563]`}>{a.bank}</p>
+                      <div className="mt-2 flex items-center justify-between gap-3">
+                        <p className={`${cinzel} text-2xl font-semibold tracking-wide text-[#5b3b47] tabular-nums`}>{a.nomor}</p>
                         <SalinNomor text={a.nomor} />
                       </div>
-                      <p className="relative mt-1 text-sm text-[#f4f1e4]/75">a.n. {a.atasNama}</p>
+                      <p className="mt-1 text-sm text-[#4a3a40]/70">a.n. {a.atasNama}</p>
                     </motion.div>
                   ))}
                 </div>
-                <button type="button" onClick={() => setOpen(false)} className="mt-6 text-sm text-[#2f3d33]/70 underline underline-offset-4">
+                <button type="button" onClick={() => setOpen(false)} className="mt-6 text-sm text-[#4a3a40]/70 underline underline-offset-4">
                   Tutup
                 </button>
               </motion.div>
@@ -241,7 +224,7 @@ function SalinNomor({ text }: { text: string }) {
           setTimeout(() => setCopied(false), 1800);
         } catch {}
       }}
-      className="shrink-0 rounded-full border border-[#e3c98a] px-4 py-1.5 text-xs font-semibold text-[#f4f1e4] transition-colors active:bg-[#e3c98a] active:text-[#2c3d31]"
+      className="shrink-0 rounded-full bg-[#5b3b47] px-4 py-1.5 text-xs text-[#f7efe9]"
     >
       {copied ? "Tersalin ✓" : "Salin"}
     </motion.button>
@@ -274,55 +257,57 @@ export function Ucapan({ tamu }: { tamu?: string }) {
     form.reset();
   }
 
-  const field = "w-full rounded-xl border border-[#3d5243]/25 bg-white/70 px-4 py-3 text-[15px] text-[#2f3d33] outline-none placeholder:text-[#2f3d33]/40 focus:border-[#3d5243]";
+  const field = "w-full rounded-lg border border-[#5b3b47]/30 bg-white/80 px-4 py-2.5 text-[15px] text-[#4a3a40] outline-none placeholder:text-[#4a3a40]/45 focus:border-[#5b3b47]";
 
   return (
     <div>
       <form onSubmit={onSubmit} className="space-y-3 text-left">
-        <input name="nama" required defaultValue={tamu} placeholder="Nama kamu" aria-label="Nama" className={field} />
-        <textarea name="ucapan" rows={3} placeholder="Tulis ucapan & doa" aria-label="Ucapan dan doa" className={`${field} resize-none`} />
+        <input name="nama" required defaultValue={tamu} placeholder="Nama Kamu" aria-label="Nama" className={field} />
+        <textarea name="ucapan" rows={3} placeholder="Berikan Ucapan & Doa" aria-label="Ucapan dan doa" className={`${field} resize-none`} />
         <fieldset>
-          <legend className="mb-2 text-sm text-[#2f3d33]/80">Konfirmasi kehadiran</legend>
+          <legend className="mb-2 text-sm font-semibold text-[#5b3b47]">Konfirmasi Kehadiran ?</legend>
           <div className="grid grid-cols-2 gap-2">
             {[
               [true, "Hadir"],
-              [false, "Tidak hadir"],
+              [false, "Tidak Hadir"],
             ].map(([val, label]) => (
               <label
                 key={String(val)}
-                className="relative cursor-pointer rounded-xl border border-[#3d5243]/30 py-2.5 text-center text-sm font-semibold text-[#3d5243] has-focus-visible:ring-2 has-focus-visible:ring-[#c9a35f]"
+                className="relative cursor-pointer rounded-lg border border-[#5b3b47]/40 py-2 text-center text-sm text-[#5b3b47] has-focus-visible:ring-2 has-focus-visible:ring-[#c9a245]"
               >
                 <input type="radio" name="hadir" checked={hadir === val} onChange={() => setHadir(val as boolean)} className="sr-only" />
-                {hadir === val && <motion.span layoutId="jw-hadir" transition={spring} className="absolute inset-0 rounded-[11px] bg-[#3d5243]" />}
-                <span className={`relative transition-colors ${hadir === val ? "text-[#f4f1e4]" : ""}`}>{label as string}</span>
+                {hadir === val && <motion.span layoutId="jw-hadir" transition={spring} className="absolute inset-0 rounded-[7px] bg-[#5b3b47]" />}
+                <span className={`relative transition-colors ${hadir === val ? "text-[#f7efe9]" : ""}`}>{label as string}</span>
               </label>
             ))}
           </div>
         </fieldset>
-        <motion.button type="submit" whileTap={{ scale: 0.97 }} className={`${tombolEmas} w-full rounded-xl py-3.5`}>
+        <motion.button type="submit" whileTap={{ scale: 0.97 }} className="w-full rounded-lg bg-[#5b3b47] py-3 font-semibold text-[#f7efe9]">
           Kirim
         </motion.button>
         <AnimatePresence>
           {sent && (
-            <motion.p initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} className="text-center text-sm text-[#2f3d33]/80">
+            <motion.p initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} className="text-center text-sm text-[#4a3a40]/80">
               Matur nuwun, ucapanmu sudah terkirim.
             </motion.p>
           )}
         </AnimatePresence>
       </form>
 
-      <ul className="mt-6 max-h-[24rem] space-y-2.5 overflow-y-auto overscroll-contain rounded-2xl border border-[#3d5243]/15 bg-white/40 p-3 text-left">
+      <ul className="mt-6 max-h-[24rem] space-y-3 overflow-y-auto overscroll-contain text-left">
         <AnimatePresence initial={false}>
           {letters.map((l) => (
-            <motion.li key={l.id} layout initial={{ opacity: 0, x: -30 }} animate={{ opacity: 1, x: 0 }} transition={spring} className="flex gap-3 rounded-xl bg-white/75 p-3 text-[#2f3d33]">
-              <span className={`${marcellus} grid size-9 shrink-0 place-items-center rounded-t-full rounded-b-md bg-[#3d5243] text-sm text-[#f4f1e4]`}>{l.name[0]?.toUpperCase()}</span>
-              <div className="min-w-0">
+            <motion.li key={l.id} layout initial={{ opacity: 0, x: -30 }} animate={{ opacity: 1, x: 0 }} transition={spring} className="flex gap-3 text-[#4a3a40]">
+              <span className={`${cinzel} grid size-9 shrink-0 place-items-center rounded-full bg-[#5b3b47] text-sm font-semibold text-[#f7efe9]`}>{l.name[0]?.toUpperCase()}</span>
+              <div className="min-w-0 flex-1 border-b border-[#5b3b47]/15 pb-3">
                 <p className="flex items-center gap-1.5 text-sm font-semibold">
                   <span className="truncate">{l.name}</span>
-                  <span className={`size-2 shrink-0 rounded-full ${l.hadir ? "bg-[#5f8a63]" : "bg-[#b9787a]"}`} aria-label={l.hadir ? "Hadir" : "Tidak hadir"} />
+                  <span className={`grid size-3.5 shrink-0 place-items-center rounded-full text-[8px] text-white ${l.hadir ? "bg-[#4f9a5f]" : "bg-[#b4553e]"}`} aria-label={l.hadir ? "Hadir" : "Tidak hadir"}>
+                    {l.hadir ? "✓" : "×"}
+                  </span>
                 </p>
-                <p className="text-[11px] text-[#2f3d33]/50">{l.waktu}</p>
-                {l.message && <p className="mt-1 text-sm leading-relaxed text-[#2f3d33]/85">{l.message}</p>}
+                <p className="text-[11px] text-[#4a3a40]/50">{l.waktu}</p>
+                {l.message && <p className="mt-1 text-sm leading-relaxed text-[#4a3a40]/90">{l.message}</p>}
               </div>
             </motion.li>
           ))}

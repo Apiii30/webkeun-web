@@ -1,472 +1,460 @@
 "use client";
 
 import { motion } from "motion/react";
-import Image, { getImageProps } from "next/image";
-import { type CSSProperties, type ReactNode, useId } from "react";
-import { ASET, type Kembang } from "./aset";
+import Image from "next/image";
+import type { CSSProperties, ReactNode } from "react";
+import { ASET, SISI, type Kembang, type NamaAset } from "./aset";
 import s from "./jawa.module.css";
 
-// Ornamen khas Jawa yang digambar sendiri (gunungan wayang, janur melengkung, bingkai kori, kembang kawung)
-// dan lapisan lanskap (langit, gunung, bukit, kabut, rumput) yang dipakai sampul, beranda, penutup & panel layar lebar.
-// Gerakan terus-menerusnya CSS (transform/opacity) di jawa.module.css.
+// Ornamen tema Jawa Klasik: gapura, janur, wayang, pohon, gunung, rumpun bunga, bingkai foto berukir,
+// gunungan, burung, kupu-kupu, butiran cahaya.
+// Gerak masuknya meniru undangan referensi: tiap ornamen "tumbuh" dari sudutnya dengan jeda bertahap, jadi
+// lapisan-lapisannya muncul bertumpuk. Semuanya `transform` utuh + opacity, dijalankan mesin animasi browser (GPU).
+// Gerak ikut scroll (parallax) ada di kelas CSS-nya (jawa.module.css), selalu di elemen pembungkus yang berbeda
+// dari elemen yang dianimasikan motion, supaya keduanya tidak saling menimpa.
+
+export const kaushan = "font-[family-name:var(--font-kaushan)]";
+export const cinzel = "font-[family-name:var(--font-cinzel)]";
+
+type Sudut = "tl" | "t" | "tr" | "l" | "c" | "r" | "bl" | "b" | "br";
+const ASAL: Record<Sudut, string> = {
+  tl: "0% 0%",
+  t: "50% 0%",
+  tr: "100% 0%",
+  l: "0% 50%",
+  c: "50% 50%",
+  r: "100% 50%",
+  bl: "0% 100%",
+  b: "50% 100%",
+  br: "100% 100%",
+};
+
+// Kurva yang cepat di awal lalu mengendap pelan: gerak tumbuh terasa lentur, tidak kaku
+export const LENTUR = [0.16, 1, 0.3, 1] as const;
+
+// Pemicu: wadah tanpa transform yang memulai animasi anak-anaknya (Tumbuh dengan `ikut`) saat terlihat,
+// atau saat `tampil` menjadi true. Dibutuhkan untuk ornamen yang tumbuh dari titik di luar layar: elemen yang
+// masih berskala 0 di luar layar tidak pernah dianggap "terlihat", sedangkan wadahnya punya ukuran penuh.
+function pemicu(tampil: boolean | undefined, amount: number) {
+  return tampil === undefined
+    ? { initial: "hidden", whileInView: "show", viewport: { once: true, amount } }
+    : { initial: "hidden", animate: tampil ? "show" : "hidden" };
+}
+export function Pemicu({ tampil, amount = 0.15, className = "", children }: { tampil?: boolean; amount?: number; className?: string; children: ReactNode }) {
+  return (
+    <motion.div className={className} {...pemicu(tampil, amount)}>
+      {children}
+    </motion.div>
+  );
+}
+
+// Tumbuh dari sudut saat terlihat (atau saat `tampil` menjadi true, mis. setelah undangan dibuka).
+// awal: skala awal (0 = dari titik, 0.7 = membesar sedikit seperti foto di referensi).
+// ikut: tidak punya pemicu sendiri, mengikuti Pemicu di atasnya.
+export function Tumbuh({
+  dari = "c",
+  jeda = 0,
+  durasi = 2,
+  awal = 0,
+  amount = 0.15,
+  ikut = false,
+  tampil,
+  className = "",
+  style,
+  children,
+}: {
+  dari?: Sudut;
+  jeda?: number;
+  durasi?: number;
+  awal?: number;
+  amount?: number;
+  ikut?: boolean;
+  tampil?: boolean;
+  className?: string;
+  style?: CSSProperties;
+  children?: ReactNode;
+}) {
+  return (
+    <motion.div
+      className={className}
+      style={{ ...style, transformOrigin: ASAL[dari] }}
+      {...(ikut ? {} : pemicu(tampil, amount))}
+      variants={{
+        hidden: { opacity: 0, transform: `scale(${awal})` },
+        show: { opacity: 1, transform: "scale(1)", transition: { duration: durasi, ease: LENTUR, delay: jeda } },
+      }}
+    >
+      {children}
+    </motion.div>
+  );
+}
+
+const AYUN = [s.ayunA, s.ayunB, s.ayunC, s.ayunD];
+
+export function Gambar({ a, className = "", sizes = "200px", flip = false, preload }: { a: NamaAset; className?: string; sizes?: string; flip?: boolean; preload?: boolean }) {
+  const g = ASET[a];
+  return <Image src={g.src} alt="" width={g.w} height={g.h} sizes={sizes} preload={preload} className={`h-auto w-full ${flip ? "-scale-x-100" : ""} ${className}`} />;
+}
+
+// Letak akhir satu bunga, supaya kotak gambarnya setelah dimiringkan (ditambah sedikit ruang untuk goyangannya)
+// tetap di dalam batas: lebar rumpun, diperluas `lebih` persen ke kiri & kanan.
+// - tanpa `lebih`: bunga digeser ke dalam (dan dikecilkan bila tetap tidak muat). Untuk rumpun di tepi layar.
+// - dengan `lebih`: tepi dalam bunga dipertahankan dan bunganya dikecilkan. Untuk bunga di bingkai foto,
+//   supaya tidak bergeser menutupi fotonya. `lebih` = jarak wadah ke tepi layar, dalam persen lebar wadah.
+const RUANG = 3;
+function dalamWadah(k: Kembang, lebih?: number) {
+  const g = ASET[k.a];
+  const rad = ((k.r ?? 0) * Math.PI) / 180;
+  const separuh = (k.w / 2) * Math.abs(Math.cos(rad)) + ((k.w * g.h) / g.w / 2) * Math.abs(Math.sin(rad));
+  const tengah = k.x + k.w / 2;
+  if (lebih !== undefined) {
+    const kiri = -lebih + RUANG;
+    const kanan = 100 + lebih - RUANG;
+    let f = 1;
+    if (tengah - separuh < kiri) f = Math.min(f, (tengah + separuh - kiri) / (2 * separuh));
+    if (tengah + separuh > kanan) f = Math.min(f, (kanan - (tengah - separuh)) / (2 * separuh));
+    if (f === 1) return { x: k.x, w: k.w };
+    const c = tengah - separuh < kiri ? tengah + separuh - separuh * f : tengah - separuh + separuh * f;
+    return { x: c - (k.w * f) / 2, w: k.w * f };
+  }
+  const f = Math.min(1, (50 - RUANG) / separuh);
+  const w = k.w * f;
+  const c = Math.min(Math.max(tengah, separuh * f + RUANG), 100 - separuh * f - RUANG);
+  return { x: c - w / 2, w };
+}
+
+// Rumpun bunga di sudut. cermin: dibalik kiri-kanan (untuk sudut kanan).
+export function Rumpun({
+  items,
+  className = "",
+  cermin = false,
+  tampil,
+  jeda = 0,
+  atas = false,
+  dari,
+  lebih,
+}: {
+  items: Kembang[];
+  className?: string;
+  cermin?: boolean;
+  tampil?: boolean;
+  jeda?: number;
+  atas?: boolean;
+  dari?: Sudut;
+  lebih?: number;
+}) {
+  return (
+    <Pemicu tampil={tampil} amount={0.1} className={`pointer-events-none absolute ${cermin ? "-scale-x-100" : ""} ${className}`}>
+      {items.map((k, i) => {
+        const { x, w } = dalamWadah(k, lebih);
+        return (
+        <Tumbuh
+          key={i}
+          ikut
+          dari={dari ?? (atas ? "tl" : "bl")}
+          jeda={jeda + (k.d ?? i * 0.2)}
+          className="absolute"
+          style={{ left: `${x}%`, bottom: `${k.b}%`, width: `${w}%`, zIndex: k.z ?? 0 }}
+        >
+          <div style={{ rotate: `${k.r ?? 0}deg` }}>
+            <div className={AYUN[i % 4]} style={{ transformOrigin: atas ? "50% 0%" : "50% 100%", animationDelay: `${-i * 1.3}s` }}>
+              <Gambar a={k.a} flip={k.flip} sizes={`${Math.round(w * 2.2)}px`} />
+            </div>
+          </div>
+        </Tumbuh>
+        );
+      })}
+    </Pemicu>
+  );
+}
+
+// Janur kuning yang menjuntai dari sudut atas
+export function Janur({ sisi, className = "", tampil, jeda = 0 }: { sisi: "kiri" | "kanan"; className?: string; tampil?: boolean; jeda?: number }) {
+  const kiri = sisi === "kiri";
+  return (
+    <Pemicu tampil={tampil} className={`pointer-events-none absolute ${className}`}>
+      <Tumbuh ikut dari={kiri ? "tl" : "tr"} jeda={jeda}>
+        <div className={kiri ? "-scale-x-100" : ""}>
+          <div className={s.janur}>
+            <Gambar a="janur" sizes="180px" />
+          </div>
+        </div>
+      </Tumbuh>
+    </Pemicu>
+  );
+}
+
+// Kepala wayang di sudut bawah, digerakkan patah-patah seperti sedang dimainkan dalang
+export function Wayang({ sisi, className = "", tampil, jeda = 0 }: { sisi: "kiri" | "kanan"; className?: string; tampil?: boolean; jeda?: number }) {
+  const kiri = sisi === "kiri";
+  return (
+    <Pemicu tampil={tampil} className={`pointer-events-none absolute ${className}`}>
+      <Tumbuh ikut dari={kiri ? "bl" : "br"} jeda={jeda}>
+        <div className={s.wayang} style={{ animationDelay: kiri ? "0s" : "-1.2s" }}>
+          <Gambar a="wayang" flip={!kiri} sizes="160px" className="drop-shadow-[0_8px_10px_rgb(91_59_71/0.3)]" />
+        </div>
+      </Tumbuh>
+    </Pemicu>
+  );
+}
+
+// Pohon ungu di sisi bawah
+export function Pohon({ sisi, className = "", tampil, jeda = 0 }: { sisi: "kiri" | "kanan"; className?: string; tampil?: boolean; jeda?: number }) {
+  const kiri = sisi === "kiri";
+  return (
+    <Pemicu tampil={tampil} className={`pointer-events-none absolute ${className}`}>
+      <Tumbuh ikut dari={kiri ? "bl" : "br"} jeda={jeda}>
+        <div className={s.ayunD} style={{ transformOrigin: "50% 100%" }}>
+          <Gambar a="pohon" flip={!kiri} sizes="200px" />
+        </div>
+      </Tumbuh>
+    </Pemicu>
+  );
+}
+
+// Gunung berkabut: membesar dari bawah (skala 0.7 → 1)
+export function Gunung({ className = "", tampil, jeda = 0, preload }: { className?: string; tampil?: boolean; jeda?: number; preload?: boolean }) {
+  return (
+    <Pemicu tampil={tampil} className={`pointer-events-none absolute ${className}`}>
+      <Tumbuh ikut dari="b" awal={0.7} jeda={jeda}>
+        <Gambar a="gunung" sizes="440px" preload={preload} />
+      </Tumbuh>
+    </Pemicu>
+  );
+}
+
+// Monogram inisial yang saling bertumpuk
+export function Monogram({ a, b, className = "" }: { a: string; b: string; className?: string }) {
+  return (
+    <p className={`${cinzel} flex items-end justify-center leading-none font-bold text-[#5b3b47] ${className}`} aria-hidden="true">
+      <span>{a}</span>
+      <span className="-ml-[0.32em] translate-y-[0.12em] text-[#7b5563]">{b}</span>
+    </p>
+  );
+}
+
+/* ───────── Bingkai foto berukir (plum) ───────── */
+
+// Bentuk kori (pintu Jawa): sisi tegak, bahu melengkung, puncak meruncing. k = jarak ke dalam.
+const kori = (k: number) =>
+  `M${10 + k} ${370 - k} V122 C${10 + k} ${102 + k * 0.4} ${36 + k} ${96 + k * 0.6} ${68 + k * 0.4} ${92 + k * 0.7} C${94} ${88 + k * 0.8} ${100} ${66 + k} ${116} ${54 + k} C${132} ${42 + k} ${142} ${28 + k} 150 ${12 + k} C158 ${28 + k} ${168} ${42 + k} ${184} ${54 + k} C${200} ${66 + k} ${206} ${88 + k * 0.8} ${232 - k * 0.4} ${92 + k * 0.7} C${264 - k} ${96 + k * 0.6} ${290 - k} ${102 + k * 0.4} ${290 - k} 122 V${370 - k} Z`;
+const MASKER = `url("data:image/svg+xml;utf8,${encodeURIComponent(`<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 380' preserveAspectRatio='none'><path d='${kori(16)}'/></svg>`)}")`;
+
+// Foto di dalamnya sedikit lebih tinggi dari bingkai dan bergeser lebih lambat dari halaman (parallax).
+export function BingkaiUkir({ src, alt, className = "", sizes, preload, posisi = "50% 25%" }: { src: string; alt: string; className?: string; sizes: string; preload?: boolean; posisi?: string }) {
+  return (
+    <div className={`relative aspect-[300/380] ${className}`}>
+      <div className="absolute inset-0 overflow-hidden" style={{ maskImage: MASKER, WebkitMaskImage: MASKER, maskSize: "100% 100%", WebkitMaskSize: "100% 100%" }}>
+        <div className={`${s.geserLambat} absolute inset-x-0 inset-y-[-10%]`}>
+          <Image src={src} alt={alt} fill sizes={sizes} preload={preload} className="object-cover" style={{ objectPosition: posisi }} />
+        </div>
+      </div>
+      <svg viewBox="0 0 300 380" preserveAspectRatio="none" className="pointer-events-none absolute inset-0 h-full w-full drop-shadow-[0_10px_14px_rgb(91_59_71/0.35)]" aria-hidden="true">
+        <defs>
+          <linearGradient id="jw-bingkai" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stopColor="#9a6f80" />
+            <stop offset=".45" stopColor="#6e4757" />
+            <stop offset="1" stopColor="#4e3240" />
+          </linearGradient>
+        </defs>
+        <path d={`${kori(0)} ${kori(16)}`} fillRule="evenodd" fill="url(#jw-bingkai)" stroke="#432a36" strokeWidth="1.2" />
+        <path d={kori(8)} fill="none" stroke="#d9b7c2" strokeWidth="1" strokeDasharray="2 4" opacity=".8" />
+        {/* mahkota kecil di puncak */}
+        <g transform="translate(150 6)">
+          {[-24, 0, 24].map((r) => (
+            <path key={r} d="M0 0 C6 -8 6 -18 0 -24 C-6 -18 -6 -8 0 0 Z" transform={`rotate(${r})`} fill="#7b5563" stroke="#432a36" strokeWidth="1" />
+          ))}
+          <circle r="3.5" fill="#e2c070" stroke="#432a36" strokeWidth=".8" />
+        </g>
+        {/* roset di sudut bawah */}
+        {[18, 282].map((x) => (
+          <g key={x} transform={`translate(${x} 362)`}>
+            {[0, 60, 120, 180, 240, 300].map((r) => (
+              <ellipse key={r} cx="0" cy="-6" rx="3.2" ry="6" transform={`rotate(${r})`} fill="#9a6f80" stroke="#432a36" strokeWidth=".7" />
+            ))}
+            <circle r="2.6" fill="#e2c070" />
+          </g>
+        ))}
+        {/* ikal di bahu */}
+        {[-1, 1].map((sx) => (
+          <path key={sx} d={`M${150 + sx * 82} 96 c${sx * 12} -10 ${sx * 26} -4 ${sx * 22} 8 c${sx * -3} 8 ${sx * -12} 6 ${sx * -10} 0`} fill="none" stroke="#e2c070" strokeWidth="1.6" strokeLinecap="round" />
+        ))}
+      </svg>
+    </div>
+  );
+}
+
+/* ───────── Kelopak mawar yang jatuh ───────── */
 
 const rnd = (n: number) => {
   const x = Math.sin(n * 127.1 + 311.7) * 43758.5453;
   return x - Math.floor(x);
 };
-const v = (o: Record<string, string | number>) => o as CSSProperties;
-
-const EMAS_TUA = "#8d6a35";
-const HIJAU_TUA = "#34493b";
-
-/* ───────── Gunungan (kayon): pembuka & penutup lakon wayang ───────── */
-
-const GUNUNGAN =
-  "M100 2 C108 22 120 42 134 62 C150 84 170 104 182 128 C194 152 196 178 190 202 C186 218 184 232 184 248 L184 262 L16 262 L16 248 C16 232 14 218 10 202 C4 178 6 152 18 128 C30 104 50 84 66 62 C80 42 92 22 100 2 Z";
-const skala = (k: number) => `translate(100 140) scale(${k}) translate(-100 -140)`;
-
-// Cabang pohon hayat: ikal di ujung, daun kecil di sepanjangnya. Separuh kiri; kanan dicerminkan.
-const CABANG = [
-  { y: 206, w: 64 },
-  { y: 176, w: 68 },
-  { y: 146, w: 62 },
-  { y: 118, w: 52 },
-  { y: 92, w: 38 },
-  { y: 70, w: 24 },
-].map(({ y, w }) => ({
-  d: `M100 ${y} C${100 - w * 0.4} ${y - 2} ${100 - w * 0.9} ${y - 6} ${100 - w} ${y - 20} C${100 - w * 1.05} ${y - 30} ${100 - w * 0.7} ${y - 34} ${100 - w * 0.62} ${y - 26} C${100 - w * 0.56} ${y - 20} ${100 - w * 0.7} ${y - 14} ${100 - w * 0.78} ${y - 19}`,
-  daun: [
-    [100 - w * 0.45, y - 4, -60],
-    [100 - w * 0.8, y - 8, -30],
-    [100 - w * 0.98, y - 30, 20],
-  ] as const,
-}));
-
-// foto: diisi foto mempelai di bagian dalam (pohon hayat tidak digambar). Ukuran mengikuti lebar pembungkus (2:3).
-// Foto dipotong dengan clipPath SVG, bukan CSS mask: di Safari, elemen ber-mask di dalam transform 3D (gunungan
-// diputar saat sampul dibuka) memunculkan garis kotak tipis di tepinya.
-export function Gunungan({ className = "", foto, alt = "", children }: { className?: string; foto?: string; alt?: string; children?: ReactNode }) {
-  const id = useId();
-  const img = foto ? getImageProps({ src: foto, alt, width: 260, height: 350 }).props : null;
-  return (
-    <div className={`relative aspect-[2/3] ${className}`} role={foto ? "img" : undefined} aria-label={foto ? alt : undefined}>
-      <svg viewBox="0 0 200 300" className="absolute inset-0 h-full w-full overflow-visible" aria-hidden="true">
-        <defs>
-          <linearGradient id={`${id}e`} x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0" stopColor="#f3e2ae" />
-            <stop offset=".45" stopColor="#c9a35f" />
-            <stop offset="1" stopColor="#8d6a35" />
-          </linearGradient>
-          <linearGradient id={`${id}h`} x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0" stopColor="#4d6a55" />
-            <stop offset="1" stopColor="#2c3d31" />
-          </linearGradient>
-        </defs>
-        <path d={GUNUNGAN} fill={`url(#${id}e)`} stroke={EMAS_TUA} strokeWidth="1.2" />
-        <path d={GUNUNGAN} transform={skala(0.93)} fill={`url(#${id}h)`} />
-        <path d={GUNUNGAN} transform={skala(0.9)} fill="none" stroke="#e8d39b" strokeWidth=".8" strokeDasharray="2 3" opacity=".7" />
-        {img && (
-          <>
-            <clipPath id={`${id}c`}>
-              <path d={GUNUNGAN} transform={skala(0.86)} />
-            </clipPath>
-            <linearGradient id={`${id}g`} x1="0" y1="0" x2="0" y2="1">
-              <stop offset=".62" stopColor="#2c3d31" stopOpacity="0" />
-              <stop offset="1" stopColor="#2c3d31" stopOpacity=".7" />
-            </linearGradient>
-            <g clipPath={`url(#${id}c)`}>
-              <rect x="14" y="18" width="172" height="232" fill="#dfe5d8" />
-              <image href={img.src} x="14" y="18" width="172" height="232" preserveAspectRatio="xMidYMin slice" />
-              <rect x="14" y="18" width="172" height="232" fill={`url(#${id}g)`} />
-            </g>
-          </>
-        )}
-        {!foto && (
-          <g fill="none" stroke="#e3c98a" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M100 240 C97 204 103 172 99 140 C96 110 102 80 100 44" strokeWidth="3" />
-            {[false, true].map((cermin) => (
-              <g key={String(cermin)} transform={cermin ? "translate(200 0) scale(-1 1)" : undefined}>
-                {CABANG.map((c) => (
-                  <g key={c.d}>
-                    <path d={c.d} strokeWidth="1.6" />
-                    {c.daun.map(([x, y, r]) => (
-                      <ellipse key={`${x}${y}`} cx={x} cy={y} rx="2.2" ry="5" transform={`rotate(${r} ${x} ${y})`} fill="#c9a35f" stroke="none" />
-                    ))}
-                  </g>
-                ))}
-              </g>
-            ))}
-            <circle cx="100" cy="38" r="4" fill="#e3c98a" stroke="none" />
-            <path d="M100 30 C96 22 98 14 100 10 C102 14 104 22 100 30 Z" fill="#c9a35f" stroke="none" />
-          </g>
-        )}
-      </svg>
-
-      {/* garis dalam, gapura & palemahan di depan foto */}
-      <svg viewBox="0 0 200 300" className="absolute inset-0 h-full w-full overflow-visible" aria-hidden="true">
-        <path d={GUNUNGAN} transform={skala(0.86)} fill="none" stroke="#e8d39b" strokeWidth="1.4" />
-        <g stroke={EMAS_TUA} strokeWidth="1" strokeLinejoin="round">
-          <path d="M100 186 L109 198 H91 Z" fill="#e3c98a" />
-          <path d="M88 198 H112 L118 208 H82 Z" fill="#c9a35f" />
-          <path d="M78 208 H122 L128 220 H72 Z" fill="#c9a35f" />
-          <rect x="80" y="220" width="40" height="42" fill={HIJAU_TUA} />
-          <path d="M91 262 V240 C91 232 109 232 109 240 V262 Z" fill="#1f2b22" />
-          <path d="M100 236 V262" stroke="#c9a35f" />
-          <rect x="66" y="232" width="8" height="30" fill="#c9a35f" />
-          <rect x="126" y="232" width="8" height="30" fill="#c9a35f" />
-          <path d="M64 232 H76 L70 224 Z M124 232 H136 L130 224 Z" fill="#e3c98a" />
-          <path d="M8 262 H192 L184 282 H16 Z" fill="#c9a35f" />
-        </g>
-        <path d={Array.from({ length: 13 }, (_, i) => `M${22 + i * 12.5} 279 L${28.25 + i * 12.5} 266 L${34.5 + i * 12.5} 279`).join(" ")} fill="none" stroke={HIJAU_TUA} strokeWidth="1.1" />
-        <rect x="97" y="282" width="6" height="18" rx="2" fill={EMAS_TUA} />
-      </svg>
-      {children}
-    </div>
-  );
-}
-
-/* ───────── Bingkai kori: lengkung berujung runcing seperti pintu keraton ───────── */
-
-// Sama dengan .topengKori di jawa.module.css (foto = skala .94)
-const KORI =
-  "M150 4 C166 4 176 18 190 28 C204 38 224 38 234 52 C242 64 244 80 262 88 C280 96 296 100 296 118 V344 C296 356 290 362 278 364 C262 367 250 378 244 396 H56 C50 378 38 367 22 364 C10 362 4 356 4 344 V118 C4 100 20 96 38 88 C56 80 58 64 66 52 C76 38 96 38 110 28 C124 18 134 4 150 4 Z";
-
-export function BingkaiKori({
-  src,
-  alt,
-  className = "",
-  sizes,
-  preload,
-  posisi = "50% 30%",
-  fotoClass = "",
-  terang = false,
-}: {
-  src: string;
-  alt: string;
-  className?: string;
-  sizes: string;
-  preload?: boolean;
-  posisi?: string;
-  fotoClass?: string;
-  terang?: boolean; // garis lebih terang untuk latar hijau tua
-}) {
-  return (
-    <div className={`relative aspect-[3/4] ${className}`}>
-      <div className={`${s.topengKori} absolute inset-0 overflow-hidden bg-[#dfe5d8]`}>
-        <div className={`absolute inset-x-0 inset-y-[-8%] ${fotoClass}`}>
-          <Image src={src} alt={alt} fill preload={preload} sizes={sizes} className="object-cover" style={{ objectPosition: posisi }} />
-        </div>
-      </div>
-      <svg viewBox="0 0 300 400" preserveAspectRatio="none" className="pointer-events-none absolute inset-0 h-full w-full overflow-visible" aria-hidden="true">
-        <path d={KORI} fill="none" stroke={terang ? "#e3c98a" : "#b08a4a"} strokeWidth="2" vectorEffect="non-scaling-stroke" />
-        <path d={KORI} transform="translate(150 200) scale(.97) translate(-150 -200)" fill="none" stroke={terang ? "#e3c98a" : "#b08a4a"} strokeWidth="1" opacity=".6" vectorEffect="non-scaling-stroke" />
-        <path d={KORI} transform="translate(150 200) scale(.9) translate(-150 -200)" fill="none" stroke="#f4f1e4" strokeWidth="1" strokeDasharray="3 4" opacity=".8" vectorEffect="non-scaling-stroke" />
-      </svg>
-    </div>
-  );
-}
-
-/* ───────── Janur kuning melengkung: tanda ada hajat pernikahan ───────── */
-
-const RUAS = [
-  [19, 384],
-  [18, 336],
-  [19, 288],
-  [21, 240],
-  [24, 196],
-  [29, 156],
-  [37, 118],
-  [49, 84],
-  [65, 56],
-  [85, 36],
-  [105, 26],
-] as const;
-
-export function Janur({ className = "", style }: { className?: string; style?: CSSProperties }) {
-  return (
-    <div className={`pointer-events-none ${className}`} style={style} aria-hidden="true">
-      <svg viewBox="0 0 150 420" className={`${s.janur} h-full w-auto overflow-visible`}>
-        <path d="M18 420 C16 300 18 190 30 120 C42 52 80 14 124 24" fill="none" stroke="#a8873f" strokeWidth="5" strokeLinecap="round" />
-        <path d="M18 420 C16 300 18 190 30 120 C42 52 80 14 124 24" fill="none" stroke="#ead492" strokeWidth="1.6" strokeLinecap="round" />
-        {RUAS.map(([x, y], i) => (
-          <g key={i} fill="#dcc17a" stroke="#a8873f" strokeWidth=".8" strokeLinejoin="round">
-            <path d={`M${x} ${y} Q${x + 10} ${y - 10} ${x + 24} ${y - 6} Q${x + 12} ${y - 1} ${x} ${y} Z`} />
-            <path d={`M${x} ${y} Q${x - 9} ${y - 10} ${x - 20} ${y - 8} Q${x - 10} ${y - 2} ${x} ${y} Z`} />
-          </g>
-        ))}
-        {/* rumbai yang menjuntai dari lengkungan */}
-        {[
-          [62, 58, 46, 0],
-          [86, 38, 58, -0.8],
-          [108, 28, 52, -1.6],
-        ].map(([x, y, p, d]) => (
-          <g key={x} className={s.rumbai} style={{ animationDelay: `${d}s` }}>
-            {[-4, 0, 4].map((o) => (
-              <path key={o} d={`M${x + o} ${y} C${x + o + 3} ${y + p * 0.35} ${x + o - 3} ${y + p * 0.7} ${x + o + 1} ${y + p}`} fill="none" stroke="#d2b46a" strokeWidth="1.6" strokeLinecap="round" />
-            ))}
-          </g>
-        ))}
-        <g className={s.rumbai} style={{ animationDelay: "-0.4s" }}>
-          {[-6, -2, 2, 6].map((o, i) => (
-            <path key={o} d={`M${124 + o} 24 C${127 + o} ${44 + i * 3} ${119 + o} ${66 + i * 4} ${125 + o} ${84 + i * 6}`} fill="none" stroke={i % 2 ? "#ead492" : "#c9a35f"} strokeWidth="2.2" strokeLinecap="round" />
-          ))}
-          <circle cx="124" cy="24" r="5" fill="#ead492" stroke="#a8873f" />
-        </g>
-      </svg>
-    </div>
-  );
-}
-
-/* ───────── Kembang kawung & pembatas ───────── */
-
-export function KembangKawung({ className = "", warna = "#c9a35f" }: { className?: string; warna?: string }) {
-  return (
-    <svg viewBox="-12 -12 24 24" className={className} aria-hidden="true">
-      {[45, 135, 225, 315].map((r) => (
-        <ellipse key={r} cx="0" cy="-5.6" rx="3.4" ry="5.4" transform={`rotate(${r})`} fill="none" stroke={warna} strokeWidth="1.1" />
-      ))}
-      <circle r="1.6" fill={warna} />
-    </svg>
-  );
-}
-
-export function Pemisah({ className = "", terang = false }: { className?: string; terang?: boolean }) {
-  const garis = terang ? "bg-[#e3c98a]/70" : "bg-[#b08a4a]/60";
-  return (
-    <div className={`flex items-center justify-center gap-2.5 ${className}`} aria-hidden="true">
-      <span className={`h-px w-14 ${garis}`} />
-      <span className={`size-1 rotate-45 ${terang ? "bg-[#e3c98a]" : "bg-[#b08a4a]"}`} />
-      <KembangKawung className={`${s.putar} size-6`} warna={terang ? "#e3c98a" : "#b08a4a"} />
-      <span className={`size-1 rotate-45 ${terang ? "bg-[#e3c98a]" : "bg-[#b08a4a]"}`} />
-      <span className={`h-px w-14 ${garis}`} />
-    </div>
-  );
-}
-
-/* ───────── Tepi bagian: siluet perbukitan dua lapis ───────── */
-
-export function Tepi({ warna, className = "" }: { warna: string; className?: string }) {
-  return (
-    <svg viewBox="0 0 440 40" preserveAspectRatio="none" className={`pointer-events-none block h-10 w-full ${className}`} aria-hidden="true">
-      <path d="M0 40 V24 C40 14 70 6 110 12 C150 18 170 2 210 4 C250 6 270 20 310 18 C350 16 380 6 440 14 V40 Z" fill={warna} opacity=".45" />
-      <path d="M0 40 V30 C50 22 90 20 130 26 C170 32 200 18 250 20 C300 22 330 34 380 30 C410 28 430 24 440 26 V40 Z" fill={warna} />
-    </svg>
-  );
-}
-
-/* ───────── Lanskap: langit, matahari, gunung, bukit, kabut, rumput ───────── */
-
-export function Langit({ senja = false, className = "" }: { senja?: boolean; className?: string }) {
-  return (
-    <div className={`absolute inset-0 ${className}`} aria-hidden="true">
-      <div className={`${s.langit} absolute inset-0`} />
-      {senja && <div className="absolute inset-0 bg-[linear-gradient(to_bottom,#e9d6c8_0%,#efd9c9_40%,#d9c2b4_70%,transparent_100%)] opacity-80" />}
-    </div>
-  );
-}
-
-export function Matahari({ className = "" }: { className?: string }) {
-  return (
-    <div className={`pointer-events-none absolute ${className}`} aria-hidden="true">
-      <div className={`${s.matahari} relative aspect-square w-full`}>
-        <div className="absolute -inset-[70%] rounded-full bg-[radial-gradient(circle,rgb(247_236_204/0.85)_0%,rgb(247_236_204/0.35)_35%,transparent_68%)]" />
-        <div className="absolute inset-0 rounded-full bg-[radial-gradient(circle_at_40%_35%,#fbf3da,#efd9a2)]" />
-      </div>
-    </div>
-  );
-}
-
-// Litografi Gunung Sumbing (tinta transparan), pudar di bagian atas supaya melebur ke langit
-export function Gunung({ className = "", posisi = "48% 100%", preload, sizes = "100vw" }: { className?: string; posisi?: string; preload?: boolean; sizes?: string }) {
-  return (
-    <div className={`pointer-events-none absolute [mask-image:linear-gradient(to_bottom,transparent_0%,black_30%)] ${className}`} aria-hidden="true">
-      <Image src={ASET.gunung.src} alt="" fill preload={preload} loading={preload ? "eager" : undefined} sizes={sizes} className="object-cover" style={{ objectPosition: posisi }} />
-    </div>
-  );
-}
-
-// Pohon kelapa: batang melengkung, pelepah berbentuk daun panjang
-function Kelapa({ x, y, h, condong = 1 }: { x: number; y: number; h: number; condong?: number }) {
-  const cx = x + 10 * condong;
-  const cy = y - h;
-  return (
-    <g>
-      <path d={`M${x} ${y} C${x + 1 * condong} ${y - h * 0.4} ${x + 5 * condong} ${y - h * 0.75} ${cx} ${cy}`} fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" />
-      {[-160, -125, -95, -60, -25, 10, 185].map((a, i) => {
-        const r = (a * Math.PI) / 180;
-        const L = 22 + (i % 3) * 4;
-        const ex = cx + L * Math.cos(r);
-        const ey = cy + L * Math.sin(r) + 9;
-        const qx = cx + L * 0.55 * Math.cos(r);
-        const qy = cy + L * 0.55 * Math.sin(r) - 5;
-        return <path key={a} d={`M${cx} ${cy} Q${qx} ${qy - 3} ${ex} ${ey} Q${qx} ${qy + 3} ${cx} ${cy} Z`} fill="currentColor" />;
-      })}
-    </g>
-  );
-}
-
-// Pohon kelapa di punggung bukit tengah: x = posisi (% lebar), h = tinggi (% tinggi bukit)
-const KELAPA = [
-  { x: 14, h: 68, c: 1 },
-  { x: 19, h: 52, c: -1 },
-  { x: 85, h: 72, c: -1 },
-];
-
-// lapis tengah: bukit sage pucat dengan pohon kelapa; lapis depan: bukit lebih gelap.
-// Bukit direntang mengikuti lebar layar (preserveAspectRatio none); kelapa digambar terpisah supaya tidak ikut melar.
-export function Bukit({ lapis, className = "" }: { lapis: "tengah" | "depan"; className?: string }) {
-  if (lapis === "tengah") {
-    return (
-      <div className={`pointer-events-none absolute text-[#9fb39a] ${className}`} aria-hidden="true">
-        {KELAPA.map((k) => (
-          <svg key={k.x} viewBox="-45 -95 95 97" className="absolute -translate-x-1/2 overflow-visible" style={{ left: `${k.x}%`, bottom: "34%", height: `${k.h}%` }}>
-            <Kelapa x={0} y={0} h={60} condong={k.c} />
-          </svg>
-        ))}
-        <svg viewBox="0 0 440 160" preserveAspectRatio="none" className="absolute inset-0 h-full w-full">
-          <path d="M0 108 C40 92 80 86 120 96 C160 106 190 80 240 78 C290 76 320 100 360 94 C400 88 420 84 440 88 V160 H0 Z" fill="currentColor" />
-        </svg>
-      </div>
-    );
-  }
-  return (
-    <svg viewBox="0 0 440 120" preserveAspectRatio="none" className={`pointer-events-none absolute w-full text-[#71876f] ${className}`} aria-hidden="true">
-      <path d="M0 52 C50 34 100 32 150 44 C200 56 250 30 300 32 C350 34 400 50 440 42 V120 H0 Z" fill="currentColor" />
-      <path d="M0 52 C50 34 100 32 150 44 C200 56 250 30 300 32 C350 34 400 50 440 42" fill="none" stroke="#5c7360" strokeWidth="1.2" vectorEffect="non-scaling-stroke" />
-    </svg>
-  );
-}
-
-// Rumpun rumput: tiga kelompok helai yang condong bergantian tertiup angin. Satu petak selebar 440px diulang
-// ke samping, jadi kerapatan helainya sama di HP maupun layar lebar.
-const HELAI = Array.from({ length: 54 }, (_, i) => {
-  const x = i * 8.2 + rnd(i) * 6;
-  const h = 18 + rnd(i + 40) * 34;
-  const b = (rnd(i + 80) - 0.5) * 22;
-  return { d: `M${x.toFixed(1)} 60 Q${(x + b * 0.25).toFixed(1)} ${(60 - h * 0.6).toFixed(1)} ${(x + b).toFixed(1)} ${(60 - h).toFixed(1)}`, k: i % 3 };
-});
-const WARNA_RUMPUT = ["#5f7a63", "#87a083", "#a9bca3"];
-const PETAK = HELAI.reduce<string[]>((a, h) => ((a[h.k] = `${a[h.k] ?? ""} ${h.d}`), a), []);
-
-export function Rumput({ className = "" }: { className?: string }) {
-  return (
-    <div className={`pointer-events-none absolute flex justify-center overflow-x-clip ${className}`} aria-hidden="true">
-      {Array.from({ length: 6 }, (_, n) => (
-        <svg key={n} viewBox="0 0 440 60" preserveAspectRatio="none" className="h-full w-[440px] shrink-0 overflow-visible">
-          {PETAK.map((d, k) => (
-            <g key={k} className={s.angin} style={{ animationDelay: `${-k * 1.7 - n * 0.6}s`, animationDuration: `${4.5 + k * 1.2}s` }}>
-              <path d={d} fill="none" stroke={WARNA_RUMPUT[k]} strokeWidth="1.6" strokeLinecap="round" />
-            </g>
-          ))}
-        </svg>
-      ))}
-    </div>
-  );
-}
-
-// Kabut tipis selebar dua layar yang berarak pelan
-export function Kabut({ className = "", balik = false }: { className?: string; balik?: boolean }) {
-  return (
-    <div className={`pointer-events-none absolute -left-1/2 w-[200%] ${balik ? s.kabutBalik : s.kabut} ${className}`} aria-hidden="true">
-      <div className="h-full w-full bg-[radial-gradient(22%_55%_at_18%_60%,rgb(248_249_243/0.85),transparent_70%),radial-gradient(18%_45%_at_42%_45%,rgb(248_249_243/0.7),transparent_70%),radial-gradient(24%_55%_at_68%_60%,rgb(248_249_243/0.8),transparent_70%),radial-gradient(16%_40%_at_90%_50%,rgb(248_249_243/0.7),transparent_70%)]" />
-    </div>
-  );
-}
-
-// Tiga burung terbang beriringan
-export function Burung({ className = "", delay = 0, size = 22 }: { className?: string; delay?: number; size?: number }) {
-  return (
-    <div className={`${s.burung} pointer-events-none absolute ${className}`} style={{ animationDelay: `${delay}s` }} aria-hidden="true">
-      {[
-        [0, 0, 1],
-        [-22, 10, 0.75],
-        [-10, -14, 0.6],
-      ].map(([x, y, k], i) => (
-        <svg key={i} viewBox="0 0 24 10" className="absolute" style={{ width: size * k, left: x, top: y }}>
-          <g className={s.kepak} style={{ animationDelay: `${-i * 0.23}s` }}>
-            <path d="M1 6 Q6 0 12 6 Q18 0 23 6" fill="none" stroke="#4e6452" strokeWidth="1.5" strokeLinecap="round" />
-          </g>
-        </svg>
-      ))}
-    </div>
-  );
-}
-
-/* ───────── Kelopak bunga & kuncup melati yang jatuh pelan ───────── */
-
-export function KelopakJatuh({ n = 8, className = "" }: { n?: number; className?: string }) {
+export function KelopakJatuh({ n = 6, className = "" }: { n?: number; className?: string }) {
   return (
     <div className={`pointer-events-none absolute inset-0 overflow-hidden ${className}`} aria-hidden="true">
+      {Array.from({ length: n }, (_, i) => (
+        <span
+          key={i}
+          className={`${s.kelopak} absolute top-0`}
+          style={
+            {
+              left: `${(rnd(i + 3) * 90).toFixed(1)}%`,
+              "--x": `${Math.round((rnd(i + 9) - 0.3) * 110)}px`,
+              "--d": `${(14 + rnd(i + 11) * 10).toFixed(1)}s`,
+              animationDelay: `${(-rnd(i + 13) * 22).toFixed(1)}s`,
+            } as CSSProperties
+          }
+        >
+          <svg viewBox="0 0 20 24" style={{ width: `${(9 + rnd(i + 7) * 7).toFixed(1)}px` }}>
+            <path d="M10 1C16 4 19 11 17 17s-7 7-7 7-6-1-8-7S4 4 10 1Z" fill={i % 2 ? "#e6a9b6" : "#f2c9d1"} opacity=".9" />
+          </svg>
+        </span>
+      ))}
+    </div>
+  );
+}
+
+/* ───────── Gapura berlapis ───────── */
+
+// Gapura yang membingkai satu bagian setinggi apa pun, dipasang di belakang isi (bagian induknya perlu `isolate`).
+// Masuknya bertumpuk: lengkung tumbuh dari atas, pilar kiri & kanan bergeser masuk dari tepi layar,
+// lalu kaki gapura tumbuh dari bawah saat dasar bagian terlihat.
+// Pilar dimulai tepat di titik potong gambarnya (550/900 lebar), memakai margin persen yang dihitung dari lebar.
+const GESER = {
+  hidden: (kiri: boolean) => ({ opacity: 0, transform: `translateX(${kiri ? -36 : 36}%)` }),
+  show: { opacity: 1, transform: "translateX(0%)", transition: { duration: 1.6, ease: LENTUR, delay: 0.25 } },
+};
+export function Gapura({ lengkung = false, kaki = true }: { lengkung?: boolean; kaki?: boolean }) {
+  return (
+    <div className="pointer-events-none absolute inset-0 -z-10" aria-hidden="true">
+      {!lengkung &&
+        [true, false].map((kiri) => (
+          <motion.div
+            key={String(kiri)}
+            custom={kiri}
+            variants={GESER}
+            initial="hidden"
+            whileInView="show"
+            viewport={{ once: true, amount: 0.05 }}
+            className={`absolute top-0 bottom-0 mt-[61.1%] w-1/2 ${kiri ? `left-0 ${s.tiangKiri}` : `right-0 ${s.tiangKanan}`} ${kaki ? "mb-[20%]" : ""}`}
+          />
+        ))}
+      {!lengkung && kaki && (
+        <Tumbuh dari="b" awal={0.8} durasi={1.6} className="absolute inset-x-0 bottom-0">
+          <Gambar a="gapuraKaki" sizes="440px" />
+        </Tumbuh>
+      )}
+      <Tumbuh dari="t" awal={0.6} durasi={1.8} className="absolute inset-x-0 top-0">
+        <Gambar a="gapuraAtas" sizes="440px" />
+      </Tumbuh>
+    </div>
+  );
+}
+
+/* ───────── Penyambung antarbagian ───────── */
+
+// Rumpun bunga di kedua tepi tepat di garis pertemuan dua bagian, menutup sambungannya.
+// Bergerak lebih cepat dari halaman (parallax dekat), jadi terasa melayang di depan isi.
+// Bagian di sekitarnya diberi ruang kosong di tepi atas/bawah supaya bunganya tidak menutupi teks.
+export function Sambung({ items = SISI, className = "", lebar = "w-[24%]" }: { items?: Kembang[]; className?: string; lebar?: string }) {
+  return (
+    <div className={`pointer-events-none relative z-20 h-0 ${className}`} aria-hidden="true">
+      <div className={`${s.pDekat} absolute top-0 left-0 ${lebar} -translate-y-1/2`}>
+        <Rumpun items={items} dari="l" className="relative! block aspect-[1/1.35] w-full" />
+      </div>
+      <div className={`${s.pDekat} absolute top-0 right-0 ${lebar} -translate-y-1/2`}>
+        <Rumpun items={items} dari="l" cermin jeda={0.15} className="relative! block aspect-[1/1.35] w-full" />
+      </div>
+    </div>
+  );
+}
+
+/* ───────── Gunungan wayang (kayon), samar di belakang teks ───────── */
+
+const CABANG = [78, 102, 126, 150, 174];
+export function Gunungan({ className = "" }: { className?: string }) {
+  return (
+    <div className={`pointer-events-none absolute ${className}`} aria-hidden="true">
+      <Tumbuh dari="b" awal={0.5} durasi={2.2}>
+        <svg viewBox="0 0 200 290" className={`${s.napas} h-auto w-full`} fill="none" stroke="#5b3b47" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+          <path
+            d="M100 6C118 40 150 70 172 112C192 150 194 196 180 226L176 262H24L20 226C6 196 8 150 28 112C50 70 82 40 100 6Z"
+            fill="#5b3b47"
+            fillOpacity=".08"
+          />
+          <path d="M100 22C116 52 142 78 160 114C176 148 178 190 166 218H34C22 190 24 148 40 114C58 78 84 52 100 22Z" strokeDasharray="3 5" />
+          <path d="M100 214V44" strokeWidth="2.4" />
+          {CABANG.map((y, i) => {
+            const p = 34 - i * 3;
+            return (
+              <g key={y}>
+                {[-1, 1].map((k) => (
+                  <path key={k} d={`M100 ${y + 14}C${100 + k * p * 0.4} ${y + 2} ${100 + k * p} ${y + 6} ${100 + k * p} ${y - 6}c0-7 ${-k * 8} -8 ${-k * 9} -2`} />
+                ))}
+                <circle cx="100" cy={y - 4} r="3" fill="#5b3b47" fillOpacity=".25" />
+              </g>
+            );
+          })}
+          <path d="M60 218L100 190L140 218" strokeWidth="2" />
+          <path d="M70 218V262M130 218V262M86 262V236Q100 222 114 236V262" />
+          <path d="M14 262H186V276H14Z" fill="#5b3b47" fillOpacity=".1" />
+        </svg>
+      </Tumbuh>
+    </div>
+  );
+}
+
+/* ───────── Makhluk & cahaya yang membuat halaman hidup ───────── */
+
+export function Burung({ className = "", delay = 0, size = 15 }: { className?: string; delay?: number; size?: number }) {
+  return (
+    <div className={`${s.burung} pointer-events-none absolute ${className}`} style={{ animationDelay: `${delay}s` }} aria-hidden="true">
+      <svg viewBox="0 0 20 8" className={s.kepakBurung} style={{ width: size }}>
+        <path d="M0 6Q5 0 10 5 15 0 20 6" fill="none" stroke="#5b3b47" strokeWidth="1.5" strokeLinecap="round" />
+      </svg>
+    </div>
+  );
+}
+
+// dekat: ikut parallax, bergerak lebih cepat dari halaman seolah terbang di depan layar
+export function Kupu({ a = "kupu1", className = "", delay = 0, w = 34, dekat = true }: { a?: "kupu1" | "kupu2"; className?: string; delay?: number; w?: number; dekat?: boolean }) {
+  const g = ASET[a];
+  return (
+    <div className={`${dekat ? s.pDekat : ""} pointer-events-none absolute z-20 ${className}`} aria-hidden="true">
+      <div className={s.terbang} style={{ animationDelay: `${delay}s` }}>
+        <div className={s.kepak} style={{ animationDelay: `${delay / 4}s` }}>
+          <Image src={g.src} alt="" width={g.w} height={g.h} sizes={`${w * 2}px`} style={{ width: w, height: "auto" }} />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// Butiran cahaya keemasan yang turun pelan di depan seluruh halaman
+export function Butir({ n = 16 }: { n?: number }) {
+  return (
+    <>
       {Array.from({ length: n }, (_, i) => {
-        const melati = i % 3 === 0;
+        const size = 2.5 + rnd(i + 30) * 4;
         return (
           <span
             key={i}
-            className={`${s.kelopak} absolute top-0`}
-            style={v({
-              left: `${(rnd(i + 3) * 92).toFixed(1)}%`,
-              "--x": `${Math.round((rnd(i + 9) - 0.3) * 110)}px`,
-              "--d": `${(13 + rnd(i + 11) * 11).toFixed(1)}s`,
-              animationDelay: `${(-rnd(i + 13) * 24).toFixed(1)}s`,
-            })}
-          >
-            {melati ? (
-              <svg viewBox="0 0 20 20" style={{ width: `${(9 + rnd(i + 7) * 6).toFixed(1)}px` }}>
-                {[0, 72, 144, 216, 288].map((r) => (
-                  <ellipse key={r} cx="10" cy="5" rx="3.2" ry="5" fill="#fffdf6" stroke="#d6d9cb" strokeWidth=".5" transform={`rotate(${r} 10 10)`} />
-                ))}
-                <circle cx="10" cy="10" r="2" fill="#efe2b8" />
-              </svg>
-            ) : (
-              <svg viewBox="0 0 12 16" style={{ width: `${(7 + rnd(i + 7) * 6).toFixed(1)}px` }}>
-                <path d="M6 1 C11 4 11 11 6 15 C1 11 1 4 6 1 Z" fill={i % 2 ? "#dcaaa6" : "#e8c4bd"} stroke="#c08883" strokeWidth=".5" />
-              </svg>
-            )}
-          </span>
+            className={`${s.butir} absolute top-0 rounded-full`}
+            style={
+              {
+                left: `${(rnd(i + 50) * 96).toFixed(1)}%`,
+                width: `${size.toFixed(1)}px`,
+                height: `${size.toFixed(1)}px`,
+                background: i % 3 ? "radial-gradient(circle, #fffaf0 0%, rgb(255 250 240 / 0) 70%)" : "radial-gradient(circle, #fbe7a6 0%, rgb(226 192 112 / 0) 70%)",
+                "--x": `${Math.round((rnd(i + 70) - 0.5) * 90)}px`,
+                "--d": `${(13 + rnd(i + 90) * 12).toFixed(1)}s`,
+                animationDelay: `${(-rnd(i + 110) * 25).toFixed(1)}s`,
+              } as CSSProperties
+            }
+          />
         );
       })}
-    </div>
-  );
-}
-
-/* ───────── Rumpun bunga dari ilustrasi botani ───────── */
-
-// Saat pertama terlihat, tiap tanaman tumbuh dari pangkalnya. Gerak masuknya memakai `transform` utuh supaya
-// dijalankan mesin animasi browser (bukan dihitung JavaScript tiap frame), lalu bergoyang pelan dengan CSS.
-// tampil: dikendalikan dari luar (mis. baru tumbuh setelah undangan dibuka) alih-alih saat terlihat.
-export function Rumpun({ items, className = "", muncul = true, jeda = 0, tampil, lebar = 440 }: { items: Kembang[]; className?: string; muncul?: boolean; jeda?: number; tampil?: boolean; lebar?: number }) {
-  const pemicu = tampil === undefined ? { whileInView: "show", viewport: { once: true, amount: 0.05 } } : { animate: tampil ? "show" : "hidden" };
-  return (
-    <motion.div className={`pointer-events-none absolute ${className}`} aria-hidden="true" initial={muncul ? "hidden" : false} {...pemicu}>
-      {items.map((t, i) => {
-        const a = ASET[t.a];
-        return (
-          <div key={i} className="absolute" style={{ left: `${t.x}%`, bottom: `${t.b}%`, width: `${t.w}%`, zIndex: t.z ?? 0, rotate: `${t.r ?? 0}deg` }}>
-            <motion.div
-              style={{ transformOrigin: "50% 100%" }}
-              variants={{
-                hidden: { opacity: 0, transform: `scale(0.55, 0.3) rotate(${i % 2 ? 12 : -12}deg)` },
-                show: { opacity: 1, transform: "scale(1, 1) rotate(0deg)", transition: { duration: 1.3, ease: [0.22, 1.2, 0.36, 1], delay: jeda + i * 0.09 } },
-              }}
-            >
-              <div className={s.goyang} style={{ animationDelay: `${-i * 1.7}s`, animationDuration: `${6 + (i % 3) * 1.5}s` }}>
-                <Image src={a.src} alt="" width={a.w} height={a.h} sizes={`${Math.round((t.w * lebar) / 100)}px`} className={`h-auto w-full ${t.flip ? "-scale-x-100" : ""}`} />
-              </div>
-            </motion.div>
-          </div>
-        );
-      })}
-    </motion.div>
-  );
-}
-
-/* ───────── Aksara Jawa ───────── */
-
-// Teks hiasan dalam aksara Jawa (Unicode), selalu disertai teks Latin di dekatnya untuk pembaca.
-export function Aksara({ children, className = "" }: { children: string; className?: string }) {
-  return (
-    <p lang="jv" className={`font-[family-name:var(--font-aksara-jawa)] ${className}`} aria-hidden="true">
-      {children}
-    </p>
+    </>
   );
 }
