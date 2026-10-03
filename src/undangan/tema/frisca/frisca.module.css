@@ -1,0 +1,40 @@
+/* Tema Frisca & Arif: kelas khusus yang di proyek aslinya ada di globals.css. */
+
+/* Latar tipis bermotif bintang delapan untuk section di dalam undangan */
+.motif {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='48' height='48' viewBox='0 0 48 48'%3E%3Cg fill='none' stroke='%239c7880' stroke-opacity='0.09' stroke-width='1'%3E%3Crect x='15' y='15' width='18' height='18'/%3E%3Crect x='15' y='15' width='18' height='18' transform='rotate(45 24 24)'/%3E%3C/g%3E%3C/svg%3E");
+}
+
+/* Latar halaman di layar lebar: pola bintang delapan (motif geometri Islami) */
+.latar {
+  background-color: #ead3cf;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='64' height='64' viewBox='0 0 64 64'%3E%3Cg fill='none' stroke='%23b8976a' stroke-opacity='0.28' stroke-width='1'%3E%3Crect x='20' y='20' width='24' height='24'/%3E%3Crect x='20' y='20' width='24' height='24' transform='rotate(45 32 32)'/%3E%3Cpath d='M0 32h8M56 32h8M32 0v8M32 56v8'/%3E%3C/g%3E%3C/svg%3E");
+}
+
+/* Butiran cahaya yang melayang naik di sampul */
+.melayang {
+  animation: melayang linear infinite;
+}
+@keyframes melayang {
+  0% {
+    transform: translateY(0) scale(1);
+    opacity: 0;
+  }
+  10% {
+    opacity: 0.9;
+  }
+  90% {
+    opacity: 0.6;
+  }
+  100% {
+    transform: translateY(-110vh) scale(0.6);
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .melayang {
+    animation: none;
+    display: none;
+  }
+}
