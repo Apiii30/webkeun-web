@@ -1,0 +1,531 @@
+/* Tema Jawa Klasik: gerakan terus-menerus (kabut, burung, janur, gunungan, kelopak jatuh) & parallax.
+   Semua hanya mengubah transform/opacity supaya dijalankan GPU. */
+
+/* Kertas sage pucat bertekstur halus */
+.kertas {
+  background-color: #eef0e6;
+  background-image:
+    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 .25 0 0 0 0 .32 0 0 0 0 .26 0 0 0 .07 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>"),
+    radial-gradient(120% 60% at 50% 0%, #f7f8f1 0%, transparent 70%);
+}
+/* Blok hijau tua dengan tekstur yang sama */
+.hijau {
+  background-color: #3d5243;
+  background-image:
+    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 .05 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>"),
+    radial-gradient(90% 50% at 50% 0%, #4a6351 0%, transparent 75%);
+}
+/* Langit pagi: krem di atas, sage berkabut di cakrawala */
+.langit {
+  background: linear-gradient(to bottom, #f4f1e4 0%, #e9ecdf 45%, #d6dfd0 75%, #c3d0bf 100%);
+}
+
+/* Batik truntum (bunga bintang, lambang cinta yang tumbuh kembali) & kawung, garis keemasan tipis */
+.truntum {
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='56' height='56'><g fill='none' stroke='%23d9bf86' stroke-width='1'><g transform='translate(14 14)'><circle r='2'/><circle cy='-6' r='2.4'/><circle cy='6' r='2.4'/><circle cx='-6' r='2.4'/><circle cx='6' r='2.4'/><circle cx='-4.2' cy='-4.2' r='1.2'/><circle cx='4.2' cy='-4.2' r='1.2'/><circle cx='-4.2' cy='4.2' r='1.2'/><circle cx='4.2' cy='4.2' r='1.2'/></g><g transform='translate(42 42)'><circle r='2'/><circle cy='-6' r='2.4'/><circle cy='6' r='2.4'/><circle cx='-6' r='2.4'/><circle cx='6' r='2.4'/><circle cx='-4.2' cy='-4.2' r='1.2'/><circle cx='4.2' cy='-4.2' r='1.2'/><circle cx='-4.2' cy='4.2' r='1.2'/><circle cx='4.2' cy='4.2' r='1.2'/></g></g><g fill='%23d9bf86'><circle cx='42' cy='14' r='1'/><circle cx='14' cy='42' r='1'/></g></svg>");
+  background-size: 56px 56px;
+}
+.kawung {
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='44' height='44'><g fill='none' stroke='%23d9bf86' stroke-width='1'><ellipse cx='11' cy='11' rx='10' ry='5.6' transform='rotate(45 11 11)'/><ellipse cx='33' cy='11' rx='10' ry='5.6' transform='rotate(-45 33 11)'/><ellipse cx='11' cy='33' rx='10' ry='5.6' transform='rotate(-45 11 33)'/><ellipse cx='33' cy='33' rx='10' ry='5.6' transform='rotate(45 33 33)'/></g><g fill='%23d9bf86'><circle cx='22' cy='22' r='1.6'/><circle cx='0' cy='0' r='1.6'/><circle cx='44' cy='0' r='1.6'/><circle cx='0' cy='44' r='1.6'/><circle cx='44' cy='44' r='1.6'/></g></svg>");
+  background-size: 44px 44px;
+}
+
+/* Bentuk foto bingkai kori (lengkung berujung runcing, sudut bawah melengkung ke dalam) */
+.topengKori {
+  -webkit-mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 400' preserveAspectRatio='none'><path transform='translate(150 200) scale(.94) translate(-150 -200)' d='M150 4 C166 4 176 18 190 28 C204 38 224 38 234 52 C242 64 244 80 262 88 C280 96 296 100 296 118 V344 C296 356 290 362 278 364 C262 367 250 378 244 396 H56 C50 378 38 367 22 364 C10 362 4 356 4 344 V118 C4 100 20 96 38 88 C56 80 58 64 66 52 C76 38 96 38 110 28 C124 18 134 4 150 4 Z'/></svg>")
+    0 0 / 100% 100% no-repeat;
+  mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 400' preserveAspectRatio='none'><path transform='translate(150 200) scale(.94) translate(-150 -200)' d='M150 4 C166 4 176 18 190 28 C204 38 224 38 234 52 C242 64 244 80 262 88 C280 96 296 100 296 118 V344 C296 356 290 362 278 364 C262 367 250 378 244 396 H56 C50 378 38 367 22 364 C10 362 4 356 4 344 V118 C4 100 20 96 38 88 C56 80 58 64 66 52 C76 38 96 38 110 28 C124 18 134 4 150 4 Z'/></svg>")
+    0 0 / 100% 100% no-repeat;
+}
+
+/* ── Gerakan terus-menerus ── */
+
+/* Tanaman & rumput bergoyang tertiup angin, berporos di pangkal */
+.goyang {
+  transform-origin: 50% 100%;
+  animation: goyang 7s ease-in-out infinite alternate;
+}
+@keyframes goyang {
+  from {
+    transform: rotate(-2.4deg);
+  }
+  to {
+    transform: rotate(2.4deg);
+  }
+}
+
+/* Rumput condong tertiup angin; pangkalnya tetap di tanah */
+.angin {
+  transform-box: fill-box;
+  transform-origin: 50% 100%;
+  animation: angin 5s ease-in-out infinite alternate;
+}
+@keyframes angin {
+  from {
+    transform: skewX(-8deg);
+  }
+  to {
+    transform: skewX(6deg);
+  }
+}
+
+/* Janur melengkung: tiang berayun pelan, rumbai di ujungnya berayun lebih bebas */
+.janur {
+  transform-origin: 20% 100%;
+  animation: janur 6s ease-in-out infinite alternate;
+}
+@keyframes janur {
+  from {
+    transform: rotate(-1.6deg);
+  }
+  to {
+    transform: rotate(1.8deg);
+  }
+}
+.rumbai {
+  transform-box: fill-box;
+  transform-origin: 50% 0%;
+  animation: rumbai 2.8s ease-in-out infinite alternate;
+}
+@keyframes rumbai {
+  from {
+    transform: rotate(-9deg);
+  }
+  to {
+    transform: rotate(9deg);
+  }
+}
+
+/* Gunungan digoyang pelan seperti dipegang dalang */
+.dalang {
+  transform-origin: 50% 96%;
+  animation: dalang 6s ease-in-out infinite alternate;
+}
+@keyframes dalang {
+  from {
+    transform: rotate(-1.4deg);
+  }
+  to {
+    transform: rotate(1.4deg);
+  }
+}
+
+/* Kabut berarak ke samping (lapisannya dua kali lebar layar) */
+.kabut {
+  animation: kabut 38s ease-in-out infinite alternate;
+}
+.kabutBalik {
+  animation: kabut 46s ease-in-out infinite alternate-reverse;
+}
+@keyframes kabut {
+  from {
+    transform: translateX(-18%);
+  }
+  to {
+    transform: translateX(6%);
+  }
+}
+
+/* Matahari pagi bernapas pelan */
+.matahari {
+  animation: matahari 7s ease-in-out infinite alternate;
+}
+@keyframes matahari {
+  from {
+    transform: scale(0.94);
+    opacity: 0.75;
+  }
+  to {
+    transform: scale(1.06);
+    opacity: 1;
+  }
+}
+
+/* Burung terbang melintas, sayap mengepak */
+.burung {
+  animation: burung 34s linear infinite;
+}
+@keyframes burung {
+  from {
+    transform: translate(-80px, 0);
+  }
+  50% {
+    transform: translate(45vw, -28px);
+  }
+  to {
+    transform: translate(105vw, -6px);
+  }
+}
+.kepak {
+  transform-origin: 50% 60%;
+  animation: kepak 0.6s ease-in-out infinite alternate;
+}
+@keyframes kepak {
+  to {
+    transform: scaleY(0.25);
+  }
+}
+
+/* Kelopak & kuncup melati yang jatuh berputar */
+.kelopak {
+  animation: kelopak var(--d, 15s) linear infinite;
+}
+@keyframes kelopak {
+  from {
+    transform: translate(0, -10vh) rotate(0deg);
+  }
+  50% {
+    transform: translate(var(--x, 50px), 50vh) rotate(200deg);
+  }
+  to {
+    transform: translate(calc(var(--x, 50px) * -0.5), 110vh) rotate(400deg);
+  }
+}
+
+/* Melayang naik-turun */
+.melayang {
+  animation: melayang 5s ease-in-out infinite alternate;
+}
+@keyframes melayang {
+  from {
+    transform: translateY(-5px);
+  }
+  to {
+    transform: translateY(5px);
+  }
+}
+
+/* Ornamen kawung berputar sangat pelan */
+.putar {
+  animation: putar 60s linear infinite;
+}
+@keyframes putar {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Kilau yang menyapu tombol */
+.kilau {
+  background-size: 220% 100%;
+  animation: kilau 4.5s ease-in-out infinite;
+}
+@keyframes kilau {
+  from {
+    background-position: 100% 0;
+  }
+  to {
+    background-position: -120% 0;
+  }
+}
+
+/* Detak hati di garis kisah */
+.detak {
+  animation: detak 1.8s ease-in-out infinite;
+}
+@keyframes detak {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  15% {
+    transform: scale(1.2);
+  }
+  30% {
+    transform: scale(1);
+  }
+  45% {
+    transform: scale(1.12);
+  }
+}
+
+/* Ikon kado sesekali bergoyang */
+.goyangKado {
+  transform-origin: 50% 80%;
+  animation: goyangKado 3.2s ease-in-out infinite;
+}
+@keyframes goyangKado {
+  0%,
+  70%,
+  100% {
+    transform: rotate(0deg);
+  }
+  76% {
+    transform: rotate(-14deg);
+  }
+  82% {
+    transform: rotate(11deg);
+  }
+  88% {
+    transform: rotate(-6deg);
+  }
+  94% {
+    transform: rotate(3deg);
+  }
+}
+
+/* ── Parallax: efek yang mengikuti scroll ──
+   Murni CSS (scroll-driven animation), hanya transform & opacity. Aktif hanya di bawah atribut data-paralaks yang
+   dipasang shell.tsx untuk browser yang menjalankannya di GPU (lihat useParalaks). Di browser lain elemen diam di
+   tempat. Nilai ditulis langsung di keyframes (tanpa var()) supaya browser bisa menjalankannya di GPU.
+   Lapisan lanskap selebar & setinggi bagiannya, jadi persen = tinggi bagian: makin jauh lapisannya, makin besar
+   geseran turunnya (= makin lambat ikut naik saat di-scroll). */
+.sek {
+  view-timeline-name: --sek;
+}
+.progres {
+  display: none;
+}
+@supports (animation-timeline: view()) {
+  [data-paralaks] .progres {
+    display: block;
+    animation: progres linear both;
+    animation-timeline: scroll(root);
+  }
+  [data-paralaks] .lapisLangit,
+  [data-paralaks] .lapisJauh,
+  [data-paralaks] .lapisTengah,
+  [data-paralaks] .lapisDekat,
+  [data-paralaks] .lapisIsi {
+    animation-timing-function: linear;
+    animation-fill-mode: both;
+    animation-timeline: --sek;
+    animation-range: exit 0% exit 100%;
+  }
+  [data-paralaks] .lapisLangit {
+    animation-name: lapisLangit;
+  }
+  [data-paralaks] .lapisJauh {
+    animation-name: lapisJauh;
+  }
+  [data-paralaks] .lapisTengah {
+    animation-name: lapisTengah;
+  }
+  [data-paralaks] .lapisDekat {
+    animation-name: lapisDekat;
+  }
+  [data-paralaks] .lapisIsi {
+    animation-name: lapisIsi;
+    animation-range: exit 0% exit 70%;
+  }
+  /* lanskap penutup: saat masuk dari bawah, gunung naik lebih lambat dari bukit di depannya */
+  [data-paralaks] .masukJauh,
+  [data-paralaks] .masukTengah {
+    animation-timing-function: linear;
+    animation-fill-mode: both;
+    animation-timeline: --sek;
+    animation-range: entry 0% contain 0%;
+  }
+  [data-paralaks] .masukJauh {
+    animation-name: masukJauh;
+  }
+  [data-paralaks] .masukTengah {
+    animation-name: masukTengah;
+  }
+  [data-paralaks] .geserLambat {
+    animation: geserLambat linear both;
+    animation-timeline: view();
+    animation-range: cover;
+  }
+  [data-paralaks] .mendekat {
+    animation: mendekat linear both;
+    animation-timeline: view();
+    animation-range: entry 0% entry 100%;
+  }
+  [data-paralaks] .pJauh {
+    animation: pJauh linear both;
+    animation-timeline: view();
+    animation-range: cover;
+  }
+  [data-paralaks] .pJudul {
+    animation: pJudul linear both;
+    animation-timeline: view();
+    animation-range: cover;
+  }
+  [data-paralaks] .pDekat {
+    animation: pDekat linear both;
+    animation-timeline: view();
+    animation-range: cover;
+  }
+  [data-paralaks] .pPutar {
+    animation: pPutar linear both;
+    animation-timeline: view();
+    animation-range: cover;
+  }
+  [data-paralaks] .tumbuhGaris {
+    animation: tumbuhGaris linear both;
+    animation-timeline: --sek;
+    animation-range: entry 60% exit 20%;
+  }
+  /* panel lanskap di layar lebar: seiring undangan dibaca, hari beranjak senja & gunung mendekat */
+  [data-paralaks] .panelGunung {
+    animation: panelGunung linear both;
+    animation-timeline: scroll(root);
+  }
+  [data-paralaks] .panelDekat {
+    animation: panelDekat linear both;
+    animation-timeline: scroll(root);
+  }
+  [data-paralaks] .panelSenja {
+    animation: panelSenja linear both;
+    animation-timeline: scroll(root);
+  }
+  [data-paralaks] .panelMatahari {
+    animation: panelMatahari linear both;
+    animation-timeline: scroll(root);
+  }
+}
+@keyframes progres {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+@keyframes lapisLangit {
+  to {
+    transform: translateY(70%);
+  }
+}
+@keyframes lapisJauh {
+  to {
+    transform: translateY(52%);
+  }
+}
+@keyframes lapisTengah {
+  to {
+    transform: translateY(30%);
+  }
+}
+@keyframes lapisDekat {
+  to {
+    transform: translateY(-6%) scale(1.08);
+  }
+}
+@keyframes lapisIsi {
+  to {
+    transform: translateY(45%) scale(0.94);
+    opacity: 0;
+  }
+}
+@keyframes masukJauh {
+  from {
+    transform: translateY(-40%);
+  }
+  to {
+    transform: none;
+  }
+}
+@keyframes masukTengah {
+  from {
+    transform: translateY(-18%);
+  }
+  to {
+    transform: none;
+  }
+}
+@keyframes geserLambat {
+  from {
+    transform: translateY(-9%);
+  }
+  to {
+    transform: translateY(9%);
+  }
+}
+@keyframes mendekat {
+  from {
+    transform: scale(0.84) translateY(40px);
+  }
+  to {
+    transform: none;
+  }
+}
+@keyframes pJauh {
+  from {
+    transform: translateY(-45px);
+  }
+  to {
+    transform: translateY(45px);
+  }
+}
+@keyframes pJudul {
+  from {
+    transform: translateY(24px);
+  }
+  to {
+    transform: translateY(-24px);
+  }
+}
+@keyframes pDekat {
+  from {
+    transform: translateY(70px);
+  }
+  to {
+    transform: translateY(-70px);
+  }
+}
+@keyframes pPutar {
+  from {
+    transform: rotate(-40deg);
+  }
+  to {
+    transform: rotate(40deg);
+  }
+}
+@keyframes tumbuhGaris {
+  from {
+    transform: scaleY(0);
+  }
+  to {
+    transform: scaleY(1);
+  }
+}
+@keyframes panelGunung {
+  to {
+    transform: translateY(-5%) scale(1.12);
+  }
+}
+@keyframes panelDekat {
+  to {
+    transform: translateY(-3%) scale(1.06);
+  }
+}
+@keyframes panelSenja {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes panelMatahari {
+  to {
+    transform: translateY(160%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .goyang,
+  .angin,
+  .janur,
+  .rumbai,
+  .dalang,
+  .kabut,
+  .kabutBalik,
+  .matahari,
+  .burung,
+  .kepak,
+  .kelopak,
+  .melayang,
+  .putar,
+  .kilau,
+  .detak,
+  .goyangKado {
+    animation: none;
+  }
+  .kelopak,
+  .burung {
+    display: none;
+  }
+}

@@ -269,6 +269,17 @@ export const templates = [
     includes: ["Karya pilihan", "Tentang saya", "Kontak"],
   },
   {
+    slug: "undangan-fara-aditya-jawa",
+    name: "Fara & Aditya · Jawa Klasik",
+    kind: "Undangan Digital",
+    category: "undangan",
+    url: "faraaditya.my.id",
+    desc: "Tema Jawa Klasik: lanskap gunung & sawah bergaya litografi tinta hijau yang bergerak berlapis saat di-scroll, gunungan wayang yang diputar saat undangan dibuka, janur kuning, dan batik truntum. Nyaman di HP maupun laptop.",
+    laptop: "/preview/laptop-undangan-jawa.webp",
+    phone: "/preview/hp-undangan-jawa-1.webp",
+    includes: ["Sampul gunungan berputar", "Lanskap parallax berlapis", "Tampilan khusus laptop", "RSVP & amplop digital"],
+  },
+  {
     slug: "undangan-fara-aditya-luxury",
     name: "Fara & Aditya · Luxury",
     kind: "Undangan Digital",
@@ -301,24 +312,12 @@ export const templates = [
     phone: "/preview/hp-undangan-rimba-1.webp",
     includes: ["Sampul buka undangan", "Ayat & salam", "Galeri layar penuh", "RSVP & amplop digital"],
   },
-  {
-    slug: "undangan-rara-dimas",
-    name: "Rara & Dimas",
-    kind: "Undangan Digital",
-    category: "undangan",
-    url: "rarandimas.my.id",
-    desc: "Undangan pernikahan bernuansa sage yang kalem. Nama tamu tampil di sampul, lengkap dengan lokasi dan RSVP.",
-    laptop: "/preview/laptop-undangan-rara-dimas.webp",
-    phone: "/preview/hp-undangan-1.webp",
-    includes: ["Nama tamu di sampul", "Hitung mundur", "RSVP & ucapan", "Amplop digital"],
-  },
 ];
 
 // Potongan layar desktop & HP dari demo, untuk kolom bergerak di hero
 const kopi = "kopisenja.id";
 const arunika = "arunikakonstruksi.co.id";
 const nadia = "nadiaputri.com";
-const undangan = "rarandimas.my.id";
 const faraAditya = "faraaditya.my.id";
 export const heroShots = {
   desktop: [
@@ -327,7 +326,6 @@ export const heroShots = {
     { src: "/preview/laptop-nadia-putri.webp", url: nadia },
     { src: "/preview/laptop-undangan-rimba.webp", url: faraAditya },
     { src: "/preview/web-kopi-senja-2.webp", url: kopi },
-    { src: "/preview/laptop-undangan-rara-dimas.webp", url: undangan },
     { src: "/preview/laptop-arunika-konstruksi.webp", url: arunika },
     { src: "/preview/web-nadia-2.webp", url: nadia },
     { src: "/preview/web-arunika-3.webp", url: arunika },
@@ -335,7 +333,6 @@ export const heroShots = {
   phone: [
     { src: "/preview/hp-arunika-1.webp", url: arunika },
     { src: "/preview/hp-kopi-senja-1.webp", url: kopi },
-    { src: "/preview/hp-undangan-1.webp", url: undangan },
     { src: "/preview/hp-nadia-1.webp", url: nadia },
     { src: "/preview/hp-arunika-2.webp", url: arunika },
     { src: "/preview/hp-kopi-senja-2.webp", url: kopi },
@@ -343,5 +340,6 @@ export const heroShots = {
     { src: "/preview/hp-undangan-rimba-1.webp", url: faraAditya },
     { src: "/preview/hp-undangan-sunda-1.webp", url: faraAditya },
     { src: "/preview/hp-undangan-luxury-1.webp", url: faraAditya },
+    { src: "/preview/hp-undangan-jawa-1.webp", url: faraAditya },
   ],
 };
