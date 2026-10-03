@@ -23,7 +23,7 @@ export type Undangan = {
   pembuka: string;
   kutipan: string;
   // opsional, dipakai tema yang menampilkan ayat & salam pembuka/penutup (mis. Rimba)
-  ayat?: { teks: string; sumber: string };
+  ayat?: { teks: string; sumber: string; arab?: string }; // arab: teks ayat aslinya (opsional, mis. tema Sakinah)
   salam?: { buka: string; tutup: string };
   cerita: { tahun: string; judul: string; isi: string }[];
   foto: { sampul: string; kutipan: string; belakang: string; galeri: Foto[] };
