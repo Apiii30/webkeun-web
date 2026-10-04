@@ -4,12 +4,14 @@ import { AnimatePresence, MotionConfig, motion } from "motion/react";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { useBukaUndangan, useParalaks } from "../../pakai";
+import { SlotMusik, useMusik } from "../../musik";
 import type { Undangan } from "../../types";
 import { ASET } from "./aset";
 import { Isi } from "./bagian";
 import s from "./delima.module.css";
 import { HALUS, Pembatas, naskah, prata } from "./hias";
 import { tombolEmas } from "./interaktif";
+import { TombolMusik } from "./musik";
 
 // Kerangka tema Merah Delima: sampul foto penuh yang terangkat saat dibuka (seperti referensinya: 1,5 detik,
 // teksnya naik lebih cepat dari fotonya), lalu animasi gerbang di beranda (gerbang.tsx). Kolom undangan selebar HP,
@@ -17,6 +19,12 @@ import { tombolEmas } from "./interaktif";
 
 export function Delima({ data: u, tamu }: { data: Undangan; tamu?: string }) {
   const { opened, open } = useBukaUndangan({ halus: false });
+  const musik = useMusik(u.musik);
+  // lagu dimulai di dalam klik "Buka Undangan" (browser hanya mengizinkan audio sesudah ada interaksi)
+  const buka = () => {
+    open();
+    musik.mulai();
+  };
   const paralaks = useParalaks();
 
   return (
@@ -24,7 +32,9 @@ export function Delima({ data: u, tamu }: { data: Undangan; tamu?: string }) {
       <div data-paralaks={paralaks ? "" : undefined} className="relative min-h-svh bg-[#2e080d] font-[family-name:var(--font-crimson)] text-[17px] text-[#4a1219] selection:bg-[#c9a35c]/50">
         <LatarSisi />
 
-        <AnimatePresence>{!opened && <Sampul key="sampul" u={u} tamu={tamu} onOpen={open} />}</AnimatePresence>
+        <AnimatePresence>{!opened && <Sampul key="sampul" u={u} tamu={tamu} onOpen={buka} />}</AnimatePresence>
+
+        <SlotMusik muncul={opened}>{u.musik && <TombolMusik main={musik.main} onUbah={musik.ubah} lagu={u.musik} />}</SlotMusik>
 
         <main className={`${s.kertas} relative z-10 mx-auto w-full max-w-[440px] overflow-x-clip`}>
           <Isi u={u} opened={opened} tamu={tamu} />

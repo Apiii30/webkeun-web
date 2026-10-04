@@ -2,6 +2,7 @@ import type { CSSProperties } from "react";
 import type { Metadata } from "next";
 import { DemoBanner } from "@/components/demo-banner";
 import { faraAditya } from "@/undangan/contoh/fara-aditya";
+import { LAGU } from "@/undangan/lagu";
 import { TemaDelima } from "@/undangan/tema/delima";
 
 export const metadata: Metadata = {
@@ -17,7 +18,7 @@ export default async function UndanganFaraAdityaMerahDelima({ searchParams }: Pa
   return (
     // --demo-h: tinggi bar demo, supaya navigasi & tombol undangan tidak tertutup
     <div style={{ "--demo-h": "3.75rem" } as CSSProperties}>
-      <TemaDelima data={faraAditya} tamu={tamu} />
+      <TemaDelima data={{ ...faraAditya, musik: LAGU.perfect }} tamu={tamu} />
       <DemoBanner name="Undangan Merah Delima" compact />
     </div>
   );

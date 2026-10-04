@@ -1,0 +1,138 @@
+/* Gerak tombol musik semua tema. Hanya transform/opacity (dijalankan GPU). Saat musik dijeda, pembungkus tombol
+   diberi kelas .jeda: semua gerak berhenti di tempat (tidak melompat ke awal). */
+
+.jeda,
+.jeda * {
+  animation-play-state: paused !important;
+}
+
+/* berputar seperti piringan */
+.putar {
+  animation: putar 7s linear infinite;
+}
+.putarLambat {
+  animation: putar 22s linear infinite;
+}
+.putarBalik {
+  animation: putar 16s linear infinite reverse;
+}
+@keyframes putar {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* batang equalizer: tinggi naik-turun dari pangkalnya (--j = jeda, --t = durasi) */
+.eq {
+  transform-origin: 50% 100%;
+  animation: eq var(--t, 0.9s) ease-in-out var(--j, 0s) infinite alternate;
+}
+.eqTengah {
+  transform-origin: 50% 50%;
+  animation: eq var(--t, 0.9s) ease-in-out var(--j, 0s) infinite alternate;
+}
+@keyframes eq {
+  from {
+    transform: scaleY(0.25);
+  }
+  to {
+    transform: scaleY(1);
+  }
+}
+
+/* gelombang suara melebar & memudar */
+.riak {
+  animation: riak 2.4s cubic-bezier(0.2, 0.6, 0.4, 1) var(--j, 0s) infinite;
+}
+@keyframes riak {
+  from {
+    transform: scale(1);
+    opacity: 0.7;
+  }
+  to {
+    transform: scale(1.75);
+    opacity: 0;
+  }
+}
+
+/* teks berjalan (isi digandakan dua kali, digeser setengahnya) */
+.geser {
+  animation: geser 9s linear infinite;
+}
+@keyframes geser {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+/* senar bergetar: lengkungnya dibalik cepat bolak-balik */
+.getar {
+  animation: getar var(--t, 0.08s) ease-in-out var(--j, 0s) infinite alternate;
+}
+@keyframes getar {
+  from {
+    transform: scaleX(1);
+  }
+  to {
+    transform: scaleX(-1);
+  }
+}
+
+/* gelombang sinus mengalir ke kiri (jalurnya selebar dua periode) */
+.alir {
+  animation: alir var(--t, 1.4s) linear infinite;
+}
+@keyframes alir {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+/* not balok / kunang-kunang naik pelan lalu hilang */
+.naik {
+  animation: naik 2.6s ease-out var(--j, 0s) infinite;
+}
+@keyframes naik {
+  from {
+    transform: translate(0, 0) scale(0.6);
+    opacity: 0;
+  }
+  20% {
+    opacity: 1;
+  }
+  to {
+    transform: translate(var(--x, 6px), var(--y, -26px)) scale(1);
+    opacity: 0;
+  }
+}
+
+/* kilau berdenyut */
+.denyut {
+  animation: denyut 1.8s ease-in-out var(--j, 0s) infinite alternate;
+}
+@keyframes denyut {
+  from {
+    opacity: 0.35;
+    transform: scale(0.85);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1.1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .putar,
+  .putarLambat,
+  .putarBalik,
+  .eq,
+  .eqTengah,
+  .riak,
+  .geser,
+  .getar,
+  .alir,
+  .naik,
+  .denyut {
+    animation: none;
+  }
+}

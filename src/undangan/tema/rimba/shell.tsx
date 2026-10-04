@@ -4,12 +4,14 @@ import { AnimatePresence, MotionConfig, motion, type Variants } from "motion/rea
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { useBukaUndangan, useParalaks } from "../../pakai";
+import { SlotMusik, useMusik } from "../../musik";
 import type { Undangan } from "../../types";
 import { Awan, Bingkai, Burung, Kabut, Kunang, Kupu, Latar, Rumpun, Sinar } from "./alam";
 import { ASET, RUMPUN_ATAS, RUMPUN_BAWAH } from "./aset";
 import { Isi } from "./bagian";
 import { tombolEmas } from "./interaktif";
 import s from "./rimba.module.css";
+import { TombolMusik } from "./musik";
 
 // Kerangka tema Rimba: sampul "Buka Undangan", latar hutan yang diam di tempat, navigasi bawah.
 // Tampilan khusus HP; di layar lebar undangan tetap selebar HP di tengah.
@@ -18,6 +20,12 @@ const cinzel = "font-[family-name:var(--font-cinzel)]";
 
 export function Rimba({ data: u, tamu }: { data: Undangan; tamu?: string }) {
   const { opened, open } = useBukaUndangan({ halus: false });
+  const musik = useMusik(u.musik);
+  // lagu dimulai di dalam klik "Buka Undangan" (browser hanya mengizinkan audio sesudah ada interaksi)
+  const buka = () => {
+    open();
+    musik.mulai();
+  };
   const paralaks = useParalaks();
 
   return (
@@ -25,7 +33,9 @@ export function Rimba({ data: u, tamu }: { data: Undangan; tamu?: string }) {
       <div data-paralaks={paralaks ? "" : undefined} className="relative min-h-svh bg-[#0b1610] font-[family-name:var(--font-montserrat)] text-[#f3ede0] selection:bg-[#c9a45c]/40">
         <Latar />
 
-        <AnimatePresence>{!opened && <Sampul key="sampul" u={u} tamu={tamu} onOpen={open} />}</AnimatePresence>
+        <AnimatePresence>{!opened && <Sampul key="sampul" u={u} tamu={tamu} onOpen={buka} />}</AnimatePresence>
+
+        <SlotMusik muncul={opened}>{u.musik && <TombolMusik main={musik.main} onUbah={musik.ubah} lagu={u.musik} />}</SlotMusik>
 
         <main className="relative z-10 mx-auto w-full max-w-[440px] overflow-x-clip">
           <Isi u={u} opened={opened} tamu={tamu} />

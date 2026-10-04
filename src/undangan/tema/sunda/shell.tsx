@@ -3,12 +3,14 @@
 import { AnimatePresence, MotionConfig, motion, type Variants } from "motion/react";
 import { useEffect, useState } from "react";
 import { useBukaUndangan, useParalaks } from "../../pakai";
+import { SlotMusik, useMusik } from "../../musik";
 import type { Undangan } from "../../types";
 import { RUMPUN_SUDUT, RUMPUN_SUDUT_KANAN } from "./aset";
 import { Isi } from "./bagian";
 import { tombolBata } from "./interaktif";
 import { Aksara, Bingkai, Kujang, MegaMendung, MelatiJatuh, Rumpun, Siger, Tumpal } from "./ornamen";
 import s from "./sunda.module.css";
+import { TombolMusik } from "./musik";
 
 // Kerangka tema Art Sunda: sampul berupa dua daun pintu (lawang) bermotif mega mendung yang terbuka,
 // kolom undangan krem, latar nila di layar lebar, dan navigasi bawah.
@@ -19,6 +21,12 @@ const rozha = "font-[family-name:var(--font-rozha)]";
 
 export function Sunda({ data: u, tamu }: { data: Undangan; tamu?: string }) {
   const { opened, open } = useBukaUndangan({ halus: false });
+  const musik = useMusik(u.musik);
+  // lagu dimulai di dalam klik "Buka Undangan" (browser hanya mengizinkan audio sesudah ada interaksi)
+  const buka = () => {
+    open();
+    musik.mulai();
+  };
   const paralaks = useParalaks();
 
   return (
@@ -26,7 +34,9 @@ export function Sunda({ data: u, tamu }: { data: Undangan; tamu?: string }) {
       <div data-paralaks={paralaks ? "" : undefined} className="relative min-h-svh bg-[#22344a] font-[family-name:var(--font-jost)] text-[#3a3330] selection:bg-[#d9bd85]/50">
         <LatarSisi />
 
-        <AnimatePresence>{!opened && <Sampul key="sampul" u={u} tamu={tamu} onOpen={open} />}</AnimatePresence>
+        <AnimatePresence>{!opened && <Sampul key="sampul" u={u} tamu={tamu} onOpen={buka} />}</AnimatePresence>
+
+        <SlotMusik muncul={opened}>{u.musik && <TombolMusik main={musik.main} onUbah={musik.ubah} lagu={u.musik} />}</SlotMusik>
 
         <main className={`${s.kertas} relative z-10 mx-auto w-full max-w-[440px] overflow-x-clip`}>
           <Isi u={u} opened={opened} tamu={tamu} />

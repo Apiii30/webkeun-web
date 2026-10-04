@@ -4,11 +4,13 @@ import { AnimatePresence, MotionConfig, motion, type Variants } from "motion/rea
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { useBukaUndangan, useParalaks } from "../../pakai";
+import { SlotMusik, useMusik } from "../../musik";
 import type { Undangan } from "../../types";
 import { Isi } from "./bagian";
 import { Daun, Kerlip, Monogram, bodoni } from "./hias";
 import { tombolEmas } from "./interaktif";
 import s from "./luxury.module.css";
+import { TombolMusik } from "./musik";
 
 // Kerangka tema Luxury: sampul foto penuh yang terangkat seperti tirai saat dibuka, kolom undangan,
 // latar espresso di layar lebar, dan navigasi bawah. Tampilan khusus HP; di layar lebar tetap selebar HP.
@@ -17,6 +19,12 @@ const ease = [0.22, 1, 0.36, 1] as const;
 
 export function Luxury({ data: u, tamu }: { data: Undangan; tamu?: string }) {
   const { opened, open } = useBukaUndangan({ halus: false });
+  const musik = useMusik(u.musik);
+  // lagu dimulai di dalam klik "Buka Undangan" (browser hanya mengizinkan audio sesudah ada interaksi)
+  const buka = () => {
+    open();
+    musik.mulai();
+  };
   const paralaks = useParalaks();
 
   return (
@@ -24,7 +32,9 @@ export function Luxury({ data: u, tamu }: { data: Undangan; tamu?: string }) {
       <div data-paralaks={paralaks ? "" : undefined} className="relative min-h-svh bg-[#1a1512] font-[family-name:var(--font-manrope)] text-[#2b2420] selection:bg-[#e9d5a1]/60">
         <LatarSisi u={u} />
 
-        <AnimatePresence>{!opened && <Sampul key="sampul" u={u} tamu={tamu} onOpen={open} />}</AnimatePresence>
+        <AnimatePresence>{!opened && <Sampul key="sampul" u={u} tamu={tamu} onOpen={buka} />}</AnimatePresence>
+
+        <SlotMusik muncul={opened}>{u.musik && <TombolMusik main={musik.main} onUbah={musik.ubah} lagu={u.musik} />}</SlotMusik>
 
         <main className="relative z-10 mx-auto w-full max-w-[440px] overflow-x-clip bg-[#f6f1e9]">
           <Isi u={u} opened={opened} tamu={tamu} />

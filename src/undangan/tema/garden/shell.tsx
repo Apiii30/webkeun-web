@@ -4,12 +4,14 @@ import { AnimatePresence, MotionConfig, motion } from "motion/react";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { useBukaUndangan, useParalaks } from "../../pakai";
+import { SlotMusik, useMusik } from "../../musik";
 import type { Undangan } from "../../types";
 import { ASET } from "./aset";
 import { Isi } from "./bagian";
 import { Burung, Gambar, Kameo, LEMBUT, Wisteria, italiana } from "./hias";
 import { tombolTeal } from "./interaktif";
 import s from "./garden.module.css";
+import { TombolMusik } from "./musik";
 
 // Kerangka tema Garden Premium: sampul yang pergi berlapis saat dibuka (isi naik, wisteria terangkat, merak & peony
 // turun, latar memudar) sementara adegan taman di baliknya mulai "kamera mundur". Kolom undangan selebar HP,
@@ -17,6 +19,12 @@ import s from "./garden.module.css";
 
 export function Garden({ data: u, tamu }: { data: Undangan; tamu?: string }) {
   const { opened, open } = useBukaUndangan({ halus: false });
+  const musik = useMusik(u.musik);
+  // lagu dimulai di dalam klik "Buka Undangan" (browser hanya mengizinkan audio sesudah ada interaksi)
+  const buka = () => {
+    open();
+    musik.mulai();
+  };
   const paralaks = useParalaks();
 
   return (
@@ -27,7 +35,9 @@ export function Garden({ data: u, tamu }: { data: Undangan; tamu?: string }) {
       >
         <LatarSisi />
 
-        <AnimatePresence>{!opened && <Sampul key="sampul" u={u} tamu={tamu} onOpen={open} />}</AnimatePresence>
+        <AnimatePresence>{!opened && <Sampul key="sampul" u={u} tamu={tamu} onOpen={buka} />}</AnimatePresence>
+
+        <SlotMusik muncul={opened}>{u.musik && <TombolMusik main={musik.main} onUbah={musik.ubah} lagu={u.musik} />}</SlotMusik>
 
         <main className={`${s.kertas} relative z-10 mx-auto w-full max-w-[440px] overflow-x-clip`}>
           <Isi u={u} opened={opened} tamu={tamu} />

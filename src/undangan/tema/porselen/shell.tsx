@@ -4,12 +4,14 @@ import { AnimatePresence, MotionConfig, motion } from "motion/react";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { useBukaUndangan, useParalaks } from "../../pakai";
+import { SlotMusik, useMusik } from "../../musik";
 import type { Undangan } from "../../types";
 import { ASET } from "./aset";
 import { Isi } from "./bagian";
 import { HALUS, Pembatas, naskah } from "./hias";
 import { tombolEmas } from "./interaktif";
 import s from "./porselen.module.css";
+import { TombolMusik } from "./musik";
 
 // Kerangka tema Biru Porselen: sampul foto penuh yang terangkat saat dibuka (teksnya naik lebih cepat dari fotonya),
 // lalu animasi jendela gunungan di beranda (gerbang.tsx). Kolom undangan selebar HP, latar redup di layar lebar,
@@ -17,6 +19,12 @@ import s from "./porselen.module.css";
 
 export function Porselen({ data: u, tamu }: { data: Undangan; tamu?: string }) {
   const { opened, open } = useBukaUndangan({ halus: false });
+  const musik = useMusik(u.musik);
+  // lagu dimulai di dalam klik "Buka Undangan" (browser hanya mengizinkan audio sesudah ada interaksi)
+  const buka = () => {
+    open();
+    musik.mulai();
+  };
   const paralaks = useParalaks();
 
   return (
@@ -27,7 +35,9 @@ export function Porselen({ data: u, tamu }: { data: Undangan; tamu?: string }) {
       >
         <LatarSisi />
 
-        <AnimatePresence>{!opened && <Sampul key="sampul" u={u} tamu={tamu} onOpen={open} />}</AnimatePresence>
+        <AnimatePresence>{!opened && <Sampul key="sampul" u={u} tamu={tamu} onOpen={buka} />}</AnimatePresence>
+
+        <SlotMusik muncul={opened}>{u.musik && <TombolMusik main={musik.main} onUbah={musik.ubah} lagu={u.musik} />}</SlotMusik>
 
         <main className={`${s.kertas} relative z-10 mx-auto w-full max-w-[440px] overflow-x-clip`}>
           <Isi u={u} opened={opened} tamu={tamu} />
