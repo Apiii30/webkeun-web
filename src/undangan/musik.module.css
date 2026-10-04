@@ -22,6 +22,20 @@
   }
 }
 
+/* berayun dari puncaknya seperti lentera */
+.ayun {
+  transform-origin: 50% 0%;
+  animation: ayun 2.6s ease-in-out infinite alternate;
+}
+@keyframes ayun {
+  from {
+    transform: rotate(-6deg);
+  }
+  to {
+    transform: rotate(6deg);
+  }
+}
+
 /* batang equalizer: tinggi naik-turun dari pangkalnya (--j = jeda, --t = durasi) */
 .eq {
   transform-origin: 50% 100%;
@@ -122,6 +136,7 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .ayun,
   .putar,
   .putarLambat,
   .putarBalik,

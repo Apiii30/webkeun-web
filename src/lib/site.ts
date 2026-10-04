@@ -271,6 +271,18 @@ export const templates = [
     includes: ["Karya pilihan", "Tentang saya", "Kontak"],
   },
   {
+    slug: "undangan-fara-aditya-oriental-peony",
+    name: "Fara & Aditya · Oriental Peony",
+    kind: "Undangan Digital",
+    category: "undangan",
+    url: "faraaditya.my.id",
+    desc: "Tema Oriental Peony: pernikahan bernuansa Tionghoa merah pernis, emas, dan giok, dengan lanskap lukisan biru-hijau, gerbang paifang, peoni, teratai, bambu, bangau, lentera merah, dan 囍. Dibuka dengan animasi kamera ±10 detik: menembus jendela bulan, melewati pegunungan berlapis, mendekati gerbang, lalu mundur ke kolam teratai berbingkai kayu merah. Galeri roda jendela bulan dan love story berupa gulungan lukisan yang terbuka saat digulir. Khusus tampilan HP.",
+    phone: "/preview/hp-undangan-oriental-1.webp",
+    screens: ["/preview/hp-undangan-oriental-2.webp", "/preview/hp-undangan-oriental-3.webp"],
+    tone: { bg: "#f6e3d6", accent: "#9e1c22" },
+    includes: ["Pembuka kamera 10 detik", "Galeri roda jendela bulan", "Love story gulungan lukisan", "Musik & angpao digital"],
+  },
+  {
     slug: "undangan-fara-aditya-putih-sakinah",
     name: "Fara & Aditya · Putih Sakinah",
     kind: "Undangan Digital",

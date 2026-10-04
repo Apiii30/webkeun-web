@@ -1,0 +1,533 @@
+/* Tema Oriental Peony: latar, gerak terus-menerus & parallax. Semua hanya mengubah transform/opacity supaya dijalankan
+   GPU. Gerak pembuka (lanskap, gerbang paifang, kolam teratai, bingkai merah) ada di gerbang.tsx (motion). */
+
+/* Kertas krem bertekstur serat halus, dengan awan keberuntungan samar (puncaknya polos supaya menyatu dengan tepi genteng) */
+.kertas {
+  background-color: #f8efdc;
+  background-image:
+    linear-gradient(180deg, #f8efdc 0, rgb(248 239 220 / 0) 70px),
+    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.012 .9' numOctaves='2' seed='3' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 .55 0 0 0 0 .42 0 0 0 0 .25 0 0 0 .1 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>"),
+    radial-gradient(120% 60% at 50% 0%, #fdf8ec 0%, transparent 70%);
+}
+
+/* Panel merah pernis (puncaknya polos supaya menyatu dengan tepi genteng) */
+.merah {
+  background-color: #9e1c22;
+  background-image:
+    linear-gradient(180deg, #9e1c22 0, rgb(158 28 34 / 0) 90px),
+    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1 0 0 0 0 .85 0 0 0 0 .6 0 0 0 .05 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>"),
+    radial-gradient(110% 55% at 50% 0%, #b4272e 0%, transparent 70%), radial-gradient(110% 50% at 50% 100%, #7a1218 0%, transparent 75%);
+}
+
+/* Langit pagi lukisan: biru pucat di atas, krem keemasan di cakrawala */
+.langit {
+  background-color: #eef3ef;
+  background-image: radial-gradient(60% 30% at 50% 36%, #fff6dc 0%, rgb(255 246 220 / 0) 100%), linear-gradient(180deg, #cfe2ea 0%, #e6efee 34%, #f8f1df 62%, #f3ecd9 100%);
+}
+
+/* Awan keberuntungan (xiangyun) samar sebagai lapisan pola */
+.polaAwan {
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='80'><g fill='none' stroke='%23c99a3e' stroke-width='1'><path d='M14 40c0-8 10-11 15-5 2-9 16-10 19-1 5-5 15-2 14 6 6 0 8 7 3 9H18c-6 0-8-6-4-9Z'/><path d='M30 41c0-4 6-4 6 0 0 2-3 2-3 0M50 41c0-4 6-4 6 0 0 2-3 2-3 0'/></g><g fill='none' stroke='%23c99a3e' stroke-width='1' transform='translate(60 0)'><path d='M4 70c0-6 7-8 11-4 2-7 12-7 14-1 4-4 11-1 10 4 5 0 6 5 2 7H7c-4 0-6-4-3-6Z'/></g></svg>");
+  background-size: 120px 80px;
+}
+
+/* Pola meander (回纹) emas untuk pita tepi */
+.huiwen {
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16'><path d='M0 15V1H15V12H4V5H11V8H8' fill='none' stroke='%23d9b25f' stroke-width='1.5' stroke-linecap='square'/></svg>");
+  background-size: 16px 16px;
+  background-repeat: repeat-x;
+}
+
+/* Tepi genteng (ujung genteng bundar berjajar) di puncak bagian */
+.genteng {
+  background-repeat: repeat-x;
+  background-size: 26px 15px;
+  background-position: center bottom;
+}
+
+/* Bunga bergoyang pelan */
+.ayunA {
+  animation: ayunA 4.8s ease-in-out infinite alternate;
+}
+.ayunB {
+  animation: ayunB 5.8s ease-in-out infinite alternate;
+}
+@keyframes ayunA {
+  from {
+    transform: rotate(-2.2deg) scale(1);
+  }
+  to {
+    transform: rotate(1.4deg) scale(1.03);
+  }
+}
+@keyframes ayunB {
+  from {
+    transform: rotate(1.8deg);
+  }
+  to {
+    transform: rotate(-2.2deg) scale(1.025);
+  }
+}
+
+/* Lentera merah berayun dari talinya */
+.lentera {
+  transform-origin: 50% 0%;
+  animation: lentera var(--d, 5s) ease-in-out infinite alternate;
+}
+@keyframes lentera {
+  from {
+    transform: rotate(var(--a, 3deg));
+  }
+  to {
+    transform: rotate(calc(var(--a, 3deg) * -1));
+  }
+}
+.nyala {
+  animation: nyala 2.4s ease-in-out infinite alternate;
+}
+@keyframes nyala {
+  from {
+    opacity: 0.5;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1.08);
+  }
+}
+/* jumbai lentera bergoyang lebih cepat */
+.jumbai {
+  transform-origin: 50% 0%;
+  animation: lentera 1.8s ease-in-out infinite alternate;
+}
+
+/* Awan & kabut melayang mendatar */
+.awanGeser {
+  animation: awanGeser var(--d, 40s) ease-in-out infinite alternate;
+}
+@keyframes awanGeser {
+  from {
+    transform: translateX(-6%);
+  }
+  to {
+    transform: translateX(6%);
+  }
+}
+
+/* Kilau air kolam */
+.riak {
+  background-image: repeating-linear-gradient(90deg, rgb(255 255 255 / 0) 0 26px, rgb(255 255 250 / 0.75) 26px 40px, rgb(255 255 255 / 0) 40px 80px);
+  background-size: 80px 100%;
+  animation: riak 7s linear infinite;
+}
+@keyframes riak {
+  from {
+    background-position: 0 0;
+  }
+  to {
+    background-position: 80px 0;
+  }
+}
+
+/* Bangau terbang melintas (pembungkus) & kepak sayap */
+.melintas {
+  animation: melintas var(--d, 30s) linear var(--j, 0s) infinite;
+}
+@keyframes melintas {
+  from {
+    transform: translate(-40vw, 0);
+  }
+  50% {
+    transform: translate(40vw, -18px);
+  }
+  to {
+    transform: translate(120vw, 4px);
+  }
+}
+.kepak {
+  animation: kepak 0.9s ease-in-out infinite alternate;
+}
+@keyframes kepak {
+  from {
+    transform: scaleY(1);
+  }
+  to {
+    transform: scaleY(-0.55);
+  }
+}
+
+/* Kelopak peoni yang jatuh berputar */
+.kelopak {
+  animation: kelopak var(--d, 16s) linear infinite;
+}
+@keyframes kelopak {
+  from {
+    transform: translate(0, -10vh) rotate(0deg);
+  }
+  50% {
+    transform: translate(var(--x, 50px), 50vh) rotate(220deg);
+  }
+  to {
+    transform: translate(calc(var(--x, 50px) * -0.4), 110vh) rotate(430deg);
+  }
+}
+
+/* Kilau emas berkelip */
+.kerlip {
+  animation: kerlip var(--d, 2.4s) ease-in-out var(--j, 0s) infinite;
+}
+@keyframes kerlip {
+  0%,
+  100% {
+    opacity: 0;
+    transform: scale(0.3) rotate(0deg);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1) rotate(45deg);
+  }
+}
+
+/* Kilau emas yang menyapu tombol */
+.kilau {
+  background-size: 220% 100%;
+  animation: kilau 4.5s ease-in-out infinite;
+}
+@keyframes kilau {
+  from {
+    background-position: 100% 0;
+  }
+  to {
+    background-position: -120% 0;
+  }
+}
+
+.putar {
+  animation: putar 50s linear infinite;
+}
+@keyframes putar {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.petunjuk {
+  animation: petunjuk 2s ease-in-out infinite;
+}
+@keyframes petunjuk {
+  0%,
+  100% {
+    transform: translateY(0);
+    opacity: 0.4;
+  }
+  50% {
+    transform: translateY(8px);
+    opacity: 1;
+  }
+}
+
+/* Angka hitung mundur yang baru masuk dari bawah (CSS saja: tidak memaksa browser mengukur ulang halaman) */
+.gulir {
+  animation: gulir 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+@keyframes gulir {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: none;
+  }
+}
+
+.goyangKado {
+  transform-origin: 50% 80%;
+  animation: goyangKado 3.2s ease-in-out infinite;
+}
+@keyframes goyangKado {
+  0%,
+  70%,
+  100% {
+    transform: rotate(0deg);
+  }
+  76% {
+    transform: rotate(-14deg);
+  }
+  82% {
+    transform: rotate(11deg);
+  }
+  88% {
+    transform: rotate(-6deg);
+  }
+  94% {
+    transform: rotate(3deg);
+  }
+}
+
+/* ── Parallax ──
+   Murni CSS (scroll-driven animation), hanya transform/opacity. Aktif hanya bila pembungkus tema punya
+   data-paralaks (dipasang shell.tsx untuk browser yang menjalankannya di GPU: Chrome/Edge/Android, Safari 26.4+).
+   Nilai ditulis langsung di keyframes (tanpa var()) supaya bisa dijalankan GPU. Longhand dipakai di mana-mana:
+   di CSS module, "animation: linear both" tanpa nama membuat "linear" dibaca sebagai nama animasi. */
+.sek {
+  view-timeline-name: --sek;
+}
+.progres,
+.redup {
+  display: none;
+}
+@supports (animation-timeline: view()) {
+  [data-paralaks] .latarSisi,
+  [data-paralaks] .progres,
+  [data-paralaks] .keluarJauh,
+  [data-paralaks] .keluarTengah,
+  [data-paralaks] .keluarDekat,
+  [data-paralaks] .keluarTeks,
+  [data-paralaks] .tumpuk,
+  [data-paralaks] .redup,
+  [data-paralaks] .geserLambat,
+  [data-paralaks] .zoomKeluar,
+  [data-paralaks] .pJauh,
+  [data-paralaks] .pDekat,
+  [data-paralaks] .pJudul,
+  [data-paralaks] .pKiri,
+  [data-paralaks] .pKanan,
+  [data-paralaks] .pLentera,
+  [data-paralaks] .mendekat {
+    animation-duration: auto;
+    animation-timing-function: linear;
+    animation-fill-mode: both;
+  }
+  [data-paralaks] .latarSisi {
+    animation-name: latarSisi;
+    animation-timeline: scroll(root);
+  }
+  [data-paralaks] .progres {
+    display: block;
+    animation-name: progres;
+    animation-timeline: scroll(root);
+  }
+  [data-paralaks] .keluarJauh,
+  [data-paralaks] .keluarTengah,
+  [data-paralaks] .keluarDekat {
+    animation-timeline: --sek;
+    animation-range: exit 0% exit 100%;
+  }
+  [data-paralaks] .keluarJauh {
+    animation-name: keluarJauh;
+  }
+  [data-paralaks] .keluarTengah {
+    animation-name: keluarTengah;
+  }
+  [data-paralaks] .keluarDekat {
+    animation-name: keluarDekat;
+  }
+  [data-paralaks] .keluarTeks {
+    animation-name: keluarTeks;
+    animation-timeline: --sek;
+    animation-range: exit 0% exit 70%;
+  }
+  /* bagian yang lewat tertinggal & mengecil di bawah bagian berikutnya (efek bertumpuk), sambil meredup */
+  [data-paralaks] .tumpuk {
+    transform-origin: 50% 100%;
+    animation-name: tumpuk;
+    animation-timeline: --sek;
+    animation-range: exit 0% exit 100%;
+  }
+  [data-paralaks] .redup {
+    display: block;
+    animation-name: redup;
+    animation-timeline: --sek;
+    animation-range: exit 0% exit 100%;
+  }
+  [data-paralaks] .geserLambat {
+    animation-name: geserLambat;
+    animation-timeline: view();
+    animation-range: cover;
+  }
+  [data-paralaks] .zoomKeluar {
+    animation-name: zoomKeluar;
+    animation-timeline: view();
+    animation-range: entry 0% cover 55%;
+  }
+  [data-paralaks] .pJauh,
+  [data-paralaks] .pDekat,
+  [data-paralaks] .pJudul,
+  [data-paralaks] .pKiri,
+  [data-paralaks] .pKanan,
+  [data-paralaks] .pLentera {
+    animation-timeline: view();
+    animation-range: cover;
+  }
+  [data-paralaks] .pJauh {
+    animation-name: pJauh;
+  }
+  [data-paralaks] .pDekat {
+    animation-name: pDekat;
+  }
+  [data-paralaks] .pJudul {
+    animation-name: pJudul;
+  }
+  [data-paralaks] .pKiri {
+    animation-name: pKiri;
+  }
+  [data-paralaks] .pKanan {
+    animation-name: pKanan;
+  }
+  [data-paralaks] .pLentera {
+    animation-name: pLentera;
+  }
+  [data-paralaks] .mendekat {
+    animation-name: mendekat;
+    animation-timeline: --sek;
+    animation-range: entry 0% entry 100%;
+  }
+}
+@keyframes latarSisi {
+  from {
+    transform: scale(1.12) translateY(3%);
+  }
+  to {
+    transform: scale(1.12) translateY(-3%);
+  }
+}
+@keyframes progres {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+@keyframes keluarJauh {
+  to {
+    transform: translateY(55%);
+  }
+}
+@keyframes keluarTengah {
+  to {
+    transform: translateY(30%) scale(0.97);
+  }
+}
+@keyframes keluarDekat {
+  to {
+    transform: translateY(-10%) scale(1.1);
+  }
+}
+@keyframes keluarTeks {
+  to {
+    transform: translateY(180px) scale(0.9);
+    opacity: 0;
+  }
+}
+@keyframes tumpuk {
+  to {
+    transform: translateY(220px) scale(0.93);
+  }
+}
+@keyframes redup {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 0.5;
+  }
+}
+@keyframes geserLambat {
+  from {
+    transform: translateY(-9%);
+  }
+  to {
+    transform: translateY(9%);
+  }
+}
+@keyframes zoomKeluar {
+  from {
+    transform: scale(1.3);
+  }
+  to {
+    transform: scale(1);
+  }
+}
+@keyframes pJauh {
+  from {
+    transform: translateY(-50px);
+  }
+  to {
+    transform: translateY(50px);
+  }
+}
+@keyframes pDekat {
+  from {
+    transform: translateY(80px);
+  }
+  to {
+    transform: translateY(-80px);
+  }
+}
+@keyframes pJudul {
+  from {
+    transform: translateY(22px);
+  }
+  to {
+    transform: translateY(-22px);
+  }
+}
+@keyframes pKiri {
+  from {
+    transform: translate(-18px, 60px) rotate(-4deg);
+  }
+  to {
+    transform: translate(6px, -60px) rotate(2deg);
+  }
+}
+@keyframes pKanan {
+  from {
+    transform: translate(18px, 60px) rotate(4deg);
+  }
+  to {
+    transform: translate(-6px, -60px) rotate(-2deg);
+  }
+}
+/* lentera turun lebih lambat dari isi bagian (seolah tergantung lebih jauh) */
+@keyframes pLentera {
+  from {
+    transform: translateY(-70px);
+  }
+  to {
+    transform: translateY(70px);
+  }
+}
+@keyframes mendekat {
+  from {
+    transform: scale(0.86) translateY(60px);
+  }
+  to {
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ayunA,
+  .ayunB,
+  .lentera,
+  .nyala,
+  .jumbai,
+  .awanGeser,
+  .riak,
+  .melintas,
+  .kepak,
+  .kelopak,
+  .kerlip,
+  .kilau,
+  .putar,
+  .petunjuk,
+  .gulir,
+  .goyangKado {
+    animation: none;
+  }
+  .kelopak,
+  .melintas,
+  .kerlip {
+    display: none;
+  }
+}
