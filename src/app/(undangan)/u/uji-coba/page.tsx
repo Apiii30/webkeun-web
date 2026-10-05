@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { faraAditya } from "@/undangan/contoh/fara-aditya";
 import { BukuTamu } from "@/undangan/buku-tamu";
 import { LAGU } from "@/undangan/lagu";
-import { TemaRimba } from "@/undangan/tema/rimba";
+import { TemaPorselen } from "@/undangan/tema/porselen";
 
 // Undangan sungguhan (bukan demo): RSVP & ucapan tamu tersimpan di Supabase.
 // Alamatnya /u/<slug>?to=<nama tamu>; link per tamu dibuat di /rekap/<slug>?kunci=...
@@ -10,10 +10,10 @@ import { TemaRimba } from "@/undangan/tema/rimba";
 // Membuat undangan baru: salin folder ini ke /u/<slug-baru>, ganti data & tema, lalu daftarkan slug-nya
 // di Supabase (supabase/daftar-undangan.sql). Tanpa didaftarkan, ucapan tamu ditolak.
 //
-// Sementara ini: uji coba buku tamu dengan data contoh Fara & Aditya dan tema Rimba.
+// Sementara ini: uji coba buku tamu dengan data contoh Fara & Aditya dan tema Biru Porselen.
 
 const SLUG = "uji-coba";
-const data = { ...faraAditya, musik: LAGU.nantiKitaSepertiIni };
+const data = { ...faraAditya, musik: LAGU.bermuara };
 const pasangan = `${data.wanita.panggilan} & ${data.pria.panggilan}`;
 
 export const metadata: Metadata = {
@@ -30,7 +30,7 @@ export default async function UndanganUjiCoba({ searchParams }: PageProps<"/u/uj
 
   return (
     <BukuTamu slug={SLUG} tamu={tamu}>
-      <TemaRimba data={data} tamu={tamu} />
+      <TemaPorselen data={data} tamu={tamu} />
     </BukuTamu>
   );
 }
