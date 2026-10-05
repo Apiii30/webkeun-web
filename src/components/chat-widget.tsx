@@ -19,6 +19,7 @@ const topics = [
 const greetings: Record<string, string> = {
   "/": "Halo! 👋 Mau dibikinin website apa?",
   "/template": "Naksir template yang mana? Tanya aja 😄",
+  "/template/undangan": "Lagi cari tema undangan? Tanya aja 😄",
   "/tentang": "Ada yang mau ditanyain soal Webkeun?",
 };
 const pricingGreeting = "Bingung pilih paket? Sini aku bantu pilihin!";

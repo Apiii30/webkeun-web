@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { type PointerEvent as ReactPointerEvent, type ReactNode, useEffect, useRef, useState } from "react";
-import { aboutLinks, navLinks, resourcesLinks, services, site, templateCategories, templates, waLink } from "@/lib/site";
+import { aboutLinks, kategoriHref, navLinks, resourcesLinks, services, site, templateCategories, templates, waLink } from "@/lib/site";
 import { Icon, type IconName } from "./icons";
 
 type MenuKey = "layanan" | "template" | "resources";
@@ -90,7 +90,7 @@ function LayananMenu({ onNavigate }: { onNavigate: () => void }) {
   );
 }
 
-// Isi menu "Template": pilih kategori, langsung terfilter di halaman template
+// Isi menu "Template": kategori website langsung terfilter di /template, undangan ke halamannya sendiri
 function TemplateMenu({ onNavigate }: { onNavigate: () => void }) {
   return (
     <>
@@ -100,7 +100,7 @@ function TemplateMenu({ onNavigate }: { onNavigate: () => void }) {
           return (
             <li key={c.slug}>
               <Link
-                href={`/template?kategori=${c.slug}`}
+                href={kategoriHref(c.slug)}
                 onClick={onNavigate}
                 className="group flex items-center gap-3 rounded-xl px-3 py-2.5 transition-colors hover:bg-lilac-soft"
               >
@@ -124,8 +124,10 @@ function TemplateMenu({ onNavigate }: { onNavigate: () => void }) {
         className="group mt-2 flex items-center justify-between gap-3 rounded-2xl bg-brand px-5 py-3.5 text-white transition-colors hover:bg-brand-deep"
       >
         <span>
-          <span className="block font-semibold">Lihat semua template</span>
-          <span className="block text-sm text-white/75">{templates.length} template siap pakai</span>
+          <span className="block font-semibold">Lihat semua template website</span>
+          <span className="block text-sm text-white/75">
+            {templates.filter((t) => t.category !== "undangan").length} template siap pakai
+          </span>
         </span>
         <span className="grid size-9 shrink-0 place-items-center rounded-full bg-white text-brand transition-transform group-hover:translate-x-0.5">
           <Icon name="arrow" className="size-4" strokeWidth={2.5} />

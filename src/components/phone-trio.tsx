@@ -98,7 +98,6 @@ function Hp({
           {/* kilap kaca */}
           <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-white/25 via-transparent to-transparent" />
         </div>
-        <span className="absolute top-[4.5%] left-1/2 h-[2.6%] w-[28%] -translate-x-1/2 rounded-full bg-[#111018]" />
       </div>
     </div>
   );

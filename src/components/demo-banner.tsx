@@ -2,15 +2,15 @@ import Link from "next/link";
 import { waLink } from "@/lib/site";
 
 // Bar melayang di halaman demo template: balik ke daftar template atau langsung pakai.
-// compact: satu baris kecil selebar HP, untuk demo undangan yang tampilannya khusus HP.
+// compact: satu baris kecil selebar HP, untuk demo undangan yang tampilannya khusus HP (kembalinya ke galeri undangan).
 export function DemoBanner({ name, compact }: { name: string; compact?: boolean }) {
   if (compact) {
     return (
       <div className="fixed inset-x-3 bottom-3 z-[70] mx-auto flex max-w-[416px] items-center gap-2 rounded-full bg-ink p-1.5 font-sans text-xs text-white shadow-[0_16px_32px_-12px_rgb(21_19_43/0.6)]">
         <Link
-          href="/template"
+          href="/template/undangan"
           className="grid size-8 shrink-0 place-items-center rounded-full bg-white/10 transition-colors hover:bg-white/20"
-          aria-label="Kembali ke daftar template"
+          aria-label="Kembali ke daftar tema undangan"
         >
           <svg viewBox="0 0 24 24" className="size-4" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
             <path d="M20 12H5M11 6l-6 6 6 6" />

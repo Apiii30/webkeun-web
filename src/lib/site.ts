@@ -198,7 +198,7 @@ export const serviceShowcase = {
     tab: "Undangan",
     nama: "undangan Fara & Aditya",
     domain: "fara-aditya.my.id",
-    demo: "/template?kategori=undangan",
+    demo: "/template/undangan",
     web: ["/preview/undangan/laptop-undangan-garden.webp", "/preview/undangan/laptop-undangan-porselen.webp"],
     hp: ["/preview/undangan/hp-undangan-garden-1.webp", "/preview/undangan/hp-undangan-porselen-1.webp"],
     mood: "kedip",
@@ -320,13 +320,41 @@ export const faqs = [
   },
 ];
 
-// Kategori template; slug-nya dipakai di URL /template?kategori=<slug>
+// Kategori template. Kategori website difilter di /template?kategori=<slug>; undangan punya halaman sendiri
+// (/template/undangan) karena pengunjung, isi, dan cara pesannya beda.
 export const templateCategories = [
   { slug: "umkm", label: "Website UMKM", desc: "Kafe, toko, usaha jasa", icon: "store" },
   { slug: "company-profile", label: "Company Profile", desc: "CV, PT, kontraktor", icon: "building" },
   { slug: "portofolio", label: "Portofolio", desc: "Desainer, fotografer", icon: "user" },
   { slug: "undangan", label: "Undangan Digital", desc: "Pernikahan online", icon: "heart" },
 ] as const;
+
+export const kategoriWebsite = templateCategories.filter((c) => c.slug !== "undangan");
+export type KategoriWebsite = (typeof kategoriWebsite)[number]["slug"];
+
+export function kategoriHref(slug: string) {
+  return slug === "undangan" ? "/template/undangan" : `/template?kategori=${slug}`;
+}
+
+// Judul & teks pembuka halaman /template, berganti mengikuti kategori website yang dipilih
+export const templateIntro = {
+  semua: {
+    judul: "siap kamu pakai",
+    intro: "Lihat demonya langsung, pilih yang paling dekat sama usaha kamu, lalu kami sesuaikan warna, foto, dan isinya.",
+  },
+  umkm: {
+    judul: "buat UMKM",
+    intro: "Buat kafe, warung, toko, atau usaha jasa. Menu & harga, lokasi, dan tombol pesan lewat WhatsApp sudah tersedia.",
+  },
+  "company-profile": {
+    judul: "company profile",
+    intro: "Wajah resmi perusahaan kamu: profil, layanan, legalitas, sampai form minta penawaran dalam satu website.",
+  },
+  portofolio: {
+    judul: "portofolio pribadi",
+    intro: "Pamerkan karya dan pengalaman kamu dengan cara yang lebih berkesan daripada PDF.",
+  },
+} as const;
 
 // Template website & undangan. Halaman demonya ada di /template/<slug>.
 // Gambar di /public/preview/<kategori> adalah screenshot dari halaman demo itu; kalau tampilannya diubah, ambil ulang.

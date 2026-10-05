@@ -1,53 +1,71 @@
 import type { Metadata } from "next";
-import { Suspense } from "react";
-import { Badge, SectionHeading } from "@/components/brand";
-import { Mascot } from "@/components/mascot";
+import Link from "next/link";
+import { redirect } from "next/navigation";
+import { SectionHeading } from "@/components/brand";
+import { CoverFan } from "@/components/cover-fan";
+import { Icon } from "@/components/icons";
 import { ClosingCta } from "@/components/sections/closing";
 import { TemplateGallery } from "@/components/sections/template-gallery";
-import { templates } from "@/lib/site";
-
-export const metadata: Metadata = {
-  title: "Template Website & Undangan",
-  description:
-    "Pilih template website UMKM, company profile, portofolio, atau undangan digital. Warna, foto, dan isinya kami sesuaikan buat kamu.",
-};
+import { type KategoriWebsite, kategoriWebsite, templateIntro, templates } from "@/lib/site";
 
 const steps = [
   { title: "Pilih template", desc: "Cari yang gayanya paling dekat sama usaha kamu." },
-  { title: "Kirim materi", desc: "Logo, foto, info usaha atau acara. Belum lengkap? Kami bantu rapikan." },
+  { title: "Kirim materi", desc: "Logo, foto, dan info usaha. Belum lengkap? Kami bantu rapikan." },
   { title: "Kami sesuaikan", desc: "Warna & isi diganti sesuai brand kamu, lalu website online." },
 ];
 
-export default function TemplatePage() {
+const jumlahUndangan = templates.filter((t) => t.category === "undangan").length;
+
+async function bacaKategori(searchParams: PageProps<"/template">["searchParams"]) {
+  const k = (await searchParams).kategori;
+  const slug = Array.isArray(k) ? k[0] : k;
+  return { slug, kategori: kategoriWebsite.find((c) => c.slug === slug) ?? null };
+}
+
+export async function generateMetadata({ searchParams }: PageProps<"/template">): Promise<Metadata> {
+  const { kategori } = await bacaKategori(searchParams);
+  if (!kategori) {
+    return {
+      title: "Template Website",
+      description: "Pilih template website UMKM, company profile, atau portofolio. Warna, foto, dan isinya kami sesuaikan buat kamu.",
+    };
+  }
+  return { title: `Template ${kategori.label}`, description: templateIntro[kategori.slug].intro };
+}
+
+export default async function TemplatePage({ searchParams }: PageProps<"/template">) {
+  const { slug, kategori } = await bacaKategori(searchParams);
+  // Undangan sekarang punya halaman sendiri; link lama /template?kategori=undangan diarahkan ke sana
+  if (slug === "undangan") redirect("/template/undangan");
+  const awal: KategoriWebsite | null = kategori?.slug ?? null;
+
   return (
     <>
-      <section className="bg-lilac">
-        <div className="mx-auto grid max-w-6xl items-end gap-8 px-4 pt-32 pb-14 sm:px-6 md:grid-cols-[1fr_auto] md:pt-36">
-          <div>
-            <Badge>{templates.length} template siap pakai</Badge>
-            <h1 className="mt-5 text-4xl leading-[1.08] font-bold tracking-[-0.03em] sm:text-5xl lg:text-[3.4rem]">
-              Template website
-              <span className="block text-brand">& undangan digital</span>
-            </h1>
-            <p className="mt-5 max-w-xl text-lg text-ink/70">
-              Lihat demonya langsung, pilih yang kamu suka, lalu kami sesuaikan warna, foto, dan isinya dengan usaha
-              atau acara kamu.
-            </p>
-          </div>
-          <div className="relative hidden w-56 md:block" aria-hidden="true">
-            <span className="absolute -top-16 -left-20 z-10 rotate-[-6deg] rounded-2xl bg-white px-4 py-2.5 text-sm font-bold shadow-md">
-              Pilih yang paling kamu suka!
-            </span>
-            <div className="absolute -inset-[5%] rotate-[9deg] rounded-[2.2rem] bg-brand" />
-            <Mascot mood="senyum" className="relative w-full -rotate-3" />
-          </div>
-        </div>
-      </section>
+      {/* key: kalau kategori diganti lewat link (mis. menu navbar), galeri mulai ulang dari kategori itu */}
+      <TemplateGallery key={awal ?? "semua"} awal={awal} />
 
-      {/* Suspense dibutuhkan karena galeri membaca ?kategori= dari URL */}
-      <Suspense>
-        <TemplateGallery />
-      </Suspense>
+      <section className="mx-auto max-w-6xl px-4 pb-16 sm:px-6 md:pb-20">
+        <Link
+          href="/template/undangan"
+          className="group grid overflow-hidden rounded-4xl bg-[#fadde4] transition-colors hover:bg-[#f8d3dc] md:grid-cols-[1.25fr_1fr]"
+        >
+          <div className="p-7 sm:p-10">
+            <p className="inline-flex items-center gap-2 text-sm font-bold tracking-[0.14em] text-[#b0415b] uppercase">
+              <Icon name="heart" className="size-4" />
+              Undangan digital
+            </p>
+            <h2 className="mt-3 text-3xl leading-tight font-bold tracking-[-0.02em] sm:text-4xl">Lagi nyiapin pernikahan?</h2>
+            <p className="mt-3 max-w-md text-lg text-ink/70">
+              Ada {jumlahUndangan} tema undangan digital. Tinggal sebar lewat WhatsApp, nama tiap tamu tertulis di undangannya.
+            </p>
+            <span className="mt-6 inline-flex items-center gap-2 font-semibold text-ink">
+              Lihat {jumlahUndangan} tema undangan
+              <Icon name="arrow" className="size-4 transition-transform group-hover:translate-x-1" strokeWidth={2.5} />
+            </span>
+          </div>
+          <CoverFan className="h-64 md:h-auto md:min-h-72" sizes="140px" />
+        </Link>
+      </section>
 
       <section className="mx-auto max-w-6xl px-4 pb-20 sm:px-6 md:pb-28">
         <SectionHeading top="Cara pakai template" bottom="cuma 3 langkah" />

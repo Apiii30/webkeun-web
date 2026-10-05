@@ -45,7 +45,6 @@ function DesktopCard({ shot, eager, hidden }: { shot: Shot; eager: boolean; hidd
 function PhoneCard({ shot, eager, hidden }: { shot: Shot; eager: boolean; hidden?: boolean }) {
   return (
     <div className="relative rounded-[1.4rem] bg-white p-1.5 shadow-[0_18px_40px_-18px_rgb(21_19_43/0.35)]">
-      <span className="absolute top-2.5 left-1/2 z-10 h-1.5 w-8 -translate-x-1/2 rounded-full bg-ink/80 sm:h-2 sm:w-10" />
       <Image
         src={shot.src}
         alt={hidden ? "" : `Tampilan HP website contoh ${shot.url}`}
