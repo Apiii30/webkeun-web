@@ -41,7 +41,7 @@ export function ContactForm() {
           <span className="text-sm font-semibold">
             Nama usaha <span className="font-normal text-ink/50">(opsional)</span>
           </span>
-          <input name="usaha" autoComplete="organization" placeholder="Misal: Kopi Senja" className={field} />
+          <input name="usaha" autoComplete="organization" placeholder="Misal: Kawalu Coffee" className={field} />
         </label>
       </div>
 

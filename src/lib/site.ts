@@ -238,15 +238,15 @@ export const templateCategories = [
 // screens = mempelai & acara) di atas warna temanya (tone).
 export const templates = [
   {
-    slug: "kopi-senja",
-    name: "Kopi Senja",
+    slug: "kawalu-coffee",
+    name: "Kawalu Coffee",
     kind: "Website UMKM",
     category: "umkm",
-    url: "kopisenja.id",
-    desc: "Kedai kopi di Bandung: menu lengkap dengan harga, jam buka, dan alamat. Pelanggan bisa langsung pesan antar.",
-    laptop: "/preview/laptop-kopi-senja.webp",
-    phone: "/preview/hp-kopi-senja-1.webp",
-    includes: ["Menu & harga", "Jam buka", "Lokasi", "Tombol pesan antar"],
+    url: "kawalucoffee.id",
+    desc: "Kedai kopi di Serang, Banten: pembuka lanskap Gunung Karang yang bergerak saat digulir, menu & harga per kategori, pesan antar, jual biji kopi, serta jam buka live dan peta lokasi.",
+    laptop: "/preview/laptop-kawalu-coffee.webp",
+    phone: "/preview/hp-kawalu-1.webp",
+    includes: ["Pembuka parallax", "Menu & harga", "Pesan antar & jual biji", "Jam buka live & peta"],
   },
   {
     slug: "arunika-konstruksi",
@@ -260,15 +260,15 @@ export const templates = [
     includes: ["Profil perusahaan", "Layanan", "Proyek terbaru", "Kontak"],
   },
   {
-    slug: "nadia-putri",
-    name: "Nadia Putri",
+    slug: "laras-kinanti",
+    name: "Laras Kinanti",
     kind: "Portofolio",
     category: "portofolio",
-    url: "nadiaputri.com",
-    desc: "Desainer grafis: karya pilihan ditata bersih dan lega, jadi hasil kerjanya yang paling menonjol.",
-    laptop: "/preview/laptop-nadia-putri.webp",
-    phone: "/preview/hp-nadia-1.webp",
-    includes: ["Karya pilihan", "Tentang saya", "Kontak"],
+    url: "laraskinanti.com",
+    desc: "Fotografer potret & dokumenter: dibuka dengan bingkai kamera yang mekar jadi layar penuh, seri foto yang bertumpuk saat digulir, rol film yang bergeser ke samping, dan daftar harga yang jelas. Parallax di setiap bagian.",
+    laptop: "/preview/laptop-laras-kinanti.webp",
+    phone: "/preview/hp-laras-1.webp",
+    includes: ["Pembuka parallax", "Seri foto & galeri", "Rol film potret", "Harga & kontak"],
   },
   {
     slug: "undangan-fara-aditya-oriental-peony",
@@ -381,27 +381,27 @@ export const templates = [
 ];
 
 // Potongan layar desktop & HP dari demo, untuk kolom bergerak di hero
-const kopi = "kopisenja.id";
+const kawalu = "kawalucoffee.id";
 const arunika = "arunikakonstruksi.co.id";
-const nadia = "nadiaputri.com";
+const laras = "laraskinanti.com";
 const faraAditya = "faraaditya.my.id";
 export const heroShots = {
   desktop: [
-    { src: "/preview/laptop-kopi-senja.webp", url: kopi },
+    { src: "/preview/laptop-kawalu-coffee.webp", url: kawalu },
     { src: "/preview/web-arunika-2.webp", url: arunika },
-    { src: "/preview/laptop-nadia-putri.webp", url: nadia },
-    { src: "/preview/web-kopi-senja-2.webp", url: kopi },
+    { src: "/preview/laptop-laras-kinanti.webp", url: laras },
+    { src: "/preview/web-kawalu-2.webp", url: kawalu },
     { src: "/preview/laptop-arunika-konstruksi.webp", url: arunika },
-    { src: "/preview/web-nadia-2.webp", url: nadia },
+    { src: "/preview/web-laras-2.webp", url: laras },
     { src: "/preview/web-arunika-3.webp", url: arunika },
   ],
   phone: [
     { src: "/preview/hp-arunika-1.webp", url: arunika },
-    { src: "/preview/hp-kopi-senja-1.webp", url: kopi },
-    { src: "/preview/hp-nadia-1.webp", url: nadia },
+    { src: "/preview/hp-kawalu-1.webp", url: kawalu },
+    { src: "/preview/hp-laras-1.webp", url: laras },
     { src: "/preview/hp-arunika-2.webp", url: arunika },
-    { src: "/preview/hp-kopi-senja-2.webp", url: kopi },
-    { src: "/preview/hp-nadia-2.webp", url: nadia },
+    { src: "/preview/hp-kawalu-2.webp", url: kawalu },
+    { src: "/preview/hp-laras-2.webp", url: laras },
     { src: "/preview/hp-undangan-rimba-1.webp", url: faraAditya },
     { src: "/preview/hp-undangan-sunda-1.webp", url: faraAditya },
     { src: "/preview/hp-undangan-luxury-1.webp", url: faraAditya },

@@ -18,6 +18,10 @@ const nextConfig: NextConfig = {
       { source: "/template/undangan-fara-aditya", destination: "/template/undangan-fara-aditya-rimba", permanent: false },
       // Tema Jawa Klasik sudah dihapus, diganti undangan Frisca & Arif
       { source: "/template/undangan-fara-aditya-jawa", destination: "/template/undangan-frisca-arif", permanent: false },
+      // Portofolio Nadia Putri sudah diganti template Laras Kinanti
+      { source: "/template/nadia-putri", destination: "/template/laras-kinanti", permanent: false },
+      // Kopi Senja sudah diganti template Kawalu Coffee
+      { source: "/template/kopi-senja", destination: "/template/kawalu-coffee", permanent: false },
     ];
   },
 };

@@ -87,8 +87,8 @@ export function Features() {
                   <span className="size-2 rounded-full bg-[#28c840]" />
                 </div>
                 <Image
-                  src="/preview/laptop-kopi-senja.webp"
-                  alt="Contoh website Kopi Senja di laptop"
+                  src="/preview/laptop-kawalu-coffee.webp"
+                  alt="Contoh website Kawalu Coffee di laptop"
                   width={1280}
                   height={800}
                   sizes="(min-width: 768px) 520px, 90vw"
@@ -97,8 +97,8 @@ export function Features() {
               </div>
               <div className="absolute right-4 -bottom-10 w-[28%] rotate-[4deg] overflow-hidden rounded-[1.1rem] bg-white p-1 shadow-2xl sm:right-5">
                 <Image
-                  src="/preview/hp-kopi-senja-1.webp"
-                  alt="Contoh website Kopi Senja di HP"
+                  src="/preview/hp-kawalu-1.webp"
+                  alt="Contoh website Kawalu Coffee di HP"
                   width={480}
                   height={960}
                   sizes="160px"

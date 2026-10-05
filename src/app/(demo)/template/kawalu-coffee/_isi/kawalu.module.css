@@ -1,0 +1,123 @@
+/* Template Kawalu Coffee */
+
+/* Awan melayang pelan di langit pembuka */
+@keyframes awan {
+  from {
+    transform: translateX(-6vw);
+  }
+  to {
+    transform: translateX(6vw);
+  }
+}
+.awan {
+  animation: awan 18s ease-in-out infinite alternate;
+}
+
+/* Dahan kopi bergoyang ditiup angin */
+@keyframes goyang {
+  from {
+    rotate: -1.6deg;
+  }
+  to {
+    rotate: 1.8deg;
+  }
+}
+.goyang {
+  animation: goyang 5.5s ease-in-out infinite alternate;
+}
+
+/* Permukaan kopi bergelombang di tepi atas menu */
+@keyframes ombak {
+  to {
+    transform: translateX(-50%);
+  }
+}
+.ombak {
+  animation: ombak 9s linear infinite;
+}
+
+/* Uap kopi di footer */
+@keyframes uap {
+  0% {
+    stroke-dashoffset: 1;
+    opacity: 0;
+  }
+  30% {
+    opacity: 0.9;
+  }
+  100% {
+    stroke-dashoffset: -1;
+    opacity: 0;
+  }
+}
+.uap {
+  stroke-dasharray: 1 1;
+  animation: uap 3.6s ease-in-out infinite;
+}
+
+/* Titik status "buka" berdenyut */
+@keyframes denyut {
+  0% {
+    box-shadow: 0 0 0 0 rgb(80 200 120 / 0.55);
+  }
+  100% {
+    box-shadow: 0 0 0 9px rgb(80 200 120 / 0);
+  }
+}
+.denyut {
+  animation: denyut 1.8s ease-out infinite;
+}
+
+/* Struk: tepi bawah bergerigi */
+.gerigi {
+  --g: 10px;
+  mask:
+    conic-gradient(from -45deg at bottom, #0000, #000 1deg 89deg, #0000 90deg) bottom / calc(var(--g) * 2) var(--g) repeat-x,
+    linear-gradient(#000 0 0) top / 100% calc(100% - var(--g) + 1px) no-repeat;
+}
+
+/* Barcode struk */
+.barcode {
+  background: repeating-linear-gradient(
+    90deg,
+    #22140e 0 2px,
+    transparent 2px 4px,
+    #22140e 4px 5px,
+    transparent 5px 8px,
+    #22140e 8px 11px,
+    transparent 11px 12px,
+    #22140e 12px 13px,
+    transparent 13px 16px
+  );
+}
+
+/* Kemasan biji kopi: kertas kraft dengan lipatan gerigi di atas */
+.kraft {
+  background:
+    linear-gradient(90deg, rgb(0 0 0 / 0.1), transparent 12%, transparent 88%, rgb(0 0 0 / 0.12)),
+    repeating-linear-gradient(115deg, rgb(255 255 255 / 0.04) 0 2px, transparent 2px 6px),
+    #c9a77c;
+  --g: 7px;
+  mask:
+    conic-gradient(from 135deg at top, #0000, #000 1deg 89deg, #0000 90deg) top / calc(var(--g) * 2) var(--g) repeat-x,
+    linear-gradient(#000 0 0) bottom / 100% calc(100% - var(--g) + 1px) no-repeat;
+}
+
+.garis {
+  -webkit-text-stroke: 1.5px currentColor;
+  -webkit-text-fill-color: transparent;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .awan,
+  .goyang,
+  .ombak,
+  .uap,
+  .denyut {
+    animation: none;
+  }
+  .uap {
+    stroke-dasharray: none;
+    opacity: 0.6;
+  }
+}

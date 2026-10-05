@@ -1,0 +1,85 @@
+/* Template portofolio Laras Kinanti */
+
+/* Butiran film tipis di atas seluruh halaman. Sengaja tanpa mix-blend-mode supaya scroll tetap ringan di HP. */
+.butir {
+  position: fixed;
+  inset: 0;
+  z-index: 45;
+  pointer-events: none;
+  opacity: 0.07;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1.4 -.35'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* Pembuka: panggung sticky jadi container, bingkai potret dihitung dari ukurannya.
+   --t: 1 = bingkai kecil di tengah, 0 = layar penuh (diisi motion saat scroll). */
+.panggung {
+  container-type: size;
+}
+.bingkai,
+.jendela {
+  --fh: min(62cqh, 96cqw);
+  --fw: calc(var(--fh) * 0.75);
+  --iy: calc((100cqh - var(--fh)) / 2);
+  --ix: calc((100cqw - var(--fw)) / 2);
+  position: absolute;
+}
+.bingkai {
+  inset: 0;
+  clip-path: inset(calc(var(--t) * var(--iy)) calc(var(--t) * var(--ix)) round calc(var(--t) * 3px));
+}
+.jendela {
+  top: calc(var(--t) * var(--iy));
+  bottom: calc(var(--t) * var(--iy));
+  left: calc(var(--t) * var(--ix));
+  right: calc(var(--t) * var(--ix));
+}
+
+/* Pita film: lubang sprocket di atas & bawah */
+.film {
+  position: relative;
+  background: #14110e;
+  padding-block: 2.6rem;
+}
+.film::before,
+.film::after {
+  content: "";
+  position: absolute;
+  inset-inline: 0;
+  height: 0.8rem;
+  background: repeating-linear-gradient(90deg, transparent 0 0.55rem, #ece5d8 0.55rem 1.35rem, transparent 1.35rem 1.9rem);
+  opacity: 0.92;
+}
+.film::before {
+  top: 0.75rem;
+}
+.film::after {
+  bottom: 0.75rem;
+}
+
+/* Tepi film tipis sebagai garis atas lembaran yang menutup pembuka */
+.tepiFilm {
+  height: 2.25rem;
+  background:
+    repeating-linear-gradient(90deg, transparent 0 0.55rem, #ece5d8 0.55rem 1.35rem, transparent 1.35rem 1.9rem) center / 100% 0.7rem no-repeat,
+    #14110e;
+}
+
+.garis {
+  -webkit-text-stroke: 1.5px currentColor;
+  -webkit-text-fill-color: transparent;
+}
+
+@keyframes kedip {
+  50% {
+    opacity: 0.25;
+  }
+}
+.kedip {
+  animation: kedip 1.6s steps(2, jump-none) infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .kedip {
+    animation: none;
+  }
+}
