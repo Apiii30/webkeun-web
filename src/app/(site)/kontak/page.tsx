@@ -4,11 +4,11 @@ import { Badge, PillLink } from "@/components/brand";
 import { Icon } from "@/components/icons";
 import { Mascot } from "@/components/mascot";
 import { ContactForm } from "@/components/sections/contact-form";
-import { site, waLink } from "@/lib/site";
+import { mailLink, site, waLink } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "Kontak",
-  description: `Konsultasi gratis soal pembuatan website. Chat Webkeun lewat WhatsApp di ${site.whatsappDisplay}.`,
+  description: `Konsultasi gratis soal pembuatan website. Chat Webkeun lewat WhatsApp di ${site.whatsappDisplay} atau email ke ${site.email}.`,
 };
 
 const prep = [
@@ -48,6 +48,21 @@ export default function KontakPage() {
               Chat sekarang
             </PillLink>
           </div>
+
+          <a
+            href={mailLink()}
+            className="group flex items-center gap-4 rounded-3xl p-5 ring-1 ring-ink/10 transition-colors hover:bg-lilac-soft sm:p-6"
+          >
+            <span className="grid size-12 shrink-0 place-items-center rounded-2xl bg-lilac-soft text-brand transition-colors group-hover:bg-brand group-hover:text-white">
+              <Icon name="mail" className="size-6" />
+            </span>
+            <span className="min-w-0 flex-1">
+              <span className="block text-sm font-semibold text-ink/55">Email</span>
+              <span className="block text-lg font-bold tracking-tight break-all sm:text-xl">{site.email}</span>
+              <span className="block text-sm text-ink/60">Buat kirim brief, berkas, atau minta penawaran resmi.</span>
+            </span>
+            <Icon name="arrow" className="size-4 shrink-0 transition-transform group-hover:translate-x-1" strokeWidth={2.5} />
+          </a>
 
           <div className="rounded-3xl bg-lilac-soft p-7">
             <h2 className="text-lg font-bold">Biar ngobrolnya lancar, siapkan ini</h2>

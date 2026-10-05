@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { footerLinks, services, site, waLink } from "@/lib/site";
+import { footerLinks, mailLink, services, site, waLink } from "@/lib/site";
 import { PillLink } from "../brand";
 import { Icon } from "../icons";
 import { Mascot } from "../mascot";
@@ -77,15 +77,20 @@ export function Footer() {
 
         <div>
           <h2 className="text-sm font-bold">Kontak</h2>
-          <a
-            href={waLink()}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="mt-4 inline-flex items-center gap-2 text-sm text-ink/65 hover:text-brand"
-          >
-            <Icon name="whatsapp" className="size-4 text-wa" />
-            {site.whatsappDisplay}
-          </a>
+          <ul className="mt-4 space-y-2.5 text-sm text-ink/65">
+            <li>
+              <a href={waLink()} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 hover:text-brand">
+                <Icon name="whatsapp" className="size-4 shrink-0 text-wa" />
+                {site.whatsappDisplay}
+              </a>
+            </li>
+            <li>
+              <a href={mailLink()} className="inline-flex items-center gap-2 break-all hover:text-brand">
+                <Icon name="mail" className="size-4 shrink-0 text-brand" />
+                {site.email}
+              </a>
+            </li>
+          </ul>
         </div>
       </div>
 

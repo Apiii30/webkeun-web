@@ -8,7 +8,12 @@ export const site = {
     "Jasa pembuatan website UMKM, company profile, dan portofolio. Rapi, cepat, enak dilihat di HP, dan harganya masuk akal.",
   whatsapp: "6283125043525", // format internasional, tanpa + dan tanpa 0 di depan
   whatsappDisplay: "0831-2504-3525",
+  email: "yukwebkeun@gmail.com",
 };
+
+export function mailLink(subject = "Tanya soal pembuatan website") {
+  return `mailto:${site.email}?subject=${encodeURIComponent(subject)}`;
+}
 
 export function waLink(message = "Halo Webkeun, aku mau tanya-tanya soal pembuatan website.") {
   return `https://wa.me/${site.whatsapp}?text=${encodeURIComponent(message)}`;
@@ -120,6 +125,15 @@ export const services = [
     price: "mulai 499rb",
   },
   {
+    icon: "heart",
+    slug: "undangan",
+    title: "Undangan Digital",
+    short: "Undangan pernikahan online",
+    desc: "Undangan pernikahan yang tinggal disebar lewat WhatsApp. Ada nama tamu, RSVP, galeri foto, dan peta lokasi acara.",
+    fit: "Akad, resepsi, lamaran, tasyakuran",
+    price: "harga menyusul", // TODO: isi setelah harga paket undangan disepakati tim
+  },
+  {
     icon: "sliders",
     slug: "custom",
     title: "Custom",
@@ -129,6 +143,88 @@ export const services = [
     price: "ngobrol dulu",
   },
 ] as const;
+
+// Panggung pratinjau di section Layanan (landing page): contoh website yang "tergulir" di bingkai browser & HP,
+// fitur yang disorot, dan celetukan maskot. Screenshot diambil dari /public/preview/<kategori>.
+// Custom belum punya contoh jadi, jadi digambar sebagai rancangan sistem booking (web & hp = null).
+export const serviceShowcase = {
+  "website-umkm": {
+    tab: "UMKM",
+    nama: "Kawalu Coffee",
+    domain: "kawalucoffee.id",
+    demo: "/template/kawalu-coffee",
+    web: ["/preview/umkm/laptop-kawalu-coffee.webp", "/preview/umkm/web-kawalu-2.webp"],
+    hp: ["/preview/umkm/hp-kawalu-1.webp", "/preview/umkm/hp-kawalu-2.webp"],
+    mood: "senyum",
+    line: "Warungmu jadi gampang dicari!",
+    chips: [
+      ["tag", "Menu & harga"],
+      ["whatsapp", "Pesan lewat WA"],
+      ["pin", "Peta lokasi"],
+    ],
+  },
+  "company-profile": {
+    tab: "Company",
+    nama: "Bahtera Lintas Nusantara",
+    domain: "bahteralogistik.co.id",
+    demo: "/template/bahtera-logistik",
+    web: ["/preview/company-profile/laptop-bahtera-logistik.webp", "/preview/company-profile/web-bahtera-2.webp"],
+    hp: ["/preview/company-profile/hp-bahtera-1.webp", "/preview/company-profile/hp-bahtera-2.webp"],
+    mood: "kedip",
+    line: "Langsung kelihatan bonafide.",
+    chips: [
+      ["building", "Profil & legalitas"],
+      ["layers", "Daftar layanan"],
+      ["edit", "Form penawaran"],
+    ],
+  },
+  portofolio: {
+    tab: "Portofolio",
+    nama: "Laras Kinanti",
+    domain: "laraskinanti.com",
+    demo: "/template/laras-kinanti",
+    web: ["/preview/portofolio/laptop-laras-kinanti.webp", "/preview/portofolio/web-laras-2.webp"],
+    hp: ["/preview/portofolio/hp-laras-1.webp", "/preview/portofolio/hp-laras-2.webp"],
+    mood: "tertawa",
+    line: "Karyamu, panggungmu.",
+    chips: [
+      ["image", "Galeri karya"],
+      ["user", "Tentang aku"],
+      ["chat", "Kontak & sosmed"],
+    ],
+  },
+  // Undangan dibuat untuk HP; di panggung dua tema bergantian (Garden → Porselen) supaya kelihatan ada banyak pilihan
+  undangan: {
+    tab: "Undangan",
+    nama: "undangan Fara & Aditya",
+    domain: "fara-aditya.my.id",
+    demo: "/template?kategori=undangan",
+    web: ["/preview/undangan/laptop-undangan-garden.webp", "/preview/undangan/laptop-undangan-porselen.webp"],
+    hp: ["/preview/undangan/hp-undangan-garden-1.webp", "/preview/undangan/hp-undangan-porselen-1.webp"],
+    mood: "kedip",
+    line: "Tinggal sebar ke tamu!",
+    chips: [
+      ["heart", "RSVP & ucapan"],
+      ["image", "Galeri prewedding"],
+      ["wallet", "Amplop digital"],
+    ],
+  },
+  custom: {
+    tab: "Custom",
+    nama: "Sistem booking",
+    domain: "ide-kamu.id/booking",
+    demo: null,
+    web: null,
+    hp: null,
+    mood: "kaget",
+    line: "Ada ide? Hayu diobrolin!",
+    chips: [
+      ["clock", "Booking jadwal"],
+      ["sliders", "Dashboard admin"],
+      ["wallet", "Bayar online"],
+    ],
+  },
+} as const;
 
 export const packages = [
   {
