@@ -2,7 +2,8 @@
 
 import { AnimatePresence, motion, type Variants } from "motion/react";
 import Image from "next/image";
-import { type FormEvent, type ReactNode, useEffect, useRef, useState, useSyncExternalStore } from "react";
+import { type FormEvent, type ReactNode, useEffect, useState, useSyncExternalStore } from "react";
+import { useBukuTamu } from "@/undangan/buku-tamu";
 import { createPortal } from "react-dom";
 import { useHitungMundur } from "../../pakai";
 import type { Foto, Undangan } from "../../types";
@@ -260,10 +261,9 @@ const contohSurat: Surat[] = [
 ];
 
 export function Ucapan({ tamu }: { tamu?: string }) {
-  const [letters, setLetters] = useState(contohSurat);
+  const { letters, kirim, mengirim, galat } = useBukuTamu(contohSurat, "Nembe pisan");
   const [hadir, setHadir] = useState(true);
   const [sent, setSent] = useState(false);
-  const nextId = useRef(contohSurat.length + 1);
 
   function onSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -271,9 +271,11 @@ export function Ucapan({ tamu }: { tamu?: string }) {
     const data = new FormData(form);
     const name = String(data.get("nama") ?? "").trim();
     if (!name) return;
-    setLetters((l) => [{ id: nextId.current++, name, hadir, message: String(data.get("ucapan") ?? "").trim(), waktu: "Nembe pisan" }, ...l]);
-    setSent(true);
-    form.reset();
+    void kirim(name, hadir, String(data.get("ucapan") ?? "").trim()).then((ok) => {
+      if (!ok) return;
+      setSent(true);
+      form.reset();
+    });
   }
 
   const field = "w-full rounded-xl border border-[#8a4b35]/30 bg-white/70 px-4 py-3 text-[15px] text-[#3a3330] outline-none placeholder:text-[#3a3330]/40 focus:border-[#8a4b35]";
@@ -301,7 +303,7 @@ export function Ucapan({ tamu }: { tamu?: string }) {
             ))}
           </div>
         </fieldset>
-        <motion.button type="submit" whileTap={{ scale: 0.97 }} className="w-full rounded-xl bg-[#2f4560] py-3.5 font-medium tracking-wide text-[#f4eee2]">
+        <motion.button type="submit" disabled={mengirim} whileTap={{ scale: 0.97 }} className="w-full rounded-xl bg-[#2f4560] py-3.5 font-medium tracking-wide text-[#f4eee2] disabled:opacity-60">
           Kirim
         </motion.button>
         <AnimatePresence>
@@ -311,6 +313,11 @@ export function Ucapan({ tamu }: { tamu?: string }) {
             </motion.p>
           )}
         </AnimatePresence>
+        {galat && (
+          <p role="alert" className="text-center text-sm text-[#3a3330]/80">
+            {galat}
+          </p>
+        )}
       </form>
 
       <ul className="mt-6 max-h-[24rem] space-y-2.5 overflow-y-auto overscroll-contain rounded-2xl border border-[#8a4b35]/15 bg-white/40 p-3 text-left">

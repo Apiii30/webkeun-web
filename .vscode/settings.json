@@ -1,0 +1,5 @@
+{
+  // Saran "class ini bisa ditulis lebih pendek" dari ekstensi Tailwind CSS (mis. z-[80] → z-80).
+  // Hasil tampilannya sama persis, jadi dimatikan supaya panel Problems tidak penuh warning oranye.
+  "tailwindCSS.lint.suggestCanonicalClasses": "ignore"
+}
