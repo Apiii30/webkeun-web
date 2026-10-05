@@ -271,8 +271,7 @@
 .sek {
   view-timeline-name: --sek;
 }
-.progres,
-.redup {
+.progres {
   display: none;
 }
 @supports (animation-timeline: view()) {
@@ -282,8 +281,6 @@
   [data-paralaks] .keluarTengah,
   [data-paralaks] .keluarDekat,
   [data-paralaks] .keluarTeks,
-  [data-paralaks] .tumpuk,
-  [data-paralaks] .redup,
   [data-paralaks] .geserLambat,
   [data-paralaks] .zoomKeluar,
   [data-paralaks] .pJauh,
@@ -325,19 +322,6 @@
     animation-name: keluarTeks;
     animation-timeline: --sek;
     animation-range: exit 0% exit 70%;
-  }
-  /* bagian yang lewat tertinggal & mengecil di bawah bagian berikutnya (efek bertumpuk), sambil meredup */
-  [data-paralaks] .tumpuk {
-    transform-origin: 50% 100%;
-    animation-name: tumpuk;
-    animation-timeline: --sek;
-    animation-range: exit 0% exit 100%;
-  }
-  [data-paralaks] .redup {
-    display: block;
-    animation-name: redup;
-    animation-timeline: --sek;
-    animation-range: exit 0% exit 100%;
   }
   [data-paralaks] .geserLambat {
     animation-name: geserLambat;
@@ -417,19 +401,6 @@
   to {
     transform: translateY(180px) scale(0.9);
     opacity: 0;
-  }
-}
-@keyframes tumpuk {
-  to {
-    transform: translateY(220px) scale(0.93);
-  }
-}
-@keyframes redup {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 0.5;
   }
 }
 @keyframes geserLambat {

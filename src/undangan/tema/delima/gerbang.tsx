@@ -5,7 +5,7 @@ import { type ReactNode, useId, useState } from "react";
 import type { Undangan } from "../../types";
 import { MASKER_BINGKAI } from "./aset";
 import s from "./delima.module.css";
-import { DefsEmas, Gambar, HALUS, Kawanan, Merak, Pembatas, TepiBingkai, naskah, prata } from "./hias";
+import { DefsEmas, FotoBingkai, Gambar, HALUS, Kawanan, Merak, Pembatas, TepiBingkai, naskah, prata } from "./hias";
 
 // Beranda tema Merah Delima: lembah air terjun bergaya cetakan tembaga merah, sekaligus animasi pembuka undangan.
 // Urutannya (detik setelah "Buka Undangan" ditekan), meniru video pembuka referensinya dengan gerak kamera
@@ -18,11 +18,15 @@ import { DefsEmas, Gambar, HALUS, Kawanan, Merak, Pembatas, TepiBingkai, naskah,
 //   4.6  kamera menembus bingkai (zoom in besar): kertas, bingkai, merak & mawar membesar melewati layar dengan
 //        kecepatan berbeda, sementara pemandangan di baliknya mundur ke ukuran asli per lapisan (zoom out, parallax)
 //   7.0  kawanan burung melintas & nama mempelai muncul di langit
+//   7.4  foto mempelai berayun masuk di dalam bingkai cermin, lalu tersingkap melingkar dari tengah
 // Saat beranda digulir keluar, tiap lapisan pergi dengan kecepatan berbeda (kelas keluar* di CSS).
 
 const T_PINTU = 2.3;
 const T_TEMBUS = 4.6;
 const T_TEKS = 7.0;
+const T_FOTO = 7.4;
+// detik saat seluruh animasi pembuka selesai (navigasi bawah baru muncul sesudahnya, lihat shell.tsx)
+export const T_SELESAI = T_FOTO + 2.1;
 
 const MENGENDAP = { duration: 3.8, ease: [0.16, 0.7, 0.2, 1], delay: T_TEMBUS + 0.1 } as const;
 const TEMBUS = { duration: 2.4, ease: [0.6, 0.02, 0.75, 0.3], delay: T_TEMBUS } as const;
@@ -228,21 +232,21 @@ function GerbangPembuka({ buka, onSelesai }: { buka: boolean; onSelesai: () => v
   );
 }
 
-// Rumpun tiga mawar: tangkainya keluar dari tepi bawah layar, kepala bunganya utuh di dalam layar
+// Rumpun tiga mawar: kaki tangkainya memudar di tepi bawah layar, kepala bunganya utuh di dalam layar
 function Bunga3({ besar = false }: { besar?: boolean }) {
   return (
     <>
-      <div className={`absolute ${besar ? "bottom-[-30%] left-[-1%] w-[46%]" : "bottom-[-22%] left-[-1%] w-[42%]"}`}>
+      <div className={`absolute ${besar ? "bottom-[-18%] left-[-1%] w-[42%]" : "bottom-[-12%] left-[-1%] w-[40%]"}`}>
         <div className={s.ayunA} style={{ transformOrigin: "40% 100%" }}>
           <Gambar a="mawarTua" sizes="200px" />
         </div>
       </div>
-      <div className={`absolute ${besar ? "right-[-1%] bottom-[-32%] w-[46%]" : "right-[-1%] bottom-[-24%] w-[42%]"}`}>
+      <div className={`absolute ${besar ? "right-[-1%] bottom-[-20%] w-[42%]" : "right-[-1%] bottom-[-14%] w-[40%]"}`}>
         <div className={s.ayunB} style={{ transformOrigin: "60% 100%" }}>
           <Gambar a="mawarPink" sizes="210px" flip />
         </div>
       </div>
-      <div className={`absolute left-[31%] ${besar ? "bottom-[-48%] w-[38%]" : "bottom-[-40%] w-[36%]"}`}>
+      <div className={`absolute left-[31%] ${besar ? "bottom-[-34%] w-[34%]" : "bottom-[-28%] w-[34%]"}`}>
         <div className={s.ayunA} style={{ transformOrigin: "50% 100%", animationDelay: "-2s" }}>
           <Gambar a="mawarBesar" sizes="170px" />
         </div>
@@ -319,11 +323,23 @@ export function Beranda({ u, buka }: { u: Undangan; buka: boolean }) {
         ))}
       </div>
 
+      {/* foto mempelai di bingkai cermin: berayun masuk (3D), lalu fotonya tersingkap melingkar dari tengah */}
+      <div className={`${s.keluarTengah} absolute inset-x-0 top-[max(36%,17rem)] flex justify-center [perspective:900px]`}>
+        <motion.div
+          className="relative w-[44%] max-w-[12rem]"
+          initial={{ opacity: 0, transform: "rotateY(-80deg) scale(0.9)" }}
+          animate={buka ? { opacity: 1, transform: "rotateY(0deg) scale(1)" } : undefined}
+          transition={{ duration: 1.6, ease: HALUS, delay: T_FOTO, opacity: { duration: 0.6, delay: T_FOTO } }}
+        >
+          <FotoBingkai src={u.foto.sampul} alt={`${u.wanita.panggilan} & ${u.pria.panggilan}`} sizes="200px" posisi="50% 30%" preload singkap={buka ? T_FOTO + 0.5 : false} />
+        </motion.div>
+      </div>
+
       <motion.div
         className="absolute inset-x-0 bottom-[calc(5.5rem+var(--demo-h,0px))] flex justify-center"
         initial={{ opacity: 0 }}
         animate={buka ? { opacity: 1 } : undefined}
-        transition={{ duration: 1, delay: T_TEKS + 1 }}
+        transition={{ duration: 1, delay: T_SELESAI }}
         aria-hidden="true"
       >
         <svg viewBox="0 0 24 24" className={`${s.petunjuk} size-6 text-[#fbf4f1] drop-shadow-[0_1px_3px_rgb(0_0_0/0.55)]`} fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round">

@@ -8,7 +8,8 @@ import { SlotMusik, useMusik } from "../../musik";
 import type { Undangan } from "../../types";
 import { ASET } from "./aset";
 import { Isi } from "./bagian";
-import { HALUS, Pembatas, naskah } from "./hias";
+import { T_SELESAI } from "./gerbang";
+import { HALUS, Pembatas, gilda, naskah } from "./hias";
 import { tombolEmas } from "./interaktif";
 import s from "./porselen.module.css";
 import { TombolMusik } from "./musik";
@@ -176,20 +177,36 @@ function Navigasi() {
     <motion.nav
       initial={{ opacity: 0, transform: "translateY(90px)" }}
       animate={{ opacity: 1, transform: "translateY(0px)" }}
-      transition={{ delay: 5, duration: 0.9, ease: HALUS }}
+      transition={{ delay: T_SELESAI, duration: 0.9, ease: HALUS }}
       className="pointer-events-none fixed inset-x-0 bottom-[calc(0.75rem+var(--demo-h,0px))] z-40 flex justify-center px-3"
     >
-      <ul className="pointer-events-auto flex items-center gap-1 rounded-full bg-[#fbfaf6]/95 p-1.5 shadow-[0_12px_28px_-12px_rgb(15_28_56/0.7)] ring-1 ring-[#27427a]/20">
-        {MENU.map(({ id, label }) => (
-          <li key={id} className="relative">
-            <a href={`#${id}`} aria-label={label} className="relative grid size-10 place-items-center rounded-full text-[#27427a]">
-              {active === id && <motion.span layoutId="pb-nav" className={`${s.kawung} absolute inset-0 rounded-full ring-2 ring-[#d8b56e]`} transition={{ type: "spring", stiffness: 320, damping: 30 }} />}
-              <svg viewBox="0 0 24 24" className={`relative size-[19px] transition-colors ${active === id ? "text-[#fbfaf6]" : ""}`} fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                {ikon[id]}
-              </svg>
-            </a>
-          </li>
-        ))}
+      {/* yang aktif: pil kobalt polos berisi ikon & namanya (motif kawung di belakang ikon membuat ikonnya tenggelam) */}
+      <ul className="pointer-events-auto flex items-center gap-0.5 rounded-full bg-[#fbfaf6]/95 p-1.5 shadow-[0_12px_28px_-12px_rgb(15_28_56/0.7)] ring-1 ring-[#27427a]/20">
+        {MENU.map(({ id, label }) => {
+          const aktif = active === id;
+          return (
+            <motion.li key={id} layout transition={{ type: "spring", stiffness: 380, damping: 34 }} className="relative">
+              <a
+                href={`#${id}`}
+                aria-label={label}
+                aria-current={aktif ? "true" : undefined}
+                className={`relative flex h-10 min-w-10 items-center justify-center gap-1.5 rounded-full transition-colors ${aktif ? "px-3.5 text-[#fbfaf6]" : "text-[#27427a]/80"}`}
+              >
+                {aktif && (
+                  <motion.span
+                    layoutId="pb-nav"
+                    className="absolute inset-0 rounded-full bg-[#27427a] shadow-[inset_0_0_0_1.5px_rgb(216_181_110/0.9)]"
+                    transition={{ type: "spring", stiffness: 380, damping: 34 }}
+                  />
+                )}
+                <svg viewBox="0 0 24 24" className="relative size-[18px] shrink-0" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                  {ikon[id]}
+                </svg>
+                {aktif && <span className={`${gilda} relative text-[12px] tracking-[0.08em] whitespace-nowrap`}>{label}</span>}
+              </a>
+            </motion.li>
+          );
+        })}
       </ul>
     </motion.nav>
   );

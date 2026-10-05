@@ -10,18 +10,22 @@
 // - bambu: lukisan tinta bambu (anonim), The Metropolitan Museum of Art, CC0. Goresannya diangkat dari sutra & diwarnai giok.
 // - 囍 (shuangxi): "Double happiness.svg", Conrad Cheung, Wikimedia Commons, domain publik.
 
+import type { Tepi } from "../../tepi";
+
 const dir = "/undangan/oriental/";
+
+// tepi: sisi gambar yang terpotong lurus (dipudarkan, lihat ../../tepi.ts)
 
 export const ASET = {
   gunungJauh: { src: `${dir}gunung-jauh.webp`, w: 1400, h: 578 },
   gunungPuncak: { src: `${dir}gunung-puncak.webp`, w: 1200, h: 753 },
   gunungTebing: { src: `${dir}gunung-tebing.webp`, w: 1100, h: 838 },
-  peoniMerahMuda: { src: `${dir}peoni-merah-muda.webp`, w: 578, h: 900 },
-  peoniSalem: { src: `${dir}peoni-salem.webp`, w: 735, h: 900 },
-  teratai: { src: `${dir}teratai.webp`, w: 805, h: 900 },
-  terataiBesar: { src: `${dir}teratai-besar.webp`, w: 645, h: 900 },
-  bambu: { src: `${dir}bambu.webp`, w: 1300, h: 745 },
-} as const;
+  peoniMerahMuda: { src: `${dir}peoni-merah-muda.webp`, w: 578, h: 900, tepi: "knb", pudar: 13 },
+  peoniSalem: { src: `${dir}peoni-salem.webp`, w: 735, h: 900, tepi: "knb", pudar: 13 },
+  teratai: { src: `${dir}teratai.webp`, w: 805, h: 900, tepi: "knb", pudar: 16 },
+  terataiBesar: { src: `${dir}teratai-besar.webp`, w: 645, h: 900, tepi: "b", pudar: 14 },
+  bambu: { src: `${dir}bambu.webp`, w: 1300, h: 745, tepi: "akn", pudar: 8 },
+} satisfies Record<string, { src: string; w: number; h: number } & Tepi>;
 
 export type NamaAset = keyof typeof ASET;
 

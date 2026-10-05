@@ -163,8 +163,8 @@ function Mempelai({ u }: { u: Undangan }) {
             </Muncul>
             <Bunga
               a={i ? "anggrek" : "magnolia"}
-              className={`${i ? s.pKanan : s.pKiri} -bottom-[14%] ${i ? "-right-[22%] w-[46%]" : "-left-[34%] w-[86%]"}`}
-              sizes={i ? "130px" : "220px"}
+              className={`${i ? s.pKanan : s.pKiri} -bottom-[10%] ${i ? "-right-[16%] w-[40%]" : "-left-[22%] w-[62%]"}`}
+              sizes={i ? "120px" : "180px"}
               asal={i ? "60% 100%" : "40% 100%"}
             />
           </div>
@@ -191,7 +191,7 @@ function SimpanTanggal({ u }: { u: Undangan }) {
       </Judul>
       <div className="relative mx-auto mt-10 w-[92%]">
         {/* bunga di belakang kartu, mengintip dari kedua sudut bawahnya */}
-        <Bunga a="magnolia" className={`${s.pDekat} -bottom-[15%] -left-[30%] w-[66%]`} sizes="240px" asal="40% 100%" />
+        <Bunga a="magnolia" className={`${s.pDekat} -bottom-[10%] -left-[20%] w-[52%]`} sizes="200px" asal="40% 100%" />
         <Bunga a="anggrek" className={`${s.pKanan} -right-[15%] -bottom-[13%] w-[34%]`} sizes="140px" varian="B" asal="60% 100%" />
         <Muncul dari="translateY(70px)" durasi={1.4} amount={0.2}>
           <KartuMihrab className="text-[#1d3d34]">
@@ -373,10 +373,10 @@ function Penutup({ u }: { u: Undangan }) {
         </Muncul>
       </div>
       <div className="pointer-events-none absolute inset-x-0 bottom-[var(--demo-h,0px)] h-56">
-        <Bunga a="melati" className="bottom-[-12%] left-[26%] w-[28%]" sizes="130px" asal="50% 100%" style={{ rotate: "-14deg" }} />
-        <Bunga a="melati" className="right-[28%] bottom-[-16%] w-[25%]" sizes="120px" flip varian="B" asal="50% 100%" style={{ rotate: "12deg" }} />
-        <Bunga a="magnolia" className="bottom-[-22%] left-[-30%] w-[86%]" sizes="(min-width: 440px) 380px, 86vw" asal="40% 100%" />
-        <Bunga a="anggrek" className="right-[-6%] bottom-[-20%] w-[42%]" sizes="190px" varian="B" asal="60% 100%" />
+        <Bunga a="melati" className="bottom-[-4%] left-[28%] w-[21%]" sizes="100px" asal="50% 100%" style={{ rotate: "-14deg" }} />
+        <Bunga a="melati" className="right-[30%] bottom-[-6%] w-[19%]" sizes="90px" flip varian="B" asal="50% 100%" style={{ rotate: "12deg" }} />
+        <Bunga a="magnolia" className="bottom-[-6%] left-[-12%] w-[56%]" sizes="(min-width: 440px) 250px, 56vw" asal="40% 100%" />
+        <Bunga a="anggrek" className="right-[-3%] bottom-[-5%] w-[30%]" sizes="140px" varian="B" asal="60% 100%" />
       </div>
       <MelatiJatuh n={9} />
     </Bagian>

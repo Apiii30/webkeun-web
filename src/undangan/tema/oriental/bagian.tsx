@@ -12,22 +12,43 @@ import s from "./oriental.module.css";
 import { Beranda } from "./pembuka";
 
 // Isi undangan tema Oriental Peony. Bagian bergantian antara kertas krem dan panel merah pernis, disambung tepi
-// genteng. Saat sebuah bagian lewat, ia tertinggal & mengecil di bawah bagian berikutnya (bertumpuk), dan hampir semua
-// elemen punya lapisan parallax (oriental.module.css).
+// genteng dengan koin keberuntungan emas di tengah sambungannya, dan hampir semua elemen punya lapisan parallax
+// (oriental.module.css). Bagian-bagiannya mengalir menyambung: tidak ada lagi efek bagian yang lewat mengecil &
+// meredup di bawah bagian berikutnya (membuat perpindahan antarbagian terasa terputus).
 
 function Bagian({ id, merah = false, className = "", children }: { id?: string; merah?: boolean; className?: string; children: ReactNode }) {
   return (
-    <section id={id} className={`${s.sek} relative`}>
-      <div className={`${s.tumpuk} relative ${merah ? `${s.merah} text-[#fff6e6]` : `${s.kertas} text-[#3b1d16]`} ${className}`}>
-        <Genteng warna={merah ? "#9e1c22" : "#f8efdc"} />
-        {/* awan keberuntungan samar, bergerak lebih lambat dari isinya (dipotong di dalam bagiannya sendiri) */}
-        <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden="true">
-          <div className={`${s.polaAwan} ${s.pJauh} absolute inset-x-0 -inset-y-16 ${merah ? "opacity-[0.12]" : "opacity-[0.16]"}`} />
-        </div>
-        {children}
-        <div className={`${s.redup} pointer-events-none absolute inset-0 z-30 bg-[#2a0708]`} aria-hidden="true" />
+    <section id={id} className={`${s.sek} relative ${merah ? `${s.merah} text-[#fff6e6]` : `${s.kertas} text-[#3b1d16]`} ${className}`}>
+      <Genteng warna={merah ? "#9e1c22" : "#f8efdc"} />
+      <KoinSambung />
+      {/* awan keberuntungan samar, bergerak lebih lambat dari isinya (dipotong di dalam bagiannya sendiri) */}
+      <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden="true">
+        <div className={`${s.polaAwan} ${s.pJauh} absolute inset-x-0 -inset-y-16 ${merah ? "opacity-[0.12]" : "opacity-[0.16]"}`} />
       </div>
+      {children}
     </section>
+  );
+}
+
+// Koin emas berlubang persegi tepat di sambungan dua bagian, dengan tali merah ke kiri-kanan di sepanjang genteng
+function KoinSambung() {
+  return (
+    <div className="pointer-events-none absolute inset-x-0 top-0 z-20 h-0" aria-hidden="true">
+      <div className="absolute top-[-7px] left-1/2 h-[2px] w-[44%] -translate-x-1/2 bg-[linear-gradient(90deg,transparent,#b3242b_25%,#b3242b_75%,transparent)]" />
+      <svg viewBox="0 0 40 40" className="absolute top-0 left-1/2 w-10 -translate-x-1/2 -translate-y-[60%] drop-shadow-[0_3px_4px_rgb(60_10_10/0.35)]">
+        <circle cx="20" cy="20" r="17" fill="#c99a3e" stroke="#7d1418" strokeWidth="1.4" />
+        <circle cx="20" cy="20" r="13.5" fill="none" stroke="#f6dc94" strokeWidth="1" />
+        <rect x="15" y="15" width="10" height="10" fill="#9e1c22" stroke="#7d1418" strokeWidth="1" />
+        {[
+          [20, 9.5],
+          [30.5, 20],
+          [20, 30.5],
+          [9.5, 20],
+        ].map(([x, y]) => (
+          <circle key={`${x}${y}`} cx={x} cy={y} r="1.3" fill="#7d1418" />
+        ))}
+      </svg>
+    </div>
   );
 }
 
@@ -80,11 +101,12 @@ function Pembuka({ u }: { u: Undangan }) {
         <p className={`${naskah} mt-6 text-[2.5rem] leading-tight text-[#9e1c22]`}>{u.kutipan}</p>
       </Muncul>
       <div className="relative mx-auto mt-10 w-[74%]">
-        <Muncul dari="rotate(-25deg)" durasi={1.7} amount={0.25}>
+        {/* peoni mengintip dari balik bingkai (di belakang foto, jadi tidak pernah menutupinya) */}
+        <Bunga a="peoniMerahMuda" className="-bottom-[6%] -left-[16%] w-[36%]" sizes="130px" asal="30% 100%" />
+        <Bunga a="peoniSalem" className="-right-[14%] -bottom-[4%] w-[33%]" sizes="120px" varian="B" asal="70% 100%" />
+        <Muncul dari="rotate(-25deg)" durasi={1.7} amount={0.25} className="relative">
           <JendelaBulan src={u.foto.kutipan} alt="" sizes="280px" />
         </Muncul>
-        <Bunga a="peoniMerahMuda" className={`${s.pDekat} -bottom-[18%] -left-[22%] w-[48%]`} sizes="160px" asal="30% 100%" />
-        <Bunga a="peoniSalem" className={`${s.pDekat} -right-[20%] -bottom-[14%] w-[44%]`} sizes="150px" varian="B" asal="70% 100%" />
       </div>
       <Muncul jeda={0.2} className="relative mt-16">
         <p className="text-[15.5px] leading-relaxed text-[#3b1d16]/90">{u.pembuka}</p>
@@ -116,15 +138,16 @@ function Mempelai({ u }: { u: Undangan }) {
             <div className={`${s.pJauh} absolute top-[4%] w-[46%] opacity-90 ${i ? "-left-[30%]" : "-right-[30%]"}`} aria-hidden="true">
               <Awan warna="#fff1d6" garis="#f6dc94" />
             </div>
+            {/* peoni mengintip dari balik bingkai (di belakang foto, jadi tidak pernah menutupinya) */}
+            <Bunga
+              a={i ? "peoniSalem" : "peoniMerahMuda"}
+              className={`-bottom-[6%] w-[34%] ${i ? "-right-[13%]" : "-left-[13%]"}`}
+              sizes="120px"
+              asal={i ? "70% 100%" : "30% 100%"}
+            />
             <Muncul dari={i ? "translateX(60px)" : "translateX(-60px)"} durasi={1.5} className="relative">
               <JendelaBulan src={p.foto} alt={p.nama} sizes="300px" posisi="50% 25%" />
             </Muncul>
-            <Bunga
-              a={i ? "peoniSalem" : "peoniMerahMuda"}
-              className={`${i ? s.pKanan : s.pKiri} -bottom-[14%] w-[44%] ${i ? "-right-[16%]" : "-left-[16%]"}`}
-              sizes="150px"
-              asal={i ? "70% 100%" : "30% 100%"}
-            />
           </div>
           <Muncul jeda={0.1} dari="scale(0.88)" className="relative mt-12">
             <h3 className={`${naskah} text-[3rem] leading-none text-[#fff6e6]`}>{p.nama}</h3>
@@ -268,7 +291,7 @@ function BagianGaleri({ u }: { u: Undangan }) {
   );
 }
 
-/* ───────── 7. Love story: gulungan lukisan ───────── */
+/* ───────── 7. Love story: benang merah takdir & kipas lipat ───────── */
 
 function BagianKisah({ u }: { u: Undangan }) {
   return (
@@ -340,9 +363,9 @@ function Penutup({ u }: { u: Undangan }) {
       </div>
       <div className="pointer-events-none absolute inset-x-0 bottom-[var(--demo-h,0px)] h-56">
         <div className="absolute inset-x-0 bottom-0 h-[60%] bg-[linear-gradient(180deg,rgb(207_227_223/0),#cfe3df_40%,#b8d6d1)]" />
-        <Bunga a="teratai" className="bottom-[-14%] left-[-8%] w-[44%]" sizes="190px" />
-        <Bunga a="terataiBesar" className="bottom-[-34%] left-[34%] w-[32%]" sizes="150px" varian="B" />
-        <Bunga a="teratai" className="right-[-10%] bottom-[-18%] w-[42%]" sizes="180px" flip varian="B" />
+        <Bunga a="teratai" className="bottom-[-4%] left-[-6%] w-[34%]" sizes="150px" />
+        <Bunga a="terataiBesar" className="bottom-[-14%] left-[37%] w-[25%]" sizes="120px" varian="B" />
+        <Bunga a="teratai" className="right-[-7%] bottom-[-6%] w-[32%]" sizes="140px" flip varian="B" />
       </div>
       <KelopakJatuh n={9} />
     </Bagian>

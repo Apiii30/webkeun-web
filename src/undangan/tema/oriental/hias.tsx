@@ -3,6 +3,7 @@
 import { motion } from "motion/react";
 import Image from "next/image";
 import { type CSSProperties, type ReactNode, useId } from "react";
+import { tepiPudar } from "../../tepi";
 import { ASET, type NamaAset, SHUANGXI } from "./aset";
 import s from "./oriental.module.css";
 
@@ -59,9 +60,9 @@ export function Muncul({
 }
 
 export function Gambar({ a, className = "", sizes = "200px", flip = false, preload }: { a: NamaAset; className?: string; sizes?: string; flip?: boolean; preload?: boolean }) {
-  const g = ASET[a];
+  const g: (typeof ASET)[NamaAset] & { tepi?: string; pudar?: number } = ASET[a];
   return (
-    <Image src={g.src} alt="" width={g.w} height={g.h} sizes={sizes} preload={preload} loading={preload ? "eager" : undefined} className={`h-auto w-full ${flip ? "-scale-x-100" : ""} ${className}`} />
+    <Image src={g.src} alt="" width={g.w} height={g.h} sizes={sizes} preload={preload} loading={preload ? "eager" : undefined} style={tepiPudar(g)} className={`h-auto w-full ${flip ? "-scale-x-100" : ""} ${className}`} />
   );
 }
 
@@ -368,14 +369,39 @@ export function Awan({ className = "", style, warna = "#fffaf0", garis = EMAS }:
 /* ───────── Bingkai jendela bulan ───────── */
 
 // Foto bundar dalam bingkai jendela bulan: cincin kayu merah, garis emas, kisi meander di sekeliling
-export function JendelaBulan({ src, alt, sizes, className = "", posisi = "50% 30%", preload }: { src: string; alt: string; sizes: string; className?: string; posisi?: string; preload?: boolean }) {
+// singkap: detik mulai foto tersingkap melingkar dari tengah (false = belum, tanpa prop = langsung tampil)
+export function JendelaBulan({
+  src,
+  alt,
+  sizes,
+  className = "",
+  posisi = "50% 30%",
+  preload,
+  singkap,
+}: {
+  src: string;
+  alt: string;
+  sizes: string;
+  className?: string;
+  posisi?: string;
+  preload?: boolean;
+  singkap?: number | false;
+}) {
+  const animasi = singkap !== undefined;
   const id = useId().replace(/:/g, "");
   return (
     <div className={`relative aspect-square ${className}`}>
-      <div className="absolute inset-[9%] overflow-hidden rounded-full">
-        <div className={`${s.geserLambat} absolute inset-x-0 inset-y-[-10%]`}>
-          <Image src={src} alt={alt} fill sizes={sizes} preload={preload} loading={preload ? "eager" : undefined} className="object-cover" style={{ objectPosition: posisi }} />
-        </div>
+      <div className="absolute inset-[9%] overflow-hidden rounded-full bg-[#f8efdc]">
+        <motion.div
+          className="absolute inset-0"
+          initial={animasi ? { clipPath: "circle(0% at 50% 50%)" } : false}
+          animate={animasi && singkap !== false ? { clipPath: "circle(71% at 50% 50%)" } : undefined}
+          transition={{ duration: 1.4, ease: [0.5, 0, 0.3, 1], delay: singkap || 0 }}
+        >
+          <div className={`${s.geserLambat} absolute inset-x-0 inset-y-[-10%]`}>
+            <Image src={src} alt={alt} fill sizes={sizes} preload={preload} loading={preload ? "eager" : undefined} className="object-cover" style={{ objectPosition: posisi }} />
+          </div>
+        </motion.div>
       </div>
       <svg viewBox="-110 -110 220 220" className="pointer-events-none absolute inset-0 h-full w-full overflow-visible drop-shadow-[0_14px_18px_rgb(60_15_10/0.3)]" aria-hidden="true">
         <DefsEmas id={`jb${id}`} />

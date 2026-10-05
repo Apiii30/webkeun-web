@@ -5,7 +5,7 @@ import Image from "next/image";
 import { type ReactNode, useState } from "react";
 import type { Undangan } from "../../types";
 import { ASET, MASKER_GUNUNGAN } from "./aset";
-import { Bunga, Burung, Danau, Gambar, HALUS, Pembatas, Perahu, TepiGunungan, gilda, naskah } from "./hias";
+import { Bunga, Burung, Danau, FotoGunungan, Gambar, HALUS, Pembatas, Perahu, TepiGunungan, gilda, naskah } from "./hias";
 import s from "./porselen.module.css";
 
 // Beranda tema Biru Porselen: pemandangan danau & air terjun bergaya lukisan porselen biru-putih, sekaligus
@@ -16,12 +16,16 @@ import s from "./porselen.module.css";
 //   3.0  kamera menembus jendela: kertas & bingkainya membesar melewati layar, sementara pemandangan danau
 //        di baliknya mengendap ke ukuran asli dengan kecepatan berbeda per lapisan (parallax)
 //   4.4  nama mempelai muncul di langit
+//   5.0  foto mempelai naik dari danau di dalam jendela gunungan bertepi timbul, lalu tersingkap dari bawah
 // Saat beranda digulir keluar, tiap lapisan pergi dengan kecepatan berbeda (kelas keluar* di CSS).
 
 const T_PINTU = 1.4;
 const T_RIMBUN = 2.2;
 const T_TEMBUS = 3.0;
 const T_TEKS = 4.4;
+const T_FOTO = 5.0;
+// detik saat seluruh animasi pembuka selesai (navigasi bawah baru muncul sesudahnya, lihat shell.tsx)
+export const T_SELESAI = T_FOTO + 1.9;
 
 const MENGENDAP = { duration: 2.6, ease: [0.2, 0.7, 0.2, 1], delay: T_TEMBUS } as const;
 
@@ -37,7 +41,7 @@ function Lapis({ awal, buka, keluar, children }: { awal: number; buka: boolean; 
 }
 
 // Medali bunga di tengah pintu (terbelah dua bersama pintunya)
-function Medali({ className = "" }: { className?: string }) {
+export function Medali({ className = "" }: { className?: string }) {
   return (
     <svg viewBox="-60 -60 120 120" className={`pointer-events-none absolute ${className}`} aria-hidden="true">
       <circle r="52" fill="#27427a" stroke="#dbe5f3" strokeWidth="1.6" />
@@ -135,9 +139,9 @@ function JendelaPembuka({ buka, onSelesai }: { buka: boolean; onSelesai: () => v
         </motion.div>
       ))}
       <motion.div className="absolute inset-x-0 bottom-0 h-[30%]" initial={{ opacity: 0, transform: "translateY(25%)" }} animate={{ opacity: 1, transform: "translateY(0%)" }} transition={{ duration: 1.6, ease: HALUS, delay: 0.35 }}>
-        <Bunga a="peony" className="bottom-[-12%] left-[-6%] w-[58%]" sizes="260px" asal="30% 100%" />
-        <Bunga a="hortensia" className="right-[-4%] bottom-[-18%] w-[40%]" sizes="180px" varian="B" />
-        <Bunga a="peonyBiru" className="bottom-[-16%] left-[38%] w-[34%]" sizes="150px" asal="50% 100%" varian="B" />
+        <Bunga a="peony" className="bottom-[-3%] left-[-6%] w-[54%]" sizes="260px" asal="30% 100%" />
+        <Bunga a="hortensia" className="right-[-3%] bottom-[-4%] w-[36%]" sizes="180px" varian="B" />
+        <Bunga a="peonyBiru" className="bottom-[-6%] left-[38%] w-[30%]" sizes="150px" asal="50% 100%" varian="B" />
       </motion.div>
       {/* ubin kawung kecil di tepi, seperti hiasan porselen */}
       {[
@@ -192,8 +196,8 @@ export function Beranda({ u, buka }: { u: Undangan; buka: boolean }) {
 
       {/* bunga porselen di depan */}
       <Lapis awal={2.6} buka={buka} keluar={s.keluarDekat}>
-        <Bunga a="peony" className="bottom-[-7%] left-[-8%] w-[60%]" sizes="270px" asal="30% 100%" />
-        <Bunga a="hortensia" className="right-[-5%] bottom-[-10%] w-[44%]" sizes="200px" varian="B" />
+        <Bunga a="peony" className="bottom-[-2%] left-[-8%] w-[54%]" sizes="270px" asal="30% 100%" />
+        <Bunga a="hortensia" className="right-[-4%] bottom-[-3%] w-[38%]" sizes="200px" varian="B" />
       </Lapis>
 
       {/* nama di langit, muncul setelah kamera menembus jendela */}
@@ -221,11 +225,30 @@ export function Beranda({ u, buka }: { u: Undangan; buka: boolean }) {
         ))}
       </div>
 
+      {/* foto mempelai di jendela gunungan: naik dari danau, lalu fotonya tersingkap dari bawah ke atas */}
+      <div className={`${s.keluarTengah} absolute inset-x-0 top-[max(30%,14.5rem)] flex justify-center`}>
+        <motion.div
+          className="relative w-[50%] max-w-[13rem]"
+          initial={{ opacity: 0, transform: "translateY(70px) scale(0.82)" }}
+          animate={buka ? { opacity: 1, transform: "translateY(0px) scale(1)" } : undefined}
+          transition={{ duration: 1.5, ease: HALUS, delay: T_FOTO }}
+        >
+          <FotoGunungan
+            src={u.foto.sampul}
+            alt={`${u.wanita.panggilan} & ${u.pria.panggilan}`}
+            sizes="220px"
+            posisi="50% 30%"
+            preload
+            singkap={buka ? T_FOTO + 0.45 : false}
+          />
+        </motion.div>
+      </div>
+
       <motion.div
         className="absolute inset-x-0 bottom-[calc(5.5rem+var(--demo-h,0px))] flex justify-center"
         initial={{ opacity: 0 }}
         animate={buka ? { opacity: 1 } : undefined}
-        transition={{ duration: 1, delay: T_TEKS + 1 }}
+        transition={{ duration: 1, delay: T_SELESAI }}
         aria-hidden="true"
       >
         <svg viewBox="0 0 24 24" className={`${s.petunjuk} size-6 text-[#f6f3ec] drop-shadow-[0_1px_3px_rgb(0_0_0/0.5)]`} fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round">

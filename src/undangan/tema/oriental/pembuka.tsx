@@ -3,7 +3,7 @@
 import { type Transition, motion } from "motion/react";
 import type { CSSProperties, ReactNode } from "react";
 import type { Undangan } from "../../types";
-import { Awan, Bunga, Gambar, HALUS, KawananBangau, Kerlip, Lentera, Paifang, PitaMeander, Shuangxi, naskah, yuji } from "./hias";
+import { Awan, Bunga, Gambar, HALUS, JendelaBulan, KawananBangau, Kerlip, Lentera, Paifang, PitaMeander, naskah, yuji } from "./hias";
 import s from "./oriental.module.css";
 
 // Beranda tema Oriental Peony sekaligus animasi pembuka (±10 detik setelah "Buka Undangan" ditekan). Kamera bergerak
@@ -15,10 +15,13 @@ import s from "./oriental.module.css";
 //   4.6  kamera maju mendekati gerbang (zoom in) — gerbang membesar memenuhi layar, peoni terdorong keluar
 //   6.0  kamera mundur lagi (zoom out): kolam teratai naik di depan gerbang, bambu menjuntai dari kedua sudut atas
 //   7.4  bingkai kayu merah masuk: tiang dari kiri-kanan, balok beratap dari atas, lentera merah turun bergantian
-//   8.8  segel 囍 muncul berputar, nama mempelai tampil berkilau di langit
+//   8.7  nama mempelai tampil di papan kertas krem (supaya kontras dengan langit & pegunungan)
+//   9.1  foto mempelai berputar masuk di gerbang bulan, tersingkap melingkar; atap genteng giok & rumbai menyusul
 // Saat beranda digulir keluar, tiap lapisan pergi dengan kecepatan berbeda (kelas keluar* di CSS).
 
-export const T_SELESAI = 10.2; // dipakai navigasi
+const T_NAMA = 8.7;
+const T_FOTO = 9.1;
+export const T_SELESAI = T_FOTO + 2.0; // dipakai navigasi
 
 const AKHIR = 8.2; // kamera berhenti
 const PUSAT = "50% 58%";
@@ -145,11 +148,11 @@ export function Beranda({ u, buka }: { u: Undangan; buka: boolean }) {
               [0, "translateY(85%) scale(1)"],
               [3.4, "translateY(85%) scale(1)"],
               [4.8, "translateY(0%) scale(1.04)"],
-              [6.0, "translateY(0%) scale(1.95)"],
+              [6.0, "translateY(0%) scale(2.4)"],
               [AKHIR, "translateY(0%) scale(1)"],
             ])}
             buka={buka}
-            className="absolute bottom-[21%] left-[7%] w-[86%]"
+            className="absolute bottom-[21%] left-[20%] w-[60%]"
             style={{ transformOrigin: "50% 66%" }}
           >
             <Paifang className="w-full" />
@@ -173,9 +176,9 @@ export function Beranda({ u, buka }: { u: Undangan; buka: boolean }) {
         >
           <div className="absolute inset-x-0 bottom-0 h-[80%] bg-[linear-gradient(180deg,rgb(220_234_232/0),#cfe3df_18%,#b8d6d1_60%,#a9ccc6)]" />
           <div className={`${s.riak} absolute inset-x-0 bottom-[8%] h-[50%] opacity-50 mix-blend-screen [mask-image:linear-gradient(to_bottom,transparent,black_40%)]`} />
-          <Bunga a="teratai" className="bottom-[calc(4.2rem+var(--demo-h,0px))] left-[-6%] w-[44%]" sizes="200px" asal="50% 100%" />
-          <Bunga a="teratai" className="right-[-8%] bottom-[calc(3.6rem+var(--demo-h,0px))] w-[42%]" sizes="200px" flip varian="B" asal="50% 100%" />
-          <Bunga a="terataiBesar" className="bottom-[calc(1.5rem+var(--demo-h,0px))] left-[35%] w-[30%]" sizes="150px" varian="B" />
+          <Bunga a="teratai" className="bottom-[calc(3.6rem+var(--demo-h,0px))] left-[-4%] w-[31%]" sizes="140px" asal="50% 100%" />
+          <Bunga a="teratai" className="right-[-5%] bottom-[calc(3.2rem+var(--demo-h,0px))] w-[29%]" sizes="130px" flip varian="B" asal="50% 100%" />
+          <Bunga a="terataiBesar" className="bottom-[calc(1.2rem+var(--demo-h,0px))] left-[40%] w-[20%]" sizes="100px" varian="B" />
         </Gerak>
       </div>
 
@@ -192,10 +195,10 @@ export function Beranda({ u, buka }: { u: Undangan; buka: boolean }) {
               [AKHIR, "translate(0%, 0%) scale(1)"],
             ])}
             buka={buka}
-            className={`absolute bottom-[-7%] w-[42%] ${k < 0 ? "left-[-12%]" : "right-[-12%]"}`}
+            className={`absolute bottom-[-3%] w-[30%] ${k < 0 ? "left-[-8%]" : "right-[-8%]"}`}
             style={{ transformOrigin: k < 0 ? "0% 100%" : "100% 100%" }}
           >
-            <Bunga a={k < 0 ? "peoniMerahMuda" : "peoniSalem"} className="relative!" sizes="190px" varian={k < 0 ? "A" : "B"} asal={k < 0 ? "30% 100%" : "70% 100%"} />
+            <Bunga a={k < 0 ? "peoniMerahMuda" : "peoniSalem"} className="relative!" sizes="140px" varian={k < 0 ? "A" : "B"} asal={k < 0 ? "30% 100%" : "70% 100%"} />
           </Gerak>
         ))}
       </div>
@@ -214,11 +217,11 @@ export function Beranda({ u, buka }: { u: Undangan; buka: boolean }) {
               HALUS,
             )}
             buka={buka}
-            className={`absolute top-[6%] w-[78%] ${k < 0 ? "left-[-26%]" : "right-[-26%]"}`}
+            className={`absolute top-[6%] w-[56%] ${k < 0 ? "left-[-20%]" : "right-[-20%]"}`}
             style={{ transformOrigin: k < 0 ? "0% 0%" : "100% 0%" }}
           >
             <div className={`${s.ayunB} [mask-image:linear-gradient(to_bottom,black_55%,transparent)]`} style={{ transformOrigin: k < 0 ? "0% 0%" : "100% 0%" }}>
-              <Gambar a="bambu" sizes="(min-width: 440px) 340px, 78vw" flip={k > 0} />
+              <Gambar a="bambu" sizes="(min-width: 440px) 250px, 56vw" flip={k > 0} />
             </div>
           </Gerak>
         ))}
@@ -227,38 +230,43 @@ export function Beranda({ u, buka }: { u: Undangan; buka: boolean }) {
       {/* bingkai kayu merah: tiang kiri-kanan, balok beratap di atas, lentera */}
       <BingkaiMerah buka={buka} />
 
-      {/* segel 囍 & nama di langit */}
-      <div className={`${s.keluarTeks} absolute inset-x-0 top-[12%] flex flex-col items-center px-12 text-center`}>
+      {/* nama di papan kertas krem bertepi emas: tulisan merah di atas langit & pegunungan pucat sulit terbaca */}
+      <div className={`${s.keluarTeks} absolute inset-x-0 top-[max(7%,3.5rem)] z-20 flex justify-center px-10`}>
         <motion.div
-          initial={{ opacity: 0, transform: "scale(0.2) rotate(-120deg)" }}
-          animate={buka ? { opacity: 1, transform: "scale(1) rotate(0deg)" } : undefined}
-          transition={{ duration: 1.3, ease: HALUS, delay: 8.8 }}
-          className="relative grid size-12 place-items-center rounded-full bg-[#b3242b] shadow-[0_6px_14px_-4px_rgb(125_20_24/0.6)] ring-2 ring-[#f6dc94]"
+          className="relative rounded-[1.6rem] bg-[#fffaf0]/92 px-7 pt-3.5 pb-4 text-center shadow-[0_14px_30px_-14px_rgb(60_15_10/0.55)] ring-1 ring-[#c99a3e]/80"
+          initial={{ opacity: 0, transform: "translateY(-16px) scale(0.94)" }}
+          animate={buka ? { opacity: 1, transform: "translateY(0px) scale(1)" } : undefined}
+          transition={{ duration: 1.1, ease: HALUS, delay: T_NAMA }}
         >
-          <Shuangxi className="size-7" warna="#f6dc94" tebal={18} />
-          <Kerlip className="-top-2 -right-3 size-4" jeda={-0.4} />
-          <Kerlip className="-bottom-1 -left-4 size-3" jeda={-1.3} />
+          <span className="pointer-events-none absolute inset-[4px] rounded-[1.3rem] border border-[#9e1c22]/25" aria-hidden="true" />
+          {[
+            <p key="a" className={`${yuji} text-[10.5px] tracking-[0.42em] text-[#7d1418] uppercase`}>
+              The Wedding of
+            </p>,
+            <h1 key="b" className={`${naskah} mt-0.5 text-[3.1rem] leading-[1.05] text-[#8a1a1f]`}>
+              {u.wanita.panggilan} <span className="text-[#b0842e]">&amp;</span> {u.pria.panggilan}
+            </h1>,
+            <p key="c" className={`${yuji} mt-1 text-[11.5px] tracking-[0.26em] text-[#3b1d16] uppercase`}>
+              {u.tanggal}
+            </p>,
+          ].map((el, i) => (
+            <motion.div
+              key={i}
+              initial={{ opacity: 0, transform: "translateY(12px)" }}
+              animate={buka ? { opacity: 1, transform: "translateY(0px)" } : undefined}
+              transition={{ duration: 1, ease: HALUS, delay: T_NAMA + 0.25 + i * 0.15 }}
+            >
+              {el}
+            </motion.div>
+          ))}
+          <Kerlip className="-top-2 -right-2 size-4" jeda={-0.4} />
+          <Kerlip className="-bottom-1.5 -left-2 size-3" jeda={-1.3} />
         </motion.div>
-        {[
-          <p key="a" className={`${yuji} mt-2 text-[10.5px] tracking-[0.42em] text-[#7d1418] uppercase`}>
-            The Wedding of
-          </p>,
-          <h1 key="b" className={`${naskah} mt-1 text-[3.3rem] leading-[1.05] text-[#9e1c22] [text-shadow:0_2px_14px_rgb(255_250_238/0.95)]`}>
-            {u.wanita.panggilan} <span className="text-[#c99a3e]">&amp;</span> {u.pria.panggilan}
-          </h1>,
-          <p key="c" className={`${yuji} mt-1 text-[12px] tracking-[0.28em] text-[#3b1d16] uppercase [text-shadow:0_1px_8px_rgb(255_250_238)]`}>
-            {u.tanggal}
-          </p>,
-        ].map((el, i) => (
-          <motion.div
-            key={i}
-            initial={{ opacity: 0, transform: "translateY(18px)" }}
-            animate={buka ? { opacity: 1, transform: "translateY(0px)" } : undefined}
-            transition={{ duration: 1.2, ease: HALUS, delay: 9.1 + i * 0.2 }}
-          >
-            {el}
-          </motion.div>
-        ))}
+      </div>
+
+      {/* foto mempelai di gerbang bulan, di depan gerbang paifang */}
+      <div className={`${s.keluarTengah} absolute inset-x-0 top-[max(33%,16.5rem)] z-20 flex justify-center`}>
+        <GerbangBulan u={u} mulai={buka ? T_FOTO : false} />
       </div>
 
       <motion.div className="absolute inset-x-0 bottom-[calc(5.5rem+var(--demo-h,0px))] flex justify-center" {...muncul(buka, T_SELESAI)} aria-hidden="true">
@@ -336,8 +344,6 @@ function BingkaiMerah({ buka }: { buka: boolean }) {
       {[
         ["left-[8%] w-[11%]", "1.5svh", 8.5, 5.2, 3],
         ["right-[8%] w-[11%]", "3svh", 8.7, 4.6, 3.4],
-        ["left-[22%] w-[7%]", "0px", 9.0, 5.8, 2.6],
-        ["right-[22%] w-[7%]", "0.8svh", 9.2, 5, 2.8],
       ].map(([c, tali, t, d, a]) => (
         <motion.div
           key={c as string}
@@ -349,6 +355,81 @@ function BingkaiMerah({ buka }: { buka: boolean }) {
           <Lentera className={c as string} tali={tali as string} d={d as number} a={a as number} />
         </motion.div>
       ))}
+    </div>
+  );
+}
+
+/* ───────── Gerbang bulan berisi foto mempelai ───────── */
+
+// Jendela bulan merah-emas dengan atap genteng giok di puncaknya, cincin emas putus-putus yang berputar pelan, rumbai
+// merah di kedua sisi (囍 sudah ada di papan gerbang paifang tepat di bawahnya). Urutan masuk (detik dari `mulai`):
+// jendela berputar masuk, foto tersingkap melingkar dari tengah, atap turun, lalu rumbai.
+function GerbangBulan({ u, mulai }: { u: Undangan; mulai: number | false }) {
+  const t = mulai === false ? 0 : mulai;
+  const jalan = mulai !== false;
+  const masuk = (jeda: number, dari: string, ke: string, durasi = 0.9) => ({
+    initial: { opacity: 0, transform: dari },
+    animate: jalan ? { opacity: 1, transform: ke } : undefined,
+    transition: { duration: durasi, ease: HALUS, delay: t + jeda },
+  });
+  return (
+    <div className="relative w-[50%] max-w-[13.5rem]">
+      {/* cincin emas putus-putus yang berputar pelan */}
+      <motion.div className="pointer-events-none absolute -inset-[8%]" {...masuk(0.2, "scale(0.7)", "scale(1)", 1.6)} aria-hidden="true">
+        <svg viewBox="-120 -120 240 240" className={`${s.putar} h-full w-full`}>
+          <circle r="116" fill="none" stroke="#c99a3e" strokeWidth="1.4" strokeDasharray="2 7" strokeLinecap="round" />
+          {[0, 45, 90, 135, 180, 225, 270, 315].map((r) => (
+            <path key={r} d="M0-121l3.5 5-3.5 5-3.5-5Z" fill="#c99a3e" transform={`rotate(${r})`} />
+          ))}
+        </svg>
+      </motion.div>
+
+      {/* jendela bulan: berputar masuk, fotonya tersingkap melingkar */}
+      <motion.div className="relative" {...masuk(0, "scale(0.5) rotate(-120deg)", "scale(1) rotate(0deg)", 1.4)}>
+        <JendelaBulan src={u.foto.sampul} alt={`${u.wanita.panggilan} & ${u.pria.panggilan}`} sizes="230px" posisi="50% 30%" preload singkap={jalan ? t + 0.55 : false} />
+      </motion.div>
+
+      {/* atap genteng giok di puncak jendela */}
+      <motion.div className="absolute top-0 left-1/2 w-[84%] -translate-x-1/2 -translate-y-[58%]" {...masuk(0.9, "translateY(-24px)", "translateY(0px)")} aria-hidden="true">
+        <svg viewBox="0 0 200 64" className="w-full overflow-visible drop-shadow-[0_6px_6px_rgb(40_20_10/0.35)]">
+          <defs>
+            <linearGradient id="or-atap-bulan" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0" stopColor="#5aa596" />
+              <stop offset="1" stopColor="#245650" />
+            </linearGradient>
+          </defs>
+          <path d="M100 6C70 10 40 14 22 16 14 17 6 22 0 30 14 30 22 32 30 38H170C178 32 186 30 200 30 194 22 186 17 178 16 160 14 130 10 100 6Z" fill="url(#or-atap-bulan)" />
+          {Array.from({ length: 13 }, (_, k) => (
+            <path key={k} d={`M${36 + k * 10.6} 37V${15 + Math.abs(k - 6) * 0.9}`} stroke="#1d4741" strokeWidth=".7" opacity=".55" />
+          ))}
+          <path d="M22 16C40 14 70 10 100 6S160 14 178 16" fill="none" stroke="#f6dc94" strokeWidth="1.6" />
+          <rect x="30" y="38" width="140" height="9" fill="#9e1c22" />
+          <rect x="30" y="38" width="140" height="1.4" fill="#f6dc94" />
+          <rect x="30" y="45.6" width="140" height="1.4" fill="#f6dc94" />
+          <circle cx="100" cy="5" r="3.4" fill="#f6dc94" />
+        </svg>
+      </motion.div>
+
+      {/* rumbai merah di kiri & kanan */}
+      {[-1, 1].map((k) => (
+        <motion.div
+          key={k}
+          className={`absolute top-[52%] w-[10%] ${k < 0 ? "-left-[9%]" : "-right-[9%]"}`}
+          {...masuk(1.2 + (k > 0 ? 0.12 : 0), "translateY(-30px)", "translateY(0px)")}
+          aria-hidden="true"
+        >
+          <div className={k < 0 ? s.ayunA : s.ayunB} style={{ transformOrigin: "50% 0%" }}>
+            <svg viewBox="0 0 12 52" className="w-full">
+              <path d="M6 0V14" stroke="#c99a3e" strokeWidth="1.2" />
+              <rect x="2.6" y="13" width="6.8" height="6.8" rx="1.2" transform="rotate(45 6 16.4)" fill="#b3242b" stroke="#f6dc94" strokeWidth=".7" />
+              <circle cx="6" cy="24" r="2.2" fill="#c99a3e" />
+              <path d="M3 26h6l1.6 26H1.4Z" fill="#b3242b" />
+              <path d="M4 27v24M6 27v25M8 27v24" stroke="#7d1418" strokeWidth=".45" />
+            </svg>
+          </div>
+        </motion.div>
+      ))}
+
     </div>
   );
 }

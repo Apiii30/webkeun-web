@@ -335,9 +335,9 @@ function Penutup({ u }: { u: Undangan }) {
         </Muncul>
       </div>
       <div className="pointer-events-none absolute inset-x-0 bottom-[var(--demo-h,0px)] h-56">
-        <Bunga a="mawarTua" className="bottom-[-30%] left-[-1%] w-[40%]" sizes="180px" asal="40% 100%" />
-        <Bunga a="mawarBesar" className="bottom-[-46%] left-[30%] w-[38%]" sizes="170px" varian="B" />
-        <Bunga a="mawarPink" className="right-[-1%] bottom-[-34%] w-[42%]" sizes="190px" flip asal="60% 100%" />
+        <Bunga a="mawarTua" className="bottom-[-10%] left-[-1%] w-[36%]" sizes="180px" asal="40% 100%" />
+        <Bunga a="mawarBesar" className="bottom-[-22%] left-[31%] w-[34%]" sizes="170px" varian="B" />
+        <Bunga a="mawarPink" className="right-[-1%] bottom-[-12%] w-[38%]" sizes="190px" flip asal="60% 100%" />
       </div>
       <KelopakJatuh n={8} />
     </Bagian>

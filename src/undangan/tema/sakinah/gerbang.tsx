@@ -4,7 +4,7 @@ import { type Transition, motion, useReducedMotion } from "motion/react";
 import { type CSSProperties, type ReactNode, useState } from "react";
 import type { Undangan } from "../../types";
 import { BISMILLAH, MASKER_LENGKUNG, maskerLengkung } from "./aset";
-import { Bunga, DaunPintu, Gambar, HALUS, Kawanan, Lentera, Pembatas, Ronce, TepiLengkung, arab, marcellus, naskah } from "./hias";
+import { Bunga, DaunPintu, FotoLengkung, Gambar, HALUS, Kawanan, Lentera, Pembatas, Ronce, TepiLengkung, arab, marcellus, naskah } from "./hias";
 import s from "./sakinah.module.css";
 
 // Beranda tema Putih Sakinah: Taj Mahal saat fajar dalam cetakan tinta emas, sekaligus animasi pembuka undangan.
@@ -18,11 +18,15 @@ import s from "./sakinah.module.css";
 //   4.6  kamera menembus lengkung (zoom in besar): dinding, lentera, melati & bunga membesar melewati layar dengan
 //        kecepatan berbeda, sementara pemandangan di baliknya mundur ke ukuran asli per lapisan (zoom out, parallax)
 //   7.0  merpati emas melintas & nama mempelai muncul di langit
+//   7.4  foto mempelai muncul di lengkung mihrab kecil, lalu dua daun pintunya berayun membuka
 // Saat beranda digulir keluar, tiap lapisan pergi dengan kecepatan berbeda (kelas keluar* di CSS).
 
 const T_PINTU = 2.3;
 const T_TEMBUS = 4.6;
 const T_TEKS = 7.0;
+const T_FOTO = 7.4;
+// detik saat seluruh animasi pembuka selesai (navigasi bawah baru muncul sesudahnya, lihat shell.tsx)
+export const T_SELESAI = T_FOTO + 2.6;
 
 const MENGENDAP = { duration: 3.8, ease: [0.16, 0.7, 0.2, 1], delay: T_TEMBUS + 0.1 } as const;
 const TEMBUS = { duration: 2.4, ease: [0.6, 0.02, 0.75, 0.3], delay: T_TEMBUS } as const;
@@ -90,15 +94,17 @@ function GerbangPembuka({ buka, onSelesai }: { buka: boolean; onSelesai: () => v
     animate: buka ? { transform: tujuan } : undefined,
     transition: TEMBUS,
   });
+  // lentera masuk pelan dengan memudar & turun tipis (tanpa jatuh-memantul): sampulnya sendiri juga berlentera, jadi
+  // lentera yang tiba-tiba hilang lalu jatuh dari atas terlihat seperti lampu berkedip
   const turun = (jeda: number) => ({
-    initial: { opacity: 0, transform: "translateY(-115%)" },
-    animate: buka ? { opacity: 1, transform: ["translateY(-115%)", "translateY(5%)", "translateY(0%)"] } : undefined,
-    transition: { duration: 1.9, delay: jeda, times: [0, 0.72, 1], ease: [HALUS, [0.45, 0, 0.55, 1]] } as Transition,
+    initial: { opacity: 0, transform: "translateY(-6%)" },
+    animate: buka ? { opacity: 1, transform: "translateY(0%)" } : undefined,
+    transition: { duration: 1.8, delay: jeda, ease: HALUS } as Transition,
   });
   const cahaya = {
     initial: { opacity: 0 },
-    animate: buka ? { opacity: [0, 1, 0] } : undefined,
-    transition: { duration: 3.4, times: [0, 0.32, 1], delay: T_PINTU + 0.25, ease: "easeInOut" } as Transition,
+    animate: buka ? { opacity: [0, 0.85, 0] } : undefined,
+    transition: { duration: 4, times: [0, 0.4, 1], delay: T_PINTU + 0.25, ease: "easeInOut" } as Transition,
   };
   return (
     <motion.div
@@ -224,14 +230,14 @@ function GerbangPembuka({ buka, onSelesai }: { buka: boolean; onSelesai: () => v
 }
 
 // Rumpun bunga di kaki layar: magnolia (kiri), anggrek bulan (kanan), dua tangkai melati di tengah. Sisi gambar yang
-// terpotong pelatnya selalu di luar layar.
+// terpotong pelatnya dipudarkan (aset.ts), ukurannya dijaga supaya tidak menutupi pemandangan.
 function RumpunBunga({ besar = false }: { besar?: boolean }) {
   return (
     <>
-      <Bunga a="melati" className={`left-[25%] w-[30%] ${besar ? "bottom-[-6%]" : "bottom-[-14%]"}`} sizes="140px" asal="50% 100%" style={{ rotate: "-16deg" }} />
-      <Bunga a="melati" className={`right-[27%] w-[27%] ${besar ? "bottom-[-10%]" : "bottom-[-18%]"}`} sizes="130px" flip varian="B" asal="50% 100%" style={{ rotate: "14deg" }} />
-      <Bunga a="magnolia" className={`left-[-30%] w-[88%] ${besar ? "bottom-[-10%]" : "bottom-[-16%]"}`} sizes="(min-width: 440px) 390px, 88vw" asal="40% 100%" />
-      <Bunga a="anggrek" className={`right-[-6%] w-[44%] ${besar ? "bottom-[-8%]" : "bottom-[-14%]"}`} sizes="200px" varian="B" asal="60% 100%" />
+      <Bunga a="melati" className={`left-[27%] w-[23%] ${besar ? "bottom-[-4%]" : "bottom-[-8%]"}`} sizes="110px" asal="50% 100%" style={{ rotate: "-16deg" }} />
+      <Bunga a="melati" className={`right-[29%] w-[21%] ${besar ? "bottom-[-6%]" : "bottom-[-10%]"}`} sizes="100px" flip varian="B" asal="50% 100%" style={{ rotate: "14deg" }} />
+      <Bunga a="magnolia" className={`left-[-14%] w-[60%] ${besar ? "bottom-[-6%]" : "bottom-[-10%]"}`} sizes="(min-width: 440px) 270px, 60vw" asal="40% 100%" />
+      <Bunga a="anggrek" className={`right-[-3%] w-[33%] ${besar ? "bottom-[-4%]" : "bottom-[-8%]"}`} sizes="150px" varian="B" asal="60% 100%" />
     </>
   );
 }
@@ -303,11 +309,23 @@ export function Beranda({ u, buka }: { u: Undangan; buka: boolean }) {
         ))}
       </div>
 
+      {/* foto mempelai di lengkung mihrab kecil: naik pelan, lalu daun pintunya berayun membuka */}
+      <div className={`${s.keluarTengah} absolute inset-x-0 top-[max(37%,17.5rem)] flex justify-center`}>
+        <motion.div
+          className="relative w-[44%] max-w-[12rem]"
+          initial={{ opacity: 0, transform: "translateY(40px) scale(0.9)" }}
+          animate={buka ? { opacity: 1, transform: "translateY(0px) scale(1)" } : undefined}
+          transition={{ duration: 1.3, ease: HALUS, delay: T_FOTO }}
+        >
+          <FotoLengkung src={u.foto.sampul} alt={`${u.wanita.panggilan} & ${u.pria.panggilan}`} sizes="200px" posisi="50% 30%" preload pintu={buka ? T_FOTO + 0.7 : false} />
+        </motion.div>
+      </div>
+
       <motion.div
         className="absolute inset-x-0 bottom-[calc(5.5rem+var(--demo-h,0px))] flex justify-center"
         initial={{ opacity: 0 }}
         animate={buka ? { opacity: 1 } : undefined}
-        transition={{ duration: 1, delay: T_TEKS + 1 }}
+        transition={{ duration: 1, delay: T_SELESAI }}
         aria-hidden="true"
       >
         <svg

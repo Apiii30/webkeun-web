@@ -11,7 +11,11 @@
 //     flore giganteo. Pierre-Joseph Redouté, Les Roses (1817–1824), domain publik.
 // - delima: Punica granatum, Köhler's Medizinal-Pflanzen (1887), domain publik.
 
+import type { Tepi } from "../../tepi";
+
 const dir = "/undangan/delima/";
+
+// tepi: sisi gambar yang terpotong lurus (dipudarkan, lihat ../../tepi.ts)
 
 export const ASET = {
   airTerjun: { src: `${dir}air-terjun.webp`, w: 900, h: 1105 },
@@ -19,11 +23,11 @@ export const ASET = {
   reruntuhan: { src: `${dir}reruntuhan.webp`, w: 700, h: 972 },
   kastil: { src: `${dir}kastil.webp`, w: 800, h: 638 },
   merak: { src: `${dir}merak-putih.webp`, w: 736, h: 900 },
-  mawarTua: { src: `${dir}mawar-tua.webp`, w: 573, h: 900 },
-  mawarPink: { src: `${dir}mawar-pink.webp`, w: 709, h: 900 },
-  mawarBesar: { src: `${dir}mawar-besar.webp`, w: 597, h: 900 },
-  delima: { src: `${dir}delima.webp`, w: 784, h: 900 },
-} as const;
+  mawarTua: { src: `${dir}mawar-tua.webp`, w: 573, h: 900, tepi: "kb", pudar: 14 },
+  mawarPink: { src: `${dir}mawar-pink.webp`, w: 709, h: 900, tepi: "nb", pudar: 14 },
+  mawarBesar: { src: `${dir}mawar-besar.webp`, w: 597, h: 900, tepi: "b", pudar: 14 },
+  delima: { src: `${dir}delima.webp`, w: 784, h: 900, tepi: "nb", pudar: 12 },
+} satisfies Record<string, { src: string; w: number; h: number } & Tepi>;
 
 export type NamaAset = keyof typeof ASET;
 

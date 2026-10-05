@@ -8,14 +8,18 @@
 // - melati: "Jasminum sambac", Flora de Filipinas, Francisco Manuel Blanco (1880–1883), domain publik.
 // Bunga dipotong dari kertasnya; isi kelopak yang sewarna kertas digeser ke putih.
 
+import type { Tepi } from "../../tepi";
+
 const dir = "/undangan/sakinah/";
+
+// tepi: sisi gambar yang terpotong lurus (dipudarkan, lihat ../../tepi.ts)
 
 export const ASET = {
   taj: { src: `${dir}taj.webp`, w: 1100, h: 760 },
-  magnolia: { src: `${dir}magnolia.webp`, w: 1100, h: 900 },
-  anggrek: { src: `${dir}anggrek.webp`, w: 563, h: 892 },
-  melati: { src: `${dir}melati.webp`, w: 549, h: 683 },
-} as const;
+  magnolia: { src: `${dir}magnolia.webp`, w: 1100, h: 900, tepi: "aknb", pudar: 15 },
+  anggrek: { src: `${dir}anggrek.webp`, w: 563, h: 892, tepi: "nb", pudar: 13 },
+  melati: { src: `${dir}melati.webp`, w: 549, h: 683, tepi: "b", pudar: 12 },
+} satisfies Record<string, { src: string; w: number; h: number } & Tepi>;
 
 export type NamaAset = keyof typeof ASET;
 

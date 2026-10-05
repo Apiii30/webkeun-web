@@ -8,6 +8,7 @@ import { SlotMusik, useMusik } from "../../musik";
 import type { Undangan } from "../../types";
 import { ASET } from "./aset";
 import { Isi } from "./bagian";
+import { T_SELESAI } from "./gerbang";
 import s from "./delima.module.css";
 import { HALUS, Pembatas, naskah, prata } from "./hias";
 import { tombolEmas } from "./interaktif";
@@ -185,7 +186,7 @@ function Navigasi() {
     <motion.nav
       initial={{ opacity: 0, transform: "translateY(90px)" }}
       animate={{ opacity: 1, transform: "translateY(0px)" }}
-      transition={{ delay: 7.6, duration: 0.9, ease: HALUS }}
+      transition={{ delay: T_SELESAI, duration: 0.9, ease: HALUS }}
       className="pointer-events-none fixed inset-x-0 bottom-[calc(0.75rem+var(--demo-h,0px))] z-40 flex justify-center px-3"
     >
       <ul className="pointer-events-auto flex items-center gap-1 rounded-full bg-[#4a1219]/95 p-1.5 shadow-[0_12px_28px_-12px_rgb(30_5_9/0.8)] ring-1 ring-[#c9a35c]/50">

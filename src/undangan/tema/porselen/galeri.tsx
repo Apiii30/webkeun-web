@@ -126,6 +126,39 @@ export function Galeri({ photos }: { photos: Foto[] }) {
       </div>
       <p className="mt-3 text-center text-[11px] text-[#dbe5f3]/70">Geser untuk memutar · ketuk foto untuk memperbesar</p>
 
+      {/* semua foto dalam kisi kotak: tiap ubin bisa diketuk untuk layar penuh. Bila jumlah foto tidak pas kelipatan
+          tiga, ubin pertama (dan terakhir) dibuat selebar dua kolom supaya baris terakhir tidak bolong. */}
+      <motion.ul
+        className="mt-9 grid grid-cols-3 gap-2 px-2"
+        initial="sembunyi"
+        whileInView="tampil"
+        viewport={{ once: true, amount: 0.15 }}
+        transition={{ staggerChildren: 0.07 }}
+      >
+        {photos.map((p, i) => {
+          const lebar = (N % 3 === 2 && i === 0) || (N % 3 === 1 && (i === 0 || i === N - 1));
+          return (
+            <motion.li
+              key={p.src}
+              className={lebar ? "col-span-2" : ""}
+              variants={{ sembunyi: { opacity: 0, transform: "translateY(24px) scale(0.92)" }, tampil: { opacity: 1, transform: "translateY(0px) scale(1)", transition: { duration: 0.8, ease: HALUS } } }}
+            >
+              <button
+                type="button"
+                onClick={() => setOpen(i)}
+                aria-label={`Lihat foto: ${p.alt}`}
+                className={`group relative block w-full overflow-hidden rounded-lg bg-[#1a2f5c] p-[3px] ring-1 transition-shadow duration-500 ${i === aktif ? "ring-[#d8b56e]" : "ring-[#dbe5f3]/25"} ${lebar ? "aspect-[2/1]" : "aspect-square"}`}
+              >
+                <span className="relative block h-full w-full overflow-hidden rounded-[5px]">
+                  <Image src={p.src} alt="" fill sizes={lebar ? "280px" : "140px"} className="object-cover transition-transform duration-700 group-active:scale-105" draggable={false} />
+                </span>
+                <span className="pointer-events-none absolute inset-[3px] rounded-[5px] ring-1 ring-[#fbfaf6]/30 ring-inset" aria-hidden="true" />
+              </button>
+            </motion.li>
+          );
+        })}
+      </motion.ul>
+
       <Lapis>
         <AnimatePresence>
           {open !== null && (

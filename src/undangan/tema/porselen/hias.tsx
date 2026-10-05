@@ -3,6 +3,7 @@
 import { motion } from "motion/react";
 import Image from "next/image";
 import { type CSSProperties, type ReactNode, useId } from "react";
+import { tepiPudar } from "../../tepi";
 import { ASET, GUNUNGAN, MASKER_GUNUNGAN, type NamaAset } from "./aset";
 import s from "./porselen.module.css";
 
@@ -48,8 +49,10 @@ export function Muncul({
 }
 
 export function Gambar({ a, className = "", sizes = "200px", flip = false, preload }: { a: NamaAset; className?: string; sizes?: string; flip?: boolean; preload?: boolean }) {
-  const g = ASET[a];
-  return <Image src={g.src} alt="" width={g.w} height={g.h} sizes={sizes} preload={preload} className={`h-auto w-full ${flip ? "-scale-x-100" : ""} ${className}`} />;
+  const g: (typeof ASET)[NamaAset] & { tepi?: string; pudar?: number } = ASET[a];
+  return (
+    <Image src={g.src} alt="" width={g.w} height={g.h} sizes={sizes} preload={preload} style={tepiPudar(g)} className={`h-auto w-full ${flip ? "-scale-x-100" : ""} ${className}`} />
+  );
 }
 
 // Bunga yang bergoyang pelan dari pangkalnya
@@ -155,28 +158,64 @@ function DefsEmas({ id }: { id: string }) {
 /* ───────── Bingkai jendela gunungan bertepi timbul ───────── */
 
 // Cincin bertingkat di sekeliling jendela gunungan, seperti ukiran timbul di kertas (dipakai di gerbang & penutup)
-export function TepiGunungan({ className = "" }: { className?: string }) {
+export function TepiGunungan({ className = "", emas = false }: { className?: string; emas?: boolean }) {
+  const id = useId().replace(/:/g, "");
   return (
     <svg viewBox="-40 -40 380 500" className={`pointer-events-none absolute overflow-visible ${className}`} aria-hidden="true">
+      {emas && <DefsEmas id={`t${id}`} />}
       <path d={GUNUNGAN} fill="none" stroke="#fbfaf6" strokeWidth="58" strokeLinejoin="round" style={{ filter: "drop-shadow(0 8px 12px rgb(39 66 122 / 0.22))" }} />
       <path d={GUNUNGAN} fill="none" stroke="#ebe6da" strokeWidth="38" strokeLinejoin="round" />
       <path d={GUNUNGAN} fill="none" stroke="#fbfaf6" strokeWidth="24" strokeLinejoin="round" />
       <path d={GUNUNGAN} fill="none" stroke="#d9d1c0" strokeWidth="9" strokeLinejoin="round" />
-      <path d={GUNUNGAN} fill="none" stroke="#fdfcf8" strokeWidth="3" strokeLinejoin="round" />
+      <path d={GUNUNGAN} fill="none" stroke={emas ? `url(#t${id})` : "#fdfcf8"} strokeWidth={emas ? 4 : 3} strokeLinejoin="round" />
     </svg>
   );
 }
 
-// Foto di dalam jendela gunungan (penutup)
-export function FotoGunungan({ src, alt, sizes, className = "" }: { src: string; alt: string; sizes: string; className?: string }) {
+// Foto di dalam jendela gunungan (beranda & penutup). singkap: detik mulai foto tersingkap dari bawah ke atas
+// (false = belum, undefined = langsung tampil), disusul kilau emas yang menyapu kacanya.
+export function FotoGunungan({
+  src,
+  alt,
+  sizes,
+  className = "",
+  posisi = "50% 50%",
+  preload,
+  singkap,
+}: {
+  src: string;
+  alt: string;
+  sizes: string;
+  className?: string;
+  posisi?: string;
+  preload?: boolean;
+  singkap?: number | false;
+}) {
+  const animasi = singkap !== undefined;
   return (
     <div className={`relative aspect-[300/420] ${className}`}>
-      <div className="absolute inset-0 overflow-hidden" style={{ maskImage: MASKER_GUNUNGAN, WebkitMaskImage: MASKER_GUNUNGAN, maskSize: "100% 100%", WebkitMaskSize: "100% 100%" }}>
-        <div className={`${s.geserLambat} absolute inset-x-0 inset-y-[-10%]`}>
-          <Image src={src} alt={alt} fill sizes={sizes} className="object-cover" />
-        </div>
+      <div className="absolute inset-0 overflow-hidden bg-[#dfe6f1]" style={{ maskImage: MASKER_GUNUNGAN, WebkitMaskImage: MASKER_GUNUNGAN, maskSize: "100% 100%", WebkitMaskSize: "100% 100%" }}>
+        <motion.div
+          className="absolute inset-0"
+          initial={animasi ? { clipPath: "inset(100% 0% 0% 0%)" } : false}
+          animate={animasi && singkap !== false ? { clipPath: "inset(0% 0% 0% 0%)" } : undefined}
+          transition={{ duration: 1.4, ease: [0.65, 0, 0.35, 1], delay: singkap || 0 }}
+        >
+          <div className={`${s.geserLambat} absolute inset-x-0 inset-y-[-10%]`}>
+            <Image src={src} alt={alt} fill sizes={sizes} preload={preload} className="object-cover" style={{ objectPosition: posisi }} />
+          </div>
+        </motion.div>
+        {animasi && (
+          <motion.div
+            className="pointer-events-none absolute inset-y-0 left-0 w-[70%] bg-[linear-gradient(100deg,transparent_20%,rgb(255_247_222/0.75)_50%,transparent_80%)]"
+            initial={{ opacity: 0, transform: "translateX(-110%)" }}
+            animate={singkap !== false ? { opacity: [0, 1, 0], transform: "translateX(160%)" } : undefined}
+            transition={{ duration: 1.1, ease: "easeInOut", delay: (singkap || 0) + 1.1 }}
+            aria-hidden="true"
+          />
+        )}
       </div>
-      <TepiGunungan className="top-[-9.52%] left-[-13.33%] h-[119.05%] w-[126.67%]" />
+      <TepiGunungan className="top-[-9.52%] left-[-13.33%] h-[119.05%] w-[126.67%]" emas />
     </div>
   );
 }

@@ -234,18 +234,6 @@
   }
 }
 
-/* ── Kisah cinta: perjalanan horizontal ──
-   Tanpa efek scroll (browser lama / kurangi gerakan): bab-bab tersusun ke bawah seperti biasa.
-   Dengan efek: bagian dibuat setinggi n layar, isinya menempel (sticky) dan bab-bab bergeser ke samping
-   mengikuti scroll, dengan lapisan latar yang bergerak lebih lambat & bunga depan yang lebih cepat. */
-.kisahLuar {
-  view-timeline-name: --kisah;
-}
-.kisahLapis,
-.kisahBatang {
-  display: none;
-}
-
 /* ── Parallax umum ──
    Murni CSS (scroll-driven animation), hanya transform. Aktif hanya bila pembungkus tema punya data-paralaks
    (dipasang shell.tsx untuk browser yang menjalankannya di GPU: Chrome/Edge/Android, Safari 26.4+).
@@ -315,90 +303,6 @@
     animation: mendekat linear both;
     animation-timeline: --sek;
     animation-range: entry 0% entry 100%;
-  }
-
-  /* kisah cinta horizontal */
-  [data-paralaks] .kisahLuar {
-    height: calc(var(--n) * 100svh);
-  }
-  [data-paralaks] .kisahLekat {
-    position: sticky;
-    top: 0;
-    height: 100svh;
-    overflow: hidden;
-  }
-  [data-paralaks] .kisahJalur {
-    display: flex;
-    width: calc(var(--n) * 100%);
-    /* sengaja tanpa shorthand: di CSS module, "animation: linear both" tanpa nama membuat "linear" dibaca
-       sebagai nama animasi, sehingga kurvanya kembali ke ease */
-    animation-duration: auto;
-    animation-timing-function: linear;
-    animation-fill-mode: both;
-    animation-timeline: --kisah;
-    animation-range: contain 4% contain 96%;
-  }
-  [data-paralaks] .kisahJalur > * {
-    width: calc(100% / var(--n));
-    flex: none;
-  }
-  [data-paralaks] .jalan2 {
-    animation-name: jalan2;
-  }
-  [data-paralaks] .jalan3 {
-    animation-name: jalan3;
-  }
-  [data-paralaks] .jalan4 {
-    animation-name: jalan4;
-  }
-  [data-paralaks] .jalan5 {
-    animation-name: jalan5;
-  }
-  [data-paralaks] .jalan6 {
-    animation-name: jalan6;
-  }
-  [data-paralaks] .kisahLapis {
-    display: block;
-  }
-  [data-paralaks] .kisahJauh,
-  [data-paralaks] .kisahDekat,
-  [data-paralaks] .kisahBatang {
-    /* sengaja tanpa shorthand: di CSS module, "animation: linear both" tanpa nama membuat "linear" dibaca
-       sebagai nama animasi, sehingga kurvanya kembali ke ease */
-    animation-duration: auto;
-    animation-timing-function: linear;
-    animation-fill-mode: both;
-    animation-timeline: --kisah;
-    animation-range: contain 0% contain 100%;
-  }
-  [data-paralaks] .kisahJauh {
-    animation-name: kisahJauh;
-  }
-  [data-paralaks] .kisahDekat {
-    animation-name: kisahDekat;
-  }
-  [data-paralaks] .kisahBatang {
-    display: block;
-    animation-name: progres;
-  }
-  /* isi tiap bab: foto sedikit tertinggal, teks sedikit mendahului (parallax di dalam bab).
-     Memakai timeline yang sama dengan jalur; rentang tiap bab (saat bab itu melintas) dipasang inline di elemennya. */
-  [data-paralaks] .babFoto,
-  [data-paralaks] .babTeks,
-  [data-paralaks] .babAngka {
-    animation-duration: auto;
-    animation-timing-function: linear;
-    animation-fill-mode: both;
-    animation-timeline: --kisah;
-  }
-  [data-paralaks] .babFoto {
-    animation-name: babFoto;
-  }
-  [data-paralaks] .babTeks {
-    animation-name: babTeks;
-  }
-  [data-paralaks] .babAngka {
-    animation-name: babAngka;
   }
 }
 @keyframes latarSisi {
@@ -486,73 +390,6 @@
     transform: none;
   }
 }
-@keyframes jalan2 {
-  to {
-    transform: translateX(-50%);
-  }
-}
-@keyframes jalan3 {
-  to {
-    transform: translateX(-66.6667%);
-  }
-}
-@keyframes jalan4 {
-  to {
-    transform: translateX(-75%);
-  }
-}
-@keyframes jalan5 {
-  to {
-    transform: translateX(-80%);
-  }
-}
-@keyframes jalan6 {
-  to {
-    transform: translateX(-83.3333%);
-  }
-}
-@keyframes kisahJauh {
-  to {
-    transform: translateX(-30%);
-  }
-}
-/* bunga depan: pita selebar 5 layar bergeser 4 layar, lebih cepat daripada bab-bab */
-@keyframes kisahDekat {
-  to {
-    transform: translateX(-80%);
-  }
-}
-@keyframes babFoto {
-  from {
-    transform: translateX(-22%) rotate(-4deg);
-  }
-  to {
-    transform: translateX(22%) rotate(4deg);
-  }
-}
-@keyframes babTeks {
-  from {
-    transform: translateX(30%);
-    opacity: 0;
-  }
-  35%,
-  65% {
-    opacity: 1;
-  }
-  to {
-    transform: translateX(-30%);
-    opacity: 0;
-  }
-}
-@keyframes babAngka {
-  from {
-    transform: translateX(45%);
-  }
-  to {
-    transform: translateX(-45%);
-  }
-}
-
 @media (prefers-reduced-motion: reduce) {
   .alirA,
   .alirB,

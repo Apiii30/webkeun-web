@@ -80,18 +80,16 @@
     transform: rotate(calc(var(--a, 2.4deg) * -1));
   }
 }
-/* Nyala api lentera berdenyut */
+/* Cahaya lentera bernapas sangat pelan (denyut yang cepat & dalam terlihat seperti lampu berkedip) */
 .nyala {
-  animation: nyala 2.6s ease-in-out infinite alternate;
+  animation: nyala 6s ease-in-out infinite alternate;
 }
 @keyframes nyala {
   from {
-    opacity: 0.55;
-    transform: scale(0.92);
+    opacity: 0.85;
   }
   to {
     opacity: 1;
-    transform: scale(1.06);
   }
 }
 

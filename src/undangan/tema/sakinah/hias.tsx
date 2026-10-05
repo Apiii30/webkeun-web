@@ -3,6 +3,7 @@
 import { motion } from "motion/react";
 import Image from "next/image";
 import { type CSSProperties, type ReactNode, useId } from "react";
+import { tepiPudar } from "../../tepi";
 import { ASET, LENGKUNG, type NamaAset, maskerLengkung, maskerMihrab } from "./aset";
 import s from "./sakinah.module.css";
 
@@ -60,9 +61,9 @@ export function Muncul({
 }
 
 export function Gambar({ a, className = "", sizes = "200px", flip = false, preload }: { a: NamaAset; className?: string; sizes?: string; flip?: boolean; preload?: boolean }) {
-  const g = ASET[a];
+  const g: (typeof ASET)[NamaAset] & { tepi?: string; pudar?: number } = ASET[a];
   return (
-    <Image src={g.src} alt="" width={g.w} height={g.h} sizes={sizes} preload={preload} loading={preload ? "eager" : undefined} className={`h-auto w-full ${flip ? "-scale-x-100" : ""} ${className}`} />
+    <Image src={g.src} alt="" width={g.w} height={g.h} sizes={sizes} preload={preload} loading={preload ? "eager" : undefined} style={tepiPudar(g)} className={`h-auto w-full ${flip ? "-scale-x-100" : ""} ${className}`} />
   );
 }
 
@@ -320,7 +321,8 @@ export function TepiLengkung({ className = "", style, sabit = true, tipis = fals
   );
 }
 
-// Foto di dalam lengkung mihrab bertepi emas (rasio 300 : 420)
+// Foto di dalam lengkung mihrab bertepi emas (rasio 300 : 420). pintu: detik saat dua daun pintu berkisi di depan
+// foto berayun membuka (3D) dengan cahaya hangat dari baliknya (false = pintu masih tertutup, tanpa prop = tanpa pintu).
 export function FotoLengkung({
   src,
   alt,
@@ -330,6 +332,7 @@ export function FotoLengkung({
   preload,
   tipis,
   sabit = true,
+  pintu,
 }: {
   src: string;
   alt: string;
@@ -339,13 +342,48 @@ export function FotoLengkung({
   preload?: boolean;
   tipis?: boolean;
   sabit?: boolean;
+  pintu?: number | false;
 }) {
+  const berpintu = pintu !== undefined;
+  const buka = berpintu && pintu !== false;
   return (
     <div className={`relative aspect-[300/420] ${className}`}>
-      <div className="absolute inset-0 overflow-hidden" style={maskerLengkung}>
-        <div className={`${s.geserLambat} absolute inset-x-0 inset-y-[-10%]`}>
-          <Image src={src} alt={alt} fill sizes={sizes} preload={preload} loading={preload ? "eager" : undefined} className="object-cover" style={{ objectPosition: posisi }} />
-        </div>
+      <div className="absolute inset-0 overflow-hidden" style={{ ...maskerLengkung, perspective: berpintu ? "700px" : undefined }}>
+        {/* foto mundur pelan ke ukuran asli saat pintunya terbuka (pembungkus terpisah dari parallax scroll-nya) */}
+        <motion.div
+          className="absolute inset-0"
+          initial={berpintu ? { transform: "scale(1.18)" } : false}
+          animate={buka ? { transform: "scale(1)" } : undefined}
+          transition={{ duration: 2.6, ease: [0.2, 0.7, 0.2, 1], delay: (pintu || 0) + 0.2 }}
+        >
+          <div className={`${s.geserLambat} absolute inset-x-0 inset-y-[-10%]`}>
+            <Image src={src} alt={alt} fill sizes={sizes} preload={preload} loading={preload ? "eager" : undefined} className="object-cover" style={{ objectPosition: posisi }} />
+          </div>
+        </motion.div>
+        {berpintu && (
+          <>
+            <motion.div
+              className="pointer-events-none absolute inset-0 bg-[radial-gradient(60%_50%_at_50%_55%,#fffdf5,rgb(255_236_190/0.7)_45%,rgb(255_236_190/0))]"
+              initial={{ opacity: 0 }}
+              animate={buka ? { opacity: [0, 0.9, 0] } : undefined}
+              transition={{ duration: 2.4, times: [0, 0.3, 1], ease: "easeInOut", delay: pintu || 0 }}
+              aria-hidden="true"
+            />
+            {[false, true].map((kanan) => (
+              <motion.div
+                key={String(kanan)}
+                className={`absolute inset-y-0 w-1/2 ${kanan ? "right-0" : "left-0"}`}
+                style={{ transformOrigin: kanan ? "100% 50%" : "0% 50%" }}
+                initial={{ transform: "rotateY(0deg)", opacity: 1 }}
+                animate={buka ? { transform: `rotateY(${kanan ? 108 : -108}deg)`, opacity: 0 } : undefined}
+                transition={{ duration: 1.9, ease: [0.5, 0, 0.25, 1], delay: pintu || 0, opacity: { duration: 0.4, delay: (pintu || 0) + 1.5 } }}
+                aria-hidden="true"
+              >
+                <DaunPintu kanan={kanan} />
+              </motion.div>
+            ))}
+          </>
+        )}
       </div>
       <TepiLengkung className="top-[-5.71%] left-[-8%] h-[111.43%] w-[116%]" tipis={tipis} sabit={sabit} />
     </div>

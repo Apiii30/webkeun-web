@@ -10,7 +10,8 @@ import { Lapis } from "./interaktif";
 // Galeri roda jendela bulan: foto-foto bundar berbingkai jendela bulan merah berjajar di sepanjang busur roda besar
 // yang porosnya di bawah galeri. Foto di puncak roda paling besar; tetangganya turun ke kiri-kanan mengikuti busur,
 // mengecil & meredup. Saat roda diputar (digeser), foto di dalam tiap jendela bergeser lebih lambat (parallax).
-// Berputar sendiri saat terlihat, berhenti setelah tamu ikut menggeser. Ketuk foto di puncak untuk tampilan penuh.
+// Berputar sendiri saat terlihat, berhenti setelah tamu ikut menggeser. Ketuk foto di kiri/kanan untuk memutarnya ke
+// puncak, ketuk foto di puncak untuk tampilan penuh.
 
 const PEGAS = { type: "spring", stiffness: 150, damping: 24 } as const;
 const SUDUT = 27; // jarak antarfoto di roda (derajat)
@@ -73,7 +74,21 @@ export function Galeri({ photos }: { photos: Foto[] }) {
           <circle cx="50" cy={9 + 26 + JARI} r={JARI - 30} fill="none" stroke="#f6dc94" strokeWidth=".2" opacity=".35" />
         </svg>
         {photos.map((f, i) => (
-          <Jendela key={f.src} f={f} i={i} n={n} p={p} onBuka={() => i === aktif && setPenuh(i)} />
+          <Jendela
+            key={f.src}
+            f={f}
+            i={i}
+            n={n}
+            p={p}
+            onBuka={() => {
+              // foto di puncak roda dibuka layar penuh; foto di kiri/kanan diputar ke puncak
+              if (i === aktif) setPenuh(i);
+              else {
+                setOtomatis(false);
+                pilih(i);
+              }
+            }}
+          />
         ))}
       </motion.div>
 
@@ -121,7 +136,7 @@ export function Galeri({ photos }: { photos: Foto[] }) {
         ))}
       </div>
 
-      <p className="mt-4 text-center text-[11px] tracking-[0.2em] text-[#fff1d6]/60 uppercase">Putar roda atau ketuk untuk memperbesar</p>
+      <p className="mt-4 text-center text-[11px] tracking-[0.2em] text-[#fff1d6]/60 uppercase">Geser atau ketuk foto samping · ketuk tengah untuk memperbesar</p>
 
       <TampilPenuh photos={photos} buka={penuh} setBuka={setPenuh} />
     </div>

@@ -3,6 +3,7 @@
 import { motion } from "motion/react";
 import Image from "next/image";
 import { type CSSProperties, type ReactNode, useId } from "react";
+import { tepiPudar } from "../../tepi";
 import { ASET, BINGKAI, MASKER_BINGKAI, type NamaAset } from "./aset";
 import s from "./delima.module.css";
 
@@ -52,9 +53,9 @@ export function Muncul({
 }
 
 export function Gambar({ a, className = "", sizes = "200px", flip = false, preload }: { a: NamaAset; className?: string; sizes?: string; flip?: boolean; preload?: boolean }) {
-  const g = ASET[a];
+  const g: (typeof ASET)[NamaAset] & { tepi?: string; pudar?: number } = ASET[a];
   return (
-    <Image src={g.src} alt="" width={g.w} height={g.h} sizes={sizes} preload={preload} loading={preload ? "eager" : undefined} className={`h-auto w-full ${flip ? "-scale-x-100" : ""} ${className}`} />
+    <Image src={g.src} alt="" width={g.w} height={g.h} sizes={sizes} preload={preload} loading={preload ? "eager" : undefined} style={tepiPudar(g)} className={`h-auto w-full ${flip ? "-scale-x-100" : ""} ${className}`} />
   );
 }
 
@@ -205,14 +206,48 @@ export function TepiBingkai({ className = "", style }: { className?: string; sty
   );
 }
 
-// Foto di dalam bingkai cermin (penutup)
-export function FotoBingkai({ src, alt, sizes, className = "" }: { src: string; alt: string; sizes: string; className?: string }) {
+// Foto di dalam bingkai cermin (beranda & penutup). singkap: detik mulai foto tersingkap melingkar dari tengah
+// seperti kabut di cermin yang menghilang (false = belum, undefined = langsung tampil), disusul kilau emas.
+export function FotoBingkai({
+  src,
+  alt,
+  sizes,
+  className = "",
+  posisi = "50% 50%",
+  preload,
+  singkap,
+}: {
+  src: string;
+  alt: string;
+  sizes: string;
+  className?: string;
+  posisi?: string;
+  preload?: boolean;
+  singkap?: number | false;
+}) {
+  const animasi = singkap !== undefined;
   return (
     <div className={`relative aspect-[300/420] ${className}`}>
-      <div className="absolute inset-0 overflow-hidden" style={{ maskImage: MASKER_BINGKAI, WebkitMaskImage: MASKER_BINGKAI, maskSize: "100% 100%", WebkitMaskSize: "100% 100%" }}>
-        <div className={`${s.geserLambat} absolute inset-x-0 inset-y-[-10%]`}>
-          <Image src={src} alt={alt} fill sizes={sizes} className="object-cover" />
-        </div>
+      <div className="absolute inset-0 overflow-hidden bg-[#f3e1dc]" style={{ maskImage: MASKER_BINGKAI, WebkitMaskImage: MASKER_BINGKAI, maskSize: "100% 100%", WebkitMaskSize: "100% 100%" }}>
+        <motion.div
+          className="absolute inset-0"
+          initial={animasi ? { clipPath: "circle(0% at 50% 45%)" } : false}
+          animate={animasi && singkap !== false ? { clipPath: "circle(80% at 50% 45%)" } : undefined}
+          transition={{ duration: 1.5, ease: [0.5, 0, 0.3, 1], delay: singkap || 0 }}
+        >
+          <div className={`${s.geserLambat} absolute inset-x-0 inset-y-[-10%]`}>
+            <Image src={src} alt={alt} fill sizes={sizes} preload={preload} className="object-cover" style={{ objectPosition: posisi }} />
+          </div>
+        </motion.div>
+        {animasi && (
+          <motion.div
+            className="pointer-events-none absolute inset-y-0 left-0 w-[70%] bg-[linear-gradient(100deg,transparent_20%,rgb(255_240_225/0.7)_50%,transparent_80%)]"
+            initial={{ opacity: 0, transform: "translateX(-110%)" }}
+            animate={singkap !== false ? { opacity: [0, 1, 0], transform: "translateX(160%)" } : undefined}
+            transition={{ duration: 1.1, ease: "easeInOut", delay: (singkap || 0) + 1.2 }}
+            aria-hidden="true"
+          />
+        )}
       </div>
       <TepiBingkai className="top-[-7.14%] left-[-10%] h-[114.29%] w-[120%]" />
     </div>

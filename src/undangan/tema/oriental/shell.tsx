@@ -100,22 +100,22 @@ function Sampul({ u, tamu, onOpen }: { u: Undangan; tamu?: string; onOpen: () =>
 
         {/* teks sampul: naik lebih cepat dari latarnya */}
         <motion.div
-          className="absolute inset-x-0 bottom-[calc(7%+var(--demo-h,0px))] flex flex-col items-center px-10 text-center"
+          className="absolute inset-x-0 bottom-[calc(7%+var(--demo-h,0px))] flex flex-col items-center px-10 text-center before:pointer-events-none before:absolute before:inset-x-[6%] before:inset-y-[-6%] before:-z-10 before:rounded-[50%] before:bg-[radial-gradient(closest-side,rgb(252_247_236/0.95),rgb(252_247_236/0.7)_60%,transparent)]"
           variants={{ ada: { opacity: 1, transform: "translateY(0px)" }, pergi: { opacity: 0, transform: "translateY(-140px)", transition: { duration: 0.9, ease: MASUK } } }}
         >
           {[
-            <p key="a" className={`${yuji} text-[10.5px] tracking-[0.42em] text-[#9e1c22]/80 uppercase`}>
+            <p key="a" className={`${yuji} text-[11px] tracking-[0.42em] text-[#7d1418] uppercase`}>
               The Wedding of
             </p>,
-            <h1 key="b" className={`${naskah} mt-1 text-[3.6rem] leading-[1.05] text-[#9e1c22]`}>
-              {u.wanita.panggilan} <span className="text-[#c99a3e]">&amp;</span> {u.pria.panggilan}
+            <h1 key="b" className={`${naskah} mt-1 text-[3.6rem] leading-[1.05] text-[#8a1a1f]`}>
+              {u.wanita.panggilan} <span className="text-[#b0842e]">&amp;</span> {u.pria.panggilan}
             </h1>,
-            <p key="c" className={`${yuji} mt-1 text-[12px] tracking-[0.26em] text-[#3b1d16] uppercase`}>
+            <p key="c" className={`${yuji} mt-1 text-[12.5px] tracking-[0.26em] text-[#2c140f] uppercase`}>
               {u.tanggal}
             </p>,
             <div key="d" className="mt-4 text-[14.5px] leading-snug">
-              <p className="text-[#3b1d16]/75">Kepada Yth. Bapak/Ibu/Saudara/i</p>
-              <p className={`${yuji} mt-1 text-[1.1rem] text-[#9e1c22]`}>{tamu ?? "Tamu Undangan"}</p>
+              <p className="text-[#2c140f]/90">Kepada Yth. Bapak/Ibu/Saudara/i</p>
+              <p className={`${yuji} mt-1 text-[1.15rem] text-[#8a1a1f]`}>{tamu ?? "Tamu Undangan"}</p>
             </div>,
             <motion.button key="e" type="button" onClick={onOpen} whileTap={{ scale: 0.95 }} className={`${tombolMerah} mt-5`}>
               <svg viewBox="0 0 24 24" className="size-4" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">

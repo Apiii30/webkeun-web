@@ -1,9 +1,12 @@
 import type { Metadata } from "next";
-import { Archivo, JetBrains_Mono, Saira_Stencil } from "next/font/google";
+import { Archivo, JetBrains_Mono } from "next/font/google";
+import localFont from "next/font/local";
 import { DemoBanner } from "@/components/demo-banner";
 import { Bahtera } from "./_isi/bahtera";
 
-const stensil = Saira_Stencil({ subsets: ["latin"], variable: "--font-stensil" });
+// Saira Stencil (Google Fonts, lisensi SIL OFL), subset latin, variabel wght 100–900. Disimpan lokal karena
+// next/font/google tidak punya data metrik font ini dan selalu memunculkan peringatan "Failed to find font override values".
+const stensil = localFont({ src: "./_isi/saira-stencil.woff2", weight: "100 900", variable: "--font-stensil" });
 const archivo = Archivo({ subsets: ["latin"], variable: "--font-archivo" });
 const jetbrains = JetBrains_Mono({ subsets: ["latin"], variable: "--font-jetbrains" });
 

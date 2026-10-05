@@ -5,7 +5,7 @@ import type { ReactNode } from "react";
 import { calendarLink } from "../../pakai";
 import type { Undangan } from "../../types";
 import { Galeri } from "./galeri";
-import { Beranda } from "./gerbang";
+import { Beranda, Medali } from "./gerbang";
 import { Bunga, Burung, Danau, FotoGunungan, HALUS, Kapsul, KelopakJatuh, Monogram, Muncul, Pembatas, Perahu, Piring, gilda, naskah } from "./hias";
 import { Amplop, Countdown, Ucapan, tombolBiru, tombolEmas } from "./interaktif";
 import { Kisah } from "./kisah";
@@ -163,45 +163,100 @@ function SimpanTanggal({ u }: { u: Undangan }) {
   );
 }
 
-/* ───────── 5. Acara: kartu yang jatuh terbuka seperti ubin porselen ───────── */
+/* ───────── 5. Acara: kartu bertutup pintu batik yang bergeser membuka ───────── */
+
+// Urutannya saat kartu terlihat: kartu naik, dua daun pintu kawung bermedali (seperti di animasi pembuka) bergeser
+// membuka ke kiri-kanan, garis emas di tepi kartu tergambar, lalu isinya naik satu per satu. Waktu, bukan scroll.
+const PINTU = 0.55; // detik pintu mulai bergeser setelah kartu terlihat
+const ISI = PINTU + 0.75;
+
+function Naik({ ke, children, className = "" }: { ke: number; children: ReactNode; className?: string }) {
+  return (
+    <motion.div
+      className={className}
+      variants={{ tutup: { opacity: 0, transform: "translateY(18px)" }, buka: { opacity: 1, transform: "translateY(0px)", transition: { duration: 0.9, ease: HALUS, delay: ISI + ke * 0.09 } } }}
+    >
+      {children}
+    </motion.div>
+  );
+}
 
 function KartuAcara({ u, a, ke }: { u: Undangan; a: Undangan["acara"][number]; ke: number }) {
   const { hari, tgl } = hariTanggal(u.tanggal);
   return (
-    <div className="[perspective:1100px]">
-      <motion.div
-        className="relative overflow-hidden rounded-[1.4rem] bg-[#fbfaf6] text-center shadow-[0_26px_40px_-26px_rgb(15_28_56/0.9)] ring-1 ring-[#27427a]/25"
-        style={{ transformOrigin: "50% 0%" }}
-        initial={{ opacity: 0, transform: "rotateX(-75deg)" }}
-        whileInView={{ opacity: 1, transform: "rotateX(0deg)" }}
-        viewport={{ once: true, amount: 0.35 }}
-        transition={{ duration: 1.5, ease: HALUS, delay: ke * 0.1 }}
-      >
-        <div className={`${s.kawung} h-4`} />
-        <div className="relative px-7 pt-8 pb-32">
-          <span className="pointer-events-none absolute inset-x-3 top-3 bottom-3 rounded-xl border border-[#b8934f]/60" aria-hidden="true" />
+    <motion.div
+      className="relative overflow-hidden rounded-[1.4rem] bg-[#fbfaf6] text-center shadow-[0_26px_40px_-26px_rgb(15_28_56/0.9)] ring-1 ring-[#27427a]/25"
+      initial="tutup"
+      whileInView="buka"
+      viewport={{ once: true, amount: 0.4 }}
+      variants={{ tutup: { opacity: 0, transform: "translateY(50px) scale(0.94)" }, buka: { opacity: 1, transform: "translateY(0px) scale(1)", transition: { duration: 0.9, ease: HALUS } } }}
+    >
+      <div className={`${s.kawung} h-4`} />
+      <div className="relative px-7 pt-8 pb-36">
+        {/* garis emas di tepi dalam kartu, tergambar mengelilingi kartu */}
+        <svg className="pointer-events-none absolute inset-3 h-[calc(100%-1.5rem)] w-[calc(100%-1.5rem)] overflow-visible" aria-hidden="true">
+          <motion.rect
+            width="100%"
+            height="100%"
+            rx="12"
+            fill="none"
+            stroke="#b8934f"
+            strokeOpacity=".65"
+            strokeWidth="1"
+            pathLength={1}
+            variants={{ tutup: { pathLength: 0 }, buka: { pathLength: 1, transition: { duration: 1.8, ease: "easeInOut", delay: PINTU + 0.4 } } }}
+          />
+        </svg>
+        <Naik ke={0}>
           <p className="text-[10px] tracking-[0.4em] text-[#b8934f] uppercase">Acara {ke + 1}</p>
+        </Naik>
+        <Naik ke={1}>
           <h3 className={`${naskah} mt-1 text-[2.8rem] leading-none`}>{a.nama}</h3>
           <Pembatas className="my-3" />
+        </Naik>
+        <Naik ke={2}>
           <p className={`${gilda} text-[1.15rem] leading-snug tracking-wide`}>
             {hari}, {tgl}
           </p>
           <p className="mt-1 text-[13px] tracking-[0.1em]">Pukul {a.jam}</p>
           <div className="mx-auto my-4 h-px w-16 bg-[#b8934f]/70" />
+        </Naik>
+        <Naik ke={3}>
           <p className="text-[13px] font-semibold">{u.lokasi.nama}</p>
           <p className="text-[13px] leading-relaxed text-[#1f3768]/85">{u.lokasi.alamat}</p>
-          <a href={u.lokasi.maps} target="_blank" rel="noopener noreferrer" className={`${tombolBiru} relative z-10 mt-5`}>
+        </Naik>
+        <Naik ke={4} className="relative z-10 mt-5">
+          <a href={u.lokasi.maps} target="_blank" rel="noopener noreferrer" className={tombolBiru}>
             <svg viewBox="0 0 24 24" className="size-4" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true">
               <path d="M12 21s-7-6.5-7-12a7 7 0 0 1 14 0c0 5.5-7 12-7 12Z" />
               <circle cx="12" cy="9" r="2.5" />
             </svg>
             Lihat Lokasi
           </a>
-        </div>
-        <Bunga a={ke % 2 ? "hortensia" : "peony"} className={`bottom-[-14%] w-[50%] ${ke % 2 ? "-right-[6%]" : "-left-[8%]"}`} sizes="170px" asal="40% 100%" />
-        <Bunga a={ke % 2 ? "peonyBiru" : "hortensia"} className={`bottom-[-12%] w-[34%] ${ke % 2 ? "-left-[4%]" : "-right-[4%]"}`} sizes="120px" varian="B" />
+        </Naik>
+      </div>
+      <motion.div className="pointer-events-none absolute inset-0" variants={{ tutup: { opacity: 0 }, buka: { opacity: 1, transition: { duration: 1.2, delay: ISI + 0.3 } } }}>
+        <Bunga a={ke % 2 ? "hortensia" : "peony"} className={`bottom-0 w-[46%] ${ke % 2 ? "-right-[4%]" : "-left-[6%]"}`} sizes="170px" asal="40% 100%" />
+        <Bunga a={ke % 2 ? "peonyBiru" : "hortensia"} className={`bottom-0 w-[30%] ${ke % 2 ? "-left-[3%]" : "-right-[3%]"}`} sizes="120px" varian="B" />
       </motion.div>
-    </div>
+
+      {/* dua daun pintu batik kawung yang menutup kartu, bergeser membuka */}
+      {[true, false].map((kiri) => (
+        <motion.div
+          key={String(kiri)}
+          className={`${s.kawung} pointer-events-none absolute inset-y-0 z-20 w-1/2 overflow-hidden ${kiri ? "left-0" : "right-0"}`}
+          variants={{
+            tutup: { transform: "translateX(0%)" },
+            buka: { transform: `translateX(${kiri ? -101 : 101}%)`, transition: { duration: 1.25, ease: [0.65, 0, 0.35, 1], delay: PINTU } },
+          }}
+          aria-hidden="true"
+        >
+          <span className={`absolute inset-y-0 w-[3px] bg-gradient-to-b from-[#b8934f] via-[#f3e3b4] to-[#b8934f] ${kiri ? "right-0" : "left-0"}`} />
+          <span className={`absolute inset-y-4 w-px bg-[#dbe5f3]/70 ${kiri ? "left-4" : "right-4"}`} />
+          <Medali className={`top-1/2 w-[62%] -translate-y-1/2 ${kiri ? "left-full -translate-x-1/2" : "left-0 -translate-x-1/2"}`} />
+        </motion.div>
+      ))}
+    </motion.div>
   );
 }
 
@@ -292,8 +347,8 @@ function Penutup({ u }: { u: Undangan }) {
       </div>
       <Danau className="inset-x-0 bottom-[var(--demo-h,0px)] h-36" />
       <Perahu className="bottom-[calc(5rem+var(--demo-h,0px))] left-[40%] w-[10%]" jeda={-4} />
-      <Bunga a="peony" className="bottom-[calc(-1.5rem+var(--demo-h,0px))] left-[-8%] w-[58%]" sizes="250px" asal="30% 100%" />
-      <Bunga a="hortensia" className="right-[-4%] bottom-[calc(-1.5rem+var(--demo-h,0px))] w-[42%]" sizes="180px" varian="B" />
+      <Bunga a="peony" className="bottom-[var(--demo-h,0px)] left-[-8%] w-[52%]" sizes="250px" asal="30% 100%" />
+      <Bunga a="hortensia" className="right-[-4%] bottom-[var(--demo-h,0px)] w-[36%]" sizes="180px" varian="B" />
       <KelopakJatuh n={7} />
     </Bagian>
   );
