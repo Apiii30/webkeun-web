@@ -1,0 +1,63 @@
+/* Template Bahtera Lintas Nusantara */
+
+/* Daun pintu kontainer: seng bergelombang merah karat */
+.pintu {
+  background:
+    radial-gradient(120% 60% at 30% 110%, rgb(40 14 8 / 0.45), transparent 60%),
+    radial-gradient(80% 40% at 80% -10%, rgb(255 255 255 / 0.08), transparent 70%),
+    repeating-linear-gradient(90deg, #9c3624 0 0.8rem, #c04b34 0.8rem 1.35rem, #a73b28 1.35rem 1.9rem, #b8432f 1.9rem 2.7rem);
+  box-shadow:
+    inset 0 0 0 0.55rem #6e2518,
+    inset 0 0 0 0.7rem #8a2f1f;
+}
+.pintuDalam {
+  background: repeating-linear-gradient(90deg, #2b1d18 0 0.8rem, #3a2822 0.8rem 1.35rem, #2f201b 1.35rem 2.7rem);
+}
+
+/* Batang pengunci pintu (baja) */
+.batang {
+  background: linear-gradient(90deg, #4b5560, #c5ced6 40%, #8b96a1 70%, #444d57);
+}
+
+/* Seng bergelombang untuk kontainer di bagian layanan; warnanya dari --w */
+.seng {
+  background:
+    linear-gradient(180deg, rgb(255 255 255 / 0.12), transparent 30%, rgb(0 0 0 / 0.18)),
+    repeating-linear-gradient(90deg, rgb(0 0 0 / 0.16) 0 0.5rem, transparent 0.5rem 1.1rem, rgb(255 255 255 / 0.07) 1.1rem 1.5rem, transparent 1.5rem 2rem),
+    var(--w);
+}
+
+/* Garis peringatan kuning-hitam */
+.bahaya {
+  background: repeating-linear-gradient(-45deg, #f2b33d 0 0.9rem, #10213a 0.9rem 1.8rem);
+}
+
+/* Marka jalan putus-putus yang bergerak */
+.marka {
+  background: repeating-linear-gradient(90deg, #eeeae1 0 3rem, transparent 3rem 6rem);
+}
+
+.garis {
+  -webkit-text-stroke: 1.5px currentColor;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Cap stempel legalitas */
+.cap {
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='f'%3E%3CfeTurbulence baseFrequency='.8' numOctaves='2'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -2.2 1.7'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23f)'/%3E%3C/svg%3E");
+}
+
+@keyframes kedip {
+  50% {
+    opacity: 0.2;
+  }
+}
+.kedip {
+  animation: kedip 1.4s steps(2, jump-none) infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .kedip {
+    animation: none;
+  }
+}

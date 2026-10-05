@@ -22,6 +22,8 @@ const nextConfig: NextConfig = {
       { source: "/template/nadia-putri", destination: "/template/laras-kinanti", permanent: false },
       // Kopi Senja sudah diganti template Kawalu Coffee
       { source: "/template/kopi-senja", destination: "/template/kawalu-coffee", permanent: false },
+      // Arunika Konstruksi sudah diganti template Bahtera Lintas Nusantara
+      { source: "/template/arunika-konstruksi", destination: "/template/bahtera-logistik", permanent: false },
     ];
   },
 };

@@ -249,15 +249,15 @@ export const templates = [
     includes: ["Pembuka parallax", "Menu & harga", "Pesan antar & jual biji", "Jam buka live & peta"],
   },
   {
-    slug: "arunika-konstruksi",
-    name: "Arunika Konstruksi",
+    slug: "bahtera-logistik",
+    name: "Bahtera Lintas Nusantara",
     kind: "Company Profile",
     category: "company-profile",
-    url: "arunikakonstruksi.co.id",
-    desc: "Kontraktor umum: profil perusahaan, layanan, dan proyek terbaru, dibuat tegas supaya calon klien langsung percaya.",
-    laptop: "/preview/laptop-arunika-konstruksi.webp",
-    phone: "/preview/hp-arunika-1.webp",
-    includes: ["Profil perusahaan", "Layanan", "Proyek terbaru", "Kontak"],
+    url: "bahteralogistik.co.id",
+    desc: "Perusahaan logistik di Surabaya: dibuka dengan pintu kontainer yang berayun 3D, peta rute ke 12 pelabuhan yang tergambar saat digulir, layanan sebagai kontainer yang diturunkan derek, armada, lacak kiriman, dan form minta penawaran.",
+    laptop: "/preview/laptop-bahtera-logistik.webp",
+    phone: "/preview/hp-bahtera-1.webp",
+    includes: ["Pembuka pintu kontainer 3D", "Peta rute interaktif", "Layanan & armada", "Lacak kiriman & penawaran"],
   },
   {
     slug: "laras-kinanti",
@@ -382,24 +382,24 @@ export const templates = [
 
 // Potongan layar desktop & HP dari demo, untuk kolom bergerak di hero
 const kawalu = "kawalucoffee.id";
-const arunika = "arunikakonstruksi.co.id";
+const bahtera = "bahteralogistik.co.id";
 const laras = "laraskinanti.com";
 const faraAditya = "faraaditya.my.id";
 export const heroShots = {
   desktop: [
     { src: "/preview/laptop-kawalu-coffee.webp", url: kawalu },
-    { src: "/preview/web-arunika-2.webp", url: arunika },
+    { src: "/preview/web-bahtera-2.webp", url: bahtera },
     { src: "/preview/laptop-laras-kinanti.webp", url: laras },
     { src: "/preview/web-kawalu-2.webp", url: kawalu },
-    { src: "/preview/laptop-arunika-konstruksi.webp", url: arunika },
+    { src: "/preview/laptop-bahtera-logistik.webp", url: bahtera },
     { src: "/preview/web-laras-2.webp", url: laras },
-    { src: "/preview/web-arunika-3.webp", url: arunika },
+    { src: "/preview/web-bahtera-3.webp", url: bahtera },
   ],
   phone: [
-    { src: "/preview/hp-arunika-1.webp", url: arunika },
+    { src: "/preview/hp-bahtera-1.webp", url: bahtera },
     { src: "/preview/hp-kawalu-1.webp", url: kawalu },
     { src: "/preview/hp-laras-1.webp", url: laras },
-    { src: "/preview/hp-arunika-2.webp", url: arunika },
+    { src: "/preview/hp-bahtera-2.webp", url: bahtera },
     { src: "/preview/hp-kawalu-2.webp", url: kawalu },
     { src: "/preview/hp-laras-2.webp", url: laras },
     { src: "/preview/hp-undangan-rimba-1.webp", url: faraAditya },
