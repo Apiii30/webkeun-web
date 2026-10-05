@@ -21,6 +21,7 @@ export function RsvpForm({ defaultName, publicMaxPax, closed, onSubmit }: Props)
   const [pending, setPending] = useState(false);
   const [attendance, setAttendance] = useState<Attendance | null>(null);
   const maxPax = publicMaxPax;
+  const terkirim = state.status === "success"; // satu tamu satu ucapan: setelah terkirim form dikunci
 
   if (closed) {
     return <p className="rounded-2xl bg-white/70 p-5 text-center text-sm">Konfirmasi kehadiran sudah ditutup. Terima kasih.</p>;
@@ -28,6 +29,7 @@ export function RsvpForm({ defaultName, publicMaxPax, closed, onSubmit }: Props)
 
   async function action(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    if (pending || terkirim) return;
     const form = e.currentTarget;
     const data = new FormData(form);
     if (data.get("website")) return setState({ status: "success", message: "Terima kasih!" });
@@ -35,7 +37,8 @@ export function RsvpForm({ defaultName, publicMaxPax, closed, onSubmit }: Props)
     if (pilih !== "hadir" && pilih !== "tidak_hadir") return setState({ status: "error", message: "Silakan pilih konfirmasi kehadiran." });
     const name = String(data.get("name") ?? "").trim().slice(0, 120);
     if (!name) return setState({ status: "error", message: "Nama wajib diisi." });
-    const message = String(data.get("message") ?? "").trim().slice(0, 500) || null;
+    const message = String(data.get("message") ?? "").trim().slice(0, 500);
+    if (!message) return setState({ status: "error", message: "Ucapan & doa wajib diisi." });
     setPending(true);
     await new Promise((r) => setTimeout(r, 500));
     onSubmit({ name, attendance: pilih, message });
@@ -105,6 +108,7 @@ export function RsvpForm({ defaultName, publicMaxPax, closed, onSubmit }: Props)
         <span className="mb-1.5 block text-xs font-medium text-[#9c7880]">Ucapan & Doa</span>
         <textarea
           name="message"
+          required
           rows={4}
           maxLength={500}
           placeholder="Tuliskan ucapan dan doa untuk kedua mempelai"
@@ -120,7 +124,7 @@ export function RsvpForm({ defaultName, publicMaxPax, closed, onSubmit }: Props)
 
       <button
         type="submit"
-        disabled={pending}
+        disabled={pending || terkirim}
         className="flex w-full items-center justify-center gap-2 rounded-full bg-[#6b4d55] py-3 text-sm font-medium text-[#fbf6f2] shadow-md transition hover:bg-[#9c7880] disabled:opacity-60"
       >
         {pending ? <Loader2 className="size-4 animate-spin" /> : <Send className="size-4" />}

@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, type ReactNode, useContext, useEffect, useRef, useState } from "react";
+import { createContext, type ReactNode, useContext, useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { ambilUcapan, kirimUcapan, type UcapanTamu } from "./aksi";
 
 // Buku tamu (RSVP & ucapan) yang dipakai bersama semua tema.
@@ -34,8 +34,24 @@ const jadiSurat = (u: UcapanTamu, baruSaja: string): Surat => ({
   waktu: kapan(u.dibuat, baruSaja),
 });
 
+// Satu tamu satu ucapan: setelah berhasil, form terkunci. Di undangan sungguhan statusnya juga disimpan di browser
+// (localStorage per undangan), jadi tetap terkunci walau halaman dimuat ulang. Server ikut menolak nama yang sama.
+const kunciTerkirim = (slug: string) => `webkeun:ucapan-terkirim:${slug}`;
+function sudahTerkirim(slug: string | undefined) {
+  if (!slug) return false;
+  try {
+    return localStorage.getItem(kunciTerkirim(slug)) === "1";
+  } catch {
+    return false;
+  }
+}
+const ikutStorage = (cb: () => void) => {
+  addEventListener("storage", cb);
+  return () => removeEventListener("storage", cb);
+};
+
 // contoh: ucapan contoh untuk demo. baruSaja: label waktu untuk kiriman baru (tema Sunda memakai "Nembe pisan").
-// kirim() mengembalikan true kalau berhasil; kalau gagal, pesannya ada di `galat`.
+// kirim() mengembalikan true kalau berhasil; kalau gagal, pesannya ada di `galat`. terkirim: tamu ini sudah mengirim.
 export function useBukuTamu(contoh: Surat[], baruSaja = "Baru saja") {
   const k = useContext(Konteks);
   const [letters, setLetters] = useState<Surat[]>(k ? [] : contoh);
@@ -44,6 +60,9 @@ export function useBukuTamu(contoh: Surat[], baruSaja = "Baru saja") {
   const idDemo = useRef(contoh.length + 1);
   const sibuk = useRef(false); // penjaga klik ganda (state baru terbaca di render berikutnya)
   const slug = k?.slug;
+  const [baruTerkirim, setBaruTerkirim] = useState(false);
+  const tersimpan = useSyncExternalStore(ikutStorage, () => sudahTerkirim(slug), () => false);
+  const terkirim = baruTerkirim || tersimpan;
 
   useEffect(() => {
     if (!slug) return;
@@ -57,10 +76,19 @@ export function useBukuTamu(contoh: Surat[], baruSaja = "Baru saja") {
   }, [slug, baruSaja]);
 
   async function kirim(name: string, hadir: boolean, message: string) {
-    if (sibuk.current) return false;
+    if (sibuk.current || terkirim) return false;
     setGalat("");
+    if (!name.trim()) {
+      setGalat("Nama belum diisi.");
+      return false;
+    }
+    if (!message.trim()) {
+      setGalat("Tulis ucapan & doa dulu ya.");
+      return false;
+    }
     if (!k) {
       setLetters((l) => [{ id: idDemo.current++, name, hadir, message, waktu: baruSaja }, ...l]);
+      setBaruTerkirim(true);
       return true;
     }
     sibuk.current = true;
@@ -72,6 +100,12 @@ export function useBukuTamu(contoh: Surat[], baruSaja = "Baru saja") {
         return false;
       }
       setLetters((l) => [jadiSurat(hasil.ucapan, baruSaja), ...l]);
+      setBaruTerkirim(true);
+      try {
+        localStorage.setItem(kunciTerkirim(k.slug), "1");
+      } catch {
+        // mode privat / penyimpanan diblokir: tetap terkunci selama halaman terbuka
+      }
       return true;
     } catch {
       setGalat("Koneksi terputus. Coba kirim lagi ya.");
@@ -82,5 +116,5 @@ export function useBukuTamu(contoh: Surat[], baruSaja = "Baru saja") {
     }
   }
 
-  return { letters, kirim, mengirim, galat };
+  return { letters, kirim, mengirim, galat, terkirim };
 }

@@ -161,9 +161,8 @@ const contohSurat: Surat[] = [
 ];
 
 export function Ucapan({ tamu }: { tamu?: string }) {
-  const { letters, kirim, mengirim, galat } = useBukuTamu(contohSurat);
+  const { letters, kirim, mengirim, galat, terkirim } = useBukuTamu(contohSurat);
   const [hadir, setHadir] = useState(true);
-  const [sent, setSent] = useState(false);
 
   function onSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -172,9 +171,7 @@ export function Ucapan({ tamu }: { tamu?: string }) {
     const name = String(data.get("nama") ?? "").trim();
     if (!name) return;
     void kirim(name, hadir, String(data.get("ucapan") ?? "").trim()).then((ok) => {
-      if (!ok) return;
-      setSent(true);
-      form.reset();
+      if (ok) form.reset();
     });
   }
 
@@ -184,7 +181,7 @@ export function Ucapan({ tamu }: { tamu?: string }) {
     <div>
       <form onSubmit={onSubmit} className="space-y-3 text-left">
         <input name="nama" required defaultValue={tamu} placeholder="Nama kamu" aria-label="Nama" className={field} />
-        <textarea name="ucapan" rows={3} placeholder="Tulis ucapan & doa" aria-label="Ucapan dan doa" className={`${field} resize-none`} />
+        <textarea name="ucapan" required rows={3} placeholder="Tulis ucapan & doa" aria-label="Ucapan dan doa" className={`${field} resize-none`} />
         <fieldset>
           <legend className="mb-2 text-sm text-[#2b2420]/80">Konfirmasi kehadiran</legend>
           <div className="grid grid-cols-2 gap-2">
@@ -203,11 +200,11 @@ export function Ucapan({ tamu }: { tamu?: string }) {
             ))}
           </div>
         </fieldset>
-        <motion.button type="submit" disabled={mengirim} whileTap={{ scale: 0.97 }} className="w-full rounded-xl bg-[#241d18] py-3.5 text-sm font-semibold tracking-[0.15em] text-[#f6f1e9] uppercase disabled:opacity-60">
+        <motion.button type="submit" disabled={mengirim || terkirim} whileTap={{ scale: 0.97 }} className="w-full rounded-xl bg-[#241d18] py-3.5 text-sm font-semibold tracking-[0.15em] text-[#f6f1e9] uppercase disabled:opacity-60">
           Kirim
         </motion.button>
         <AnimatePresence>
-          {sent && (
+          {terkirim && (
             <motion.p initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} className="text-center text-sm text-[#2b2420]/80">
               Terima kasih, ucapanmu sudah terkirim.
             </motion.p>
