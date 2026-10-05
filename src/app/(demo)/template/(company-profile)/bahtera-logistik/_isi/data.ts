@@ -30,7 +30,7 @@ const UKURAN = {
 
 export type Foto = { src: string; w: number; h: number; alt: string };
 const foto = (nama: keyof typeof UKURAN, alt: string): Foto => ({
-  src: `/company/bahtera/${nama}.webp`,
+  src: `/company-profile/bahtera/${nama}.webp`,
   w: UKURAN[nama][0],
   h: UKURAN[nama][1],
   alt,

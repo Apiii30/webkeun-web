@@ -64,7 +64,7 @@ export function Armada() {
       <div className="grid grid-cols-2">
         {["truk-kota", "gudang-gelap"].map((n, i) => (
           <div key={n} className="relative aspect-[4/3] md:aspect-[16/9]">
-            <Image src={`/company/bahtera/${n}.webp`} alt={i ? "Forklift di gudang yang remang" : "Truk boks di jalan kota"} fill sizes="50vw" className="object-cover" />
+            <Image src={`/company-profile/bahtera/${n}.webp`} alt={i ? "Forklift di gudang yang remang" : "Truk boks di jalan kota"} fill sizes="50vw" className="object-cover" />
           </div>
         ))}
       </div>
