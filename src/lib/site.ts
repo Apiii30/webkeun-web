@@ -320,6 +320,40 @@ export const faqs = [
   },
 ];
 
+// Testimoni klien. Yang pertama tampil besar sebagai percakapan WhatsApp, sisanya sebagai kartu di bawahnya.
+// sorotan: potongan kalimat dari `isi` yang diberi stabilo. karya: hasil kerja yang bisa dilihat pengunjung.
+// CONTOH: testimoni Frisca & Arif di bawah masih data dummy. Ganti dengan kata-kata mereka sendiri (dan minta izin
+// menampilkan nama & foto) sebelum dipakai untuk promosi.
+export type Testimoni = {
+  nama: string;
+  panggilan: string;
+  layanan: string;
+  bintang: number;
+  isi: string;
+  sorotan?: string;
+  reaksi?: string;
+  balasan: string;
+  foto: string;
+  waktu: string;
+  karya?: { href: string; layar: string; label: string };
+};
+
+export const testimonials: Testimoni[] = [
+  {
+    nama: "Frisca Triani & Arif Rahman",
+    panggilan: "Frisca & Arif",
+    layanan: "Undangan digital pernikahan",
+    bintang: 5,
+    isi: "Kak, makasih banyak ya! Undangannya cantik banget, tamu-tamu pada nanya bikin di mana. Nama tiap tamu muncul di link-nya, musiknya pas, dan RSVP-nya bikin kami gampang ngitung catering. Revisi juga diladenin sampai kami bener-bener puas. Pokoknya recommended!",
+    sorotan: "tamu-tamu pada nanya bikin di mana",
+    reaksi: "🥹🤍",
+    balasan: "Sama-sama, Kak Frisca & Kak Arif! Ikut seneng undangannya disukai. Selamat menempuh hidup baru ya 🤍",
+    foto: "/undangan/frisca-arif/dsc00251.webp",
+    waktu: "19.42",
+    karya: { href: "/template/undangan-frisca-arif", layar: "/preview/undangan/hp-undangan-frisca-1.webp", label: "Lihat undangan mereka" },
+  },
+];
+
 // Kategori template. Kategori website difilter di /template?kategori=<slug>; undangan punya halaman sendiri
 // (/template/undangan) karena pengunjung, isi, dan cara pesannya beda.
 export const templateCategories = [

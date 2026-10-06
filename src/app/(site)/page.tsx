@@ -7,6 +7,7 @@ import { Portfolio } from "@/components/sections/portfolio";
 import { Pricing } from "@/components/sections/pricing";
 import { Process } from "@/components/sections/process";
 import { Services } from "@/components/sections/services";
+import { Testimonials } from "@/components/sections/testimonials";
 import { Why } from "@/components/sections/why";
 import { halaman, SITUS } from "@/lib/seo";
 import { site } from "@/lib/site";
@@ -59,6 +60,7 @@ export default function Home() {
       <Features />
       <Services />
       <Portfolio />
+      <Testimonials />
       <Pricing />
       <Process />
       <Faq />

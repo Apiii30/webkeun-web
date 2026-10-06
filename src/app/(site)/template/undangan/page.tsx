@@ -6,6 +6,7 @@ import { Icon, type IconName } from "@/components/icons";
 import { Mascot } from "@/components/mascot";
 import { TemplateCard } from "@/components/template-card";
 import { templates, waLink } from "@/lib/site";
+import { Testimonials } from "@/components/sections/testimonials";
 
 export const metadata: Metadata = halaman({
   judul: "Template Undangan Digital Pernikahan",
@@ -135,6 +136,8 @@ export default function UndanganPage() {
           ))}
         </ol>
       </section>
+
+      <Testimonials />
 
       <section className="border-t border-ink/10">
         <div className="mx-auto max-w-6xl px-4 py-16 sm:px-6 md:py-20">
