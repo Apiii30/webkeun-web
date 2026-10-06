@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { halaman } from "@/lib/seo";
 import { Badge, PillLink, SectionHeading } from "@/components/brand";
 import { CoverFan } from "@/components/cover-fan";
 import { Icon, type IconName } from "@/components/icons";
@@ -6,11 +7,12 @@ import { Mascot } from "@/components/mascot";
 import { TemplateCard } from "@/components/template-card";
 import { templates, waLink } from "@/lib/site";
 
-export const metadata: Metadata = {
-  title: "Template Undangan Digital Pernikahan",
-  description:
+export const metadata: Metadata = halaman({
+  judul: "Template Undangan Digital Pernikahan",
+  deskripsi:
     "Pilih tema undangan pernikahan digital: nama tamu di tiap link, galeri foto, peta lokasi, RSVP, amplop digital, dan musik. Tinggal sebar lewat WhatsApp.",
-};
+  path: "/template/undangan",
+});
 
 // Galeri undangan dipisah dari template website karena pengunjungnya (calon pengantin), isi, dan cara pesannya beda.
 // Harga paket undangan belum ditentukan, jadi halaman ini belum menampilkan harga.

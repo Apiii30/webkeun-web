@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { halaman } from "@/lib/seo";
 import Link from "next/link";
 import { Suspense } from "react";
 import { SectionHeading } from "@/components/brand";
@@ -16,10 +17,12 @@ const steps = [
 
 const jumlahUndangan = templates.filter((t) => t.category === "undangan").length;
 
-export const metadata: Metadata = {
-  title: "Template Website",
-  description: "Pilih template website UMKM, company profile, atau portofolio. Warna, foto, dan isinya kami sesuaikan buat kamu.",
-};
+export const metadata: Metadata = halaman({
+  judul: "Template Website",
+  deskripsi:
+    "Pilih template website UMKM, company profile, atau portofolio. Warna, foto, dan isinya kami sesuaikan buat kamu.",
+  path: "/template",
+});
 
 // Halaman ini statis (dibuat sekali saat build). Kategori dari link (?kategori=umkm) dibaca galerinya di browser;
 // link lama ?kategori=undangan diarahkan ke /template/undangan lewat next.config.ts.

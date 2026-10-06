@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { halaman } from "@/lib/seo";
 import Link from "next/link";
 import { Badge, PillLink } from "@/components/brand";
 import { Icon } from "@/components/icons";
@@ -6,10 +7,12 @@ import { Mascot } from "@/components/mascot";
 import { ContactForm } from "@/components/sections/contact-form";
 import { mailLink, site, waLink } from "@/lib/site";
 
-export const metadata: Metadata = {
-  title: "Kontak",
-  description: `Konsultasi gratis soal pembuatan website. Chat Webkeun lewat WhatsApp di ${site.whatsappDisplay} atau email ke ${site.email}.`,
-};
+export const metadata: Metadata = halaman({
+  judul: "Kontak",
+  deskripsi:
+    `Konsultasi gratis soal pembuatan website. Chat Webkeun lewat WhatsApp di ${site.whatsappDisplay} atau email ke ${site.email}.`,
+  path: "/kontak",
+});
 
 const prep = [
   "Nama usaha & apa yang kamu jual",

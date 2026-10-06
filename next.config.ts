@@ -1,5 +1,18 @@
 import type { NextConfig } from "next";
 
+const situs = process.env.SITUS_URL ? new URL(process.env.SITUS_URL) : null;
+
+// Situs bisa dibuka lewat beberapa alamat (www.webkeun.id, webkeun.<akun>.workers.dev). Semuanya diarahkan permanen ke
+// alamat resmi, supaya Google hanya mengenal satu alamat dan link lama (termasuk ?to= & ?kunci=) tetap jalan.
+const keAlamatResmi = situs
+  ? [
+      { source: "/:path*", has: [{ type: "host" as const, value: `www.${situs.host}` }], destination: `${situs.origin}/:path*`, permanent: true },
+      ...(situs.host.endsWith(".workers.dev")
+        ? []
+        : [{ source: "/:path*", has: [{ type: "host" as const, value: ".*\\.workers\\.dev" }], destination: `${situs.origin}/:path*`, permanent: true }]),
+    ]
+  : [];
+
 if (process.env.NODE_ENV === "production" && !process.env.SITUS_URL) {
   console.warn("⚠ SITUS_URL belum diisi (.env.production): gambar pratinjau link di WhatsApp akan mengarah ke localhost.");
 }
@@ -16,6 +29,7 @@ const nextConfig: NextConfig = {
   // Halaman "Contoh" sudah diganti jadi "Template"
   async redirects() {
     return [
+      ...keAlamatResmi,
       // Undangan punya halaman sendiri; link lama /template?kategori=undangan diarahkan ke sana
       { source: "/template", has: [{ type: "query", key: "kategori", value: "undangan" }], destination: "/template/undangan", permanent: false },
       { source: "/contoh", destination: "/template", permanent: true },

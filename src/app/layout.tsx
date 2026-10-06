@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Plus_Jakarta_Sans } from "next/font/google";
+import { ogDasar, judulUtama, SITUS } from "@/lib/seo";
 import { site } from "@/lib/site";
 import "./globals.css";
 
@@ -11,18 +12,12 @@ const jakarta = Plus_Jakarta_Sans({
 export const metadata: Metadata = {
   // Alamat situs yang sudah online, untuk link gambar pratinjau (mis. foto undangan saat link dibagikan di WhatsApp).
   // Diisi lewat SITUS_URL di .env.production sebelum build untuk hosting; tanpa itu gambarnya mengarah ke localhost.
-  metadataBase: new URL(process.env.SITUS_URL ?? "http://localhost:3000"),
-  title: {
-    default: `${site.name}: Jasa Pembuatan Website UMKM, Company Profile & Portofolio`,
-    template: `%s · ${site.name}`,
-  },
+  metadataBase: SITUS,
+  title: { default: judulUtama, template: `%s · ${site.name}` },
   description: site.description,
-  openGraph: {
-    title: `${site.name}: ${site.tagline}`,
-    description: site.description,
-    locale: "id_ID",
-    type: "website",
-  },
+  applicationName: site.name,
+  openGraph: ogDasar,
+  twitter: { card: "summary_large_image" },
 };
 
 // Saat halaman di-refresh, mulai lagi dari paling atas: matikan pemulihan scroll bawaan browser

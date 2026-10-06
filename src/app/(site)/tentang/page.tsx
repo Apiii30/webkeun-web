@@ -1,14 +1,16 @@
 import type { Metadata } from "next";
+import { halaman } from "@/lib/seo";
 import { Badge, PillLink, SectionHeading } from "@/components/brand";
 import { Icon } from "@/components/icons";
 import { Mascot, type Mood } from "@/components/mascot";
 import { ClosingCta } from "@/components/sections/closing";
 
-export const metadata: Metadata = {
-  title: "Tentang Kami",
-  description:
+export const metadata: Metadata = halaman({
+  judul: "Tentang Kami",
+  deskripsi:
     "Webkeun bantu UMKM, perusahaan, dan pekerja kreatif punya website yang rapi, cepat, dan gampang dicari, tanpa ribet urusan teknis.",
-};
+  path: "/tentang",
+});
 
 const principles = [
   {
