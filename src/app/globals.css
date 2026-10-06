@@ -521,3 +521,15 @@ body {
     transition-duration: 0.01ms !important;
   }
 }
+
+/* Safari di iPhone/iPad otomatis memperbesar halaman saat kolom isian berhuruf di bawah 16px diketuk, lalu halamannya
+   bisa digeser ke samping sampai tamu memperkecilnya sendiri. Di perangkat itu saja, huruf kolom isian minimal 16px.
+   Sengaja tidak memakai maximum-scale di viewport: itu juga mematikan cubit-perbesar yang dibutuhkan sebagian orang.
+   Aturan ini di luar @layer, jadi menang atas kelas ukuran huruf Tailwind (text-sm, text-[15px], ...). */
+@supports (-webkit-touch-callout: none) {
+  input:not([type="radio"], [type="checkbox"], [type="range"], [type="button"], [type="submit"]),
+  textarea,
+  select {
+    font-size: max(16px, 1em);
+  }
+}
