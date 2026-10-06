@@ -14,11 +14,10 @@ const delafield = Mrs_Saint_Delafield({ subsets: ["latin"], weight: "400", varia
 const yuji = Yuji_Syuku({ subsets: ["latin"], weight: "400", variable: "--font-yuji" });
 const mincho = Shippori_Mincho({ subsets: ["latin"], weight: ["400", "500"], variable: "--font-mincho" });
 
-// tamu: nama dari link (?to=...). Kosong berarti undangan umum.
-export function TemaOriental({ data, tamu }: { data: Undangan; tamu?: string }) {
+export function TemaOriental({ data }: { data: Undangan }) {
   return (
     <div className={`${delafield.variable} ${yuji.variable} ${mincho.variable}`}>
-      <Oriental data={data} tamu={tamu} />
+      <Oriental data={data} />
     </div>
   );
 }

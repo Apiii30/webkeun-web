@@ -11,19 +11,22 @@
 // - peony-merah: Paeonia peregrina, Curtis's Botanical Magazine (1918), domain publik.
 // - gapura-taman: digambar sendiri (vektor) lalu diberi tekstur cetak.
 
+import type { Tepi } from "../../tepi";
+
 const dir = "/undangan/garden/";
 
+// tepi: sisi gambar yang terpotong lurus (dipudarkan, lihat ../../tepi.ts)
 export const ASET = {
   lembah: { src: `${dir}lembah.webp`, w: 1200, h: 1495 },
   gapura: { src: `${dir}gapura-taman.webp`, w: 1000, h: 1500 },
   airMancur: { src: `${dir}air-mancur.webp`, w: 600, h: 1007 },
-  palem: { src: `${dir}palem.webp`, w: 600, h: 902 },
-  merakDahan: { src: `${dir}merak-dahan.webp`, w: 744, h: 1300 },
-  merakSakura: { src: `${dir}merak-sakura.webp`, w: 678, h: 1200 },
-  peony: { src: `${dir}peony.webp`, w: 900, h: 719 },
-  peonyMerah: { src: `${dir}peony-merah.webp`, w: 800, h: 921 },
-  wisteria: { src: `${dir}wisteria.webp`, w: 303, h: 1200 },
-} as const;
+  palem: { src: `${dir}palem.webp`, w: 600, h: 902, tepi: "b", pudar: 10 },
+  merakDahan: { src: `${dir}merak-dahan.webp`, w: 744, h: 1300, tepi: "aknb", pudar: 12 },
+  merakSakura: { src: `${dir}merak-sakura.webp`, w: 678, h: 1200, tepi: "anb", pudar: 12 },
+  peony: { src: `${dir}peony.webp`, w: 900, h: 719, tepi: "knb", pudar: 13 },
+  peonyMerah: { src: `${dir}peony-merah.webp`, w: 800, h: 921, tepi: "aknb", pudar: 11 },
+  wisteria: { src: `${dir}wisteria.webp`, w: 303, h: 1200, tepi: "a", pudar: 7 },
+} satisfies Record<string, { src: string; w: number; h: number } & Tepi>;
 
 export type NamaAset = keyof typeof ASET;
 

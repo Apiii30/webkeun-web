@@ -5,6 +5,7 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 import { useBukaUndangan, useParalaks } from "../../pakai";
 import { SlotMusik, useMusik } from "../../musik";
+import { useTamu } from "../../tamu";
 import type { Undangan } from "../../types";
 import { Isi } from "./bagian";
 import { Daun, Kerlip, Monogram, bodoni } from "./hias";
@@ -17,7 +18,8 @@ import { TombolMusik } from "./musik";
 
 const ease = [0.22, 1, 0.36, 1] as const;
 
-export function Luxury({ data: u, tamu }: { data: Undangan; tamu?: string }) {
+export function Luxury({ data: u }: { data: Undangan }) {
+  const tamu = useTamu();
   const { opened, open } = useBukaUndangan({ halus: false });
   const musik = useMusik(u.musik);
   // lagu dimulai di dalam klik "Buka Undangan" (browser hanya mengizinkan audio sesudah ada interaksi)
@@ -36,7 +38,7 @@ export function Luxury({ data: u, tamu }: { data: Undangan; tamu?: string }) {
 
         <SlotMusik muncul={opened}>{u.musik && <TombolMusik main={musik.main} onUbah={musik.ubah} lagu={u.musik} />}</SlotMusik>
 
-        <main className="relative z-10 mx-auto w-full max-w-[440px] overflow-x-clip bg-[#f6f1e9]">
+        <main className="relative z-10 mx-auto w-full max-w-[440px] overflow-clip bg-[#f6f1e9]">
           <Isi u={u} opened={opened} tamu={tamu} />
         </main>
 

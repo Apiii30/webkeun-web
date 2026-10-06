@@ -65,7 +65,7 @@ const MASUK: Variants[] = [
   { hidden: { opacity: 0, transform: "translateX(40px) rotate(6deg)" }, show: { opacity: 1, transform: "translateX(0px) rotate(0deg)" } },
 ];
 
-/* ───────── Galeri: dua kolom, ketuk foto untuk tampilan penuh ───────── */
+/* ───────── Galeri: dua kolom bergeser berlawanan, foto melengkung seperti tabung; ketuk untuk tampilan penuh ───────── */
 
 export function Galeri({ photos }: { photos: Foto[] }) {
   const [open, setOpen] = useState<number | null>(null);
@@ -91,28 +91,30 @@ export function Galeri({ photos }: { photos: Foto[] }) {
             {list.map((p) => {
               const i = photos.indexOf(p);
               return (
-                <motion.button
-                  key={p.src}
-                  type="button"
-                  onClick={() => setOpen(i)}
-                  initial="hidden"
-                  whileInView="show"
-                  viewport={{ once: true, amount: 0.25 }}
-                  variants={MASUK[i % MASUK.length]}
-                  transition={{ duration: 1, ease }}
-                  className="block w-full"
-                  aria-label={`Lihat foto: ${p.alt}`}
-                >
-                  <motion.div
-                    layoutId={`sd-foto-${i}`}
-                    className={`relative overflow-hidden border-[1.5px] border-[#8a4b35]/70 p-1 ${i % 3 === 0 ? "rounded-t-full rounded-b-lg" : "rounded-lg"}`}
-                    style={{ aspectRatio: `${p.w} / ${p.h}` }}
+                // tiap foto melengkung seperti di permukaan tabung saat lewat (kDrum, mengikuti scroll)
+                <div key={p.src} className={s.kDrum}>
+                  <motion.button
+                    type="button"
+                    onClick={() => setOpen(i)}
+                    initial="hidden"
+                    whileInView="show"
+                    viewport={{ once: true, amount: 0.25 }}
+                    variants={MASUK[i % MASUK.length]}
+                    transition={{ duration: 1, ease }}
+                    className="block w-full"
+                    aria-label={`Lihat foto: ${p.alt}`}
                   >
-                    <div className={`relative h-full w-full overflow-hidden ${i % 3 === 0 ? "rounded-t-full rounded-b-md" : "rounded-md"}`}>
-                      <Image src={p.src} alt={p.alt} fill sizes="210px" className="object-cover" />
-                    </div>
-                  </motion.div>
-                </motion.button>
+                    <motion.div
+                      layoutId={`sd-foto-${i}`}
+                      className={`relative overflow-clip border-[1.5px] border-[#8a4b35]/70 p-1 ${i % 3 === 0 ? "rounded-t-full rounded-b-lg" : "rounded-lg"}`}
+                      style={{ aspectRatio: `${p.w} / ${p.h}` }}
+                    >
+                      <div className={`relative h-full w-full overflow-clip ${i % 3 === 0 ? "rounded-t-full rounded-b-md" : "rounded-md"}`}>
+                        <Image src={p.src} alt={p.alt} fill sizes="210px" className="object-cover" />
+                      </div>
+                    </motion.div>
+                  </motion.button>
+                </div>
               );
             })}
           </div>

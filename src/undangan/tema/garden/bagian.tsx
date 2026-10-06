@@ -1,17 +1,21 @@
 "use client";
 
 import Image from "next/image";
-import type { ReactNode } from "react";
+import { type ReactNode, useId } from "react";
 import { calendarLink } from "../../pakai";
 import type { Undangan } from "../../types";
 import { ASET } from "./aset";
 import { Adegan } from "./adegan";
-import { Burung, Gambar, Kameo, KelopakJatuh, Monogram, Muncul, Pembatas, PintuTaman, Tiang, Wisteria, cormorant, italiana } from "./hias";
+import { Burung, Gambar, Kameo, KelopakJatuh, Monogram, Muncul, Pembatas, PintuTaman, Putar, Tiang, Wisteria, cormorant, italiana } from "./hias";
 import { Amplop, Countdown, Galeri, Ucapan, tombolEmas, tombolTeal } from "./interaktif";
+import { Kisah as LorongGapura } from "./kisah";
 import s from "./garden.module.css";
+import { KreditWebkeun } from "../../kredit";
 
 // Isi undangan tema Garden Premium. Setelah adegan taman di beranda, tiap bagian berpuncak lengkung lebar dan
-// sedikit menumpuk di atas bagian sebelumnya, bergantian antara kertas kabut dan panel teal.
+// sedikit menumpuk di atas bagian sebelumnya, bergantian antara kertas kabut dan panel teal. Setiap sambungan diberi
+// garis lengkung emas & medali bunga berlaurel di tengahnya, supaya semua bagian terasa satu rangkaian. Judul, foto &
+// kartu masuk berputar seperti panel komidi putar (Putar), bergantian dari kanan & kiri.
 
 const TINTA = "text-[#24434e]";
 
@@ -19,15 +23,47 @@ const TINTA = "text-[#24434e]";
 function Bagian({ id, panel = false, className = "", children }: { id?: string; panel?: boolean; className?: string; children: ReactNode }) {
   return (
     <section id={id} className={`${s.sek} relative -mt-[2.6rem] overflow-x-clip ${panel ? `${s.panel} text-[#f3efe3]` : `${s.kertas} rounded-t-[50%_2.6rem] ${TINTA}`} ${className}`}>
+      {/* sambungan: garis lengkung emas di puncak bagian & medali bunga berlaurel di tengahnya */}
+      <span className="pointer-events-none absolute inset-x-0 top-0 h-[2.6rem] rounded-t-[50%_2.6rem] border-t-[1.5px] border-[#dcc58f]/90" aria-hidden="true" />
+      <Sambung />
       {children}
     </section>
   );
 }
 
-// Judul bagian: tulisan miring Cormorant, sedikit mendahului halaman saat digulir
-function Judul({ children, terang = false, kecil }: { children: string; terang?: boolean; kecil?: string }) {
+function Sambung() {
+  const id = useId().replace(/:/g, "");
+  const daun = [10, 18, 26];
   return (
-    <div className={`${s.pJudul} text-center`}>
+    <svg viewBox="0 0 80 30" className="pointer-events-none absolute top-0 left-1/2 z-20 w-20 -translate-x-1/2 -translate-y-1/2 drop-shadow-[0_2px_3px_rgb(20_40_48/0.3)]" aria-hidden="true">
+      <defs>
+        <linearGradient id={`sb${id}`} x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0" stopColor="#8a6a33" />
+          <stop offset=".45" stopColor="#f2e3b5" />
+          <stop offset="1" stopColor="#a8843f" />
+        </linearGradient>
+      </defs>
+      {[1, -1].map((k) => (
+        <g key={k} transform={k < 0 ? "translate(80 0) scale(-1 1)" : undefined}>
+          <path d="M30 16C22 14 12 14 3 18" fill="none" stroke={`url(#sb${id})`} strokeWidth="1.3" strokeLinecap="round" />
+          {daun.map((x, i) => (
+            <ellipse key={x} cx={x} cy={i % 2 ? 12.5 : 19.5} rx="4.4" ry="1.9" transform={`rotate(${i % 2 ? -22 : 22} ${x} ${i % 2 ? 12.5 : 19.5})`} fill={`url(#sb${id})`} />
+          ))}
+        </g>
+      ))}
+      <circle cx="40" cy="15" r="11" fill="#eef1ec" stroke={`url(#sb${id})`} strokeWidth="1.6" />
+      {[0, 72, 144, 216, 288].map((r) => (
+        <ellipse key={r} cx="40" cy="10" rx="2.6" ry="4.6" transform={`rotate(${r} 40 15)`} fill={`url(#sb${id})`} />
+      ))}
+      <circle cx="40" cy="15" r="2.2" fill="#fff4d6" />
+    </svg>
+  );
+}
+
+// Judul bagian: tulisan miring Cormorant, sedikit mendahului halaman saat digulir
+function Judul({ children, terang = false, kecil, arah = 1 }: { children: string; terang?: boolean; kecil?: string; arah?: 1 | -1 }) {
+  return (
+    <Putar arah={arah} className={`${s.pJudul} text-center`}>
       {kecil && (
         <Muncul>
           <p className={`text-[10px] tracking-[0.4em] uppercase ${terang ? "text-[#dcc58f]" : "text-[#b9975b]"}`}>{kecil}</p>
@@ -39,7 +75,7 @@ function Judul({ children, terang = false, kecil }: { children: string; terang?:
       <Muncul jeda={0.25}>
         <Pembatas className="mt-1" />
       </Muncul>
-    </div>
+    </Putar>
   );
 }
 
@@ -95,9 +131,9 @@ function Mempelai({ u }: { u: Undangan }) {
             </Muncul>
           )}
           <div className={`relative mx-auto w-[72%] ${i === 0 ? "mt-10" : ""}`}>
-            <Muncul dari="scale(0.82)" durasi={1.5}>
+            <Putar arah={i ? 1 : -1} durasi={1.6}>
               <Kameo src={p.foto} alt={p.nama} sizes="260px" posisi="50% 20%" />
-            </Muncul>
+            </Putar>
             {/* bunga di satu sudut bawah bingkai, bergantian sisi */}
             <Muncul jeda={0.4} dari="scale(0.5)" className={`${s.pDekat} pointer-events-none absolute -bottom-[6%] w-[52%] ${i ? "-right-[16%]" : "-left-[16%]"}`} style={{ transformOrigin: i ? "80% 100%" : "20% 100%" }}>
               <div className={s.ayunA} style={{ transformOrigin: "50% 100%" }}>
@@ -130,7 +166,7 @@ function Mempelai({ u }: { u: Undangan }) {
 function SimpanTanggal({ u }: { u: Undangan }) {
   return (
     <Bagian panel className="px-6 pt-16 pb-20 text-center">
-      <Judul terang kecil="Hitung mundur">
+      <Judul terang kecil="Hitung mundur" arah={-1}>
         Save The Date
       </Judul>
       <Muncul jeda={0.2}>
@@ -157,7 +193,7 @@ function SimpanTanggal({ u }: { u: Undangan }) {
 function KartuAcara({ u, a, ke }: { u: Undangan; a: Undangan["acara"][number]; ke: number }) {
   const { hari, tgl } = hariTanggal(u.tanggal);
   return (
-    <div className="relative mx-auto w-[86%] pt-6 pb-4">
+    <Putar arah={ke % 2 ? 1 : -1} amount={0.2} className="relative mx-auto w-[86%] pt-6 pb-4">
       <Tiang className="top-[3.8rem] bottom-4 -left-[30px]" />
       <Tiang className="top-[3.8rem] -right-[30px] bottom-4" />
       <div className="relative rounded-t-[999px] rounded-b-md border-2 border-[#34596a] bg-[#f3f5f1] px-7 pt-20 pb-10 text-center shadow-[0_26px_40px_-26px_rgb(20_40_48/0.9)]">
@@ -191,7 +227,7 @@ function KartuAcara({ u, a, ke }: { u: Undangan; a: Undangan["acara"][number]; k
           <Gambar a={ke % 2 ? "peonyMerah" : "peony"} sizes="120px" />
         </div>
       </Muncul>
-    </div>
+    </Putar>
   );
 }
 
@@ -208,54 +244,28 @@ function Acara({ u }: { u: Undangan }) {
   );
 }
 
-/* ───────── 6. Galeri: dinding museum teal dengan pigura emas ───────── */
+/* ───────── 6. Galeri: tumpukan kartu foto berpigura emas ───────── */
 
 function BagianGaleri({ u }: { u: Undangan }) {
   return (
     <Bagian id="galeri" panel className="px-6 pt-16 pb-24">
-      <Judul terang kecil="Potret kami">
+      <Judul terang kecil="Potret kami" arah={-1}>
         Galeri
       </Judul>
-      <div className="mt-12">
+      <Putar arah={1} amount={0.2} durasi={1.6} className="mt-10">
         <Galeri photos={u.foto.galeri} />
-      </div>
+      </Putar>
     </Bagian>
   );
 }
 
-/* ───────── 7. Kisah cinta ───────── */
+/* ───────── 7. Kisah cinta: lorong gapura (kisah.tsx) ───────── */
 
 function Kisah({ u }: { u: Undangan }) {
-  const foto = u.foto.galeri[1] ?? u.foto.galeri[0];
   return (
-    <Bagian id="cerita" className="px-7 pt-16 pb-24">
+    <Bagian id="cerita" className="px-4 pt-16 pb-20">
       <Judul kecil="Perjalanan kami">Kisah Cinta</Judul>
-      <Muncul dari="scale(0.85)" durasi={1.5} className="relative mx-auto mt-8 w-[78%]">
-        <div className="relative aspect-[3/4] overflow-hidden rounded-t-[999px] border-[6px] border-[#f3f5f1] shadow-[0_0_0_1px_#b9975b,0_22px_36px_-22px_rgb(20_40_48/0.9)]">
-          <div className={`${s.geserLambat} absolute inset-x-0 inset-y-[-10%]`}>
-            <Image src={foto.src} alt={foto.alt} fill sizes="320px" className="object-cover" />
-          </div>
-        </div>
-        <Wisteria className="-top-2 -left-3 w-[17%]" />
-        <Wisteria className="-top-2 -right-3 w-[15%]" jeda={-1.8} />
-      </Muncul>
-      <ol className="relative mt-12 space-y-9 pl-10">
-        <span className={`${s.tumbuhGaris} absolute top-2 bottom-2 left-[11px] w-px origin-top bg-gradient-to-b from-[#b9975b] via-[#34596a]/50 to-[#b9975b]`} aria-hidden="true" />
-        {u.cerita.map((c, i) => (
-          <li key={c.tahun} className="relative">
-            <Muncul dari="scale(0)" durasi={0.8} className="absolute top-1 -left-10 grid size-[23px] place-items-center rounded-full border border-[#b9975b] bg-[#eef1ec]">
-              <svg viewBox="0 0 20 20" className="size-3 text-[#2f5563]" aria-hidden="true">
-                <path d="M10 2C14 6 14 12 10 18 6 12 6 6 10 2Z" fill="currentColor" transform={`rotate(${i * 35} 10 10)`} />
-              </svg>
-            </Muncul>
-            <Muncul dari={i % 2 ? "translateY(30px)" : "translateY(30px)"}>
-              <p className={`${italiana} text-[1.5rem] leading-none text-[#b9975b]`}>{c.tahun}</p>
-              <p className={`${cormorant} mt-1 text-[1.3rem] font-medium italic`}>{c.judul}</p>
-              <p className="mt-1 text-[13px] leading-relaxed font-light">{c.isi}</p>
-            </Muncul>
-          </li>
-        ))}
-      </ol>
+      <LorongGapura u={u} />
     </Bagian>
   );
 }
@@ -273,16 +283,16 @@ function KadoUcapan({ u, tamu }: { u: Undangan; tamu?: string }) {
           Doa restu Anda adalah hadiah terindah bagi kami. Namun jika memberi adalah ungkapan tanda kasih Anda, kami menerimanya dengan senang hati.
         </p>
       </Muncul>
-      <Muncul jeda={0.3} className="mt-6">
+      <Putar arah={1} jeda={0.2} className="mt-6">
         <Amplop amplop={u.amplop} />
-      </Muncul>
+      </Putar>
       <div className="mt-20">
-        <Judul terang kecil="Doa & restu">
+        <Judul terang kecil="Doa & restu" arah={-1}>
           Ucapan
         </Judul>
-        <Muncul jeda={0.2} className="mt-8">
+        <Putar arah={-1} jeda={0.15} amount={0.15} className="mt-8">
           <Ucapan tamu={tamu} />
-        </Muncul>
+        </Putar>
       </div>
     </Bagian>
   );
@@ -292,7 +302,7 @@ function KadoUcapan({ u, tamu }: { u: Undangan; tamu?: string }) {
 
 function Penutup({ u }: { u: Undangan }) {
   return (
-    <Bagian className="min-h-svh px-7 pt-14 pb-[calc(22rem+var(--demo-h,0px))] text-center">
+    <Bagian className="min-h-svh px-7 pt-14 pb-[calc(20rem+var(--demo-h,0px))] text-center">
       <div className="pointer-events-none absolute inset-0 opacity-[0.22] [mask-image:linear-gradient(to_bottom,transparent,black_20%,black_70%,transparent)]" aria-hidden="true">
         <Image src={ASET.lembah.src} alt="" fill sizes="440px" className={`${s.geserLambat} object-cover`} />
       </div>
@@ -323,6 +333,7 @@ function Penutup({ u }: { u: Undangan }) {
             {u.wanita.panggilan} <span className={`${cormorant} text-[#b9975b] italic`}>&amp;</span> {u.pria.panggilan}
           </p>
         </Muncul>
+        <KreditWebkeun className="relative mt-12" />
       </div>
       <Muncul dari="translateY(80px)" durasi={1.6} amount={0.1} className="pointer-events-none absolute right-0 bottom-[calc(1rem+var(--demo-h,0px))] w-[38%]">
         <Gambar a="merakSakura" sizes="200px" />

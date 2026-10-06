@@ -11,14 +11,11 @@ export const metadata: Metadata = {
 };
 
 // Demo tema Luxury dengan data contoh Fara & Aditya
-export default async function UndanganFaraAdityaLuxury({ searchParams }: PageProps<"/template/undangan-fara-aditya-luxury">) {
-  const to = (await searchParams).to;
-  const tamu = (Array.isArray(to) ? to[0] : to)?.slice(0, 60) || undefined;
-
+export default function UndanganFaraAdityaLuxury() {
   return (
     // --demo-h: tinggi bar demo, supaya navigasi & tombol undangan tidak tertutup
     <div style={{ "--demo-h": "3.75rem" } as CSSProperties}>
-      <TemaLuxury data={{ ...faraAditya, musik: LAGU.pernikahanKita }} tamu={tamu} />
+      <TemaLuxury data={{ ...faraAditya, musik: LAGU.pernikahanKita }} />
       <DemoBanner name="Undangan Luxury" compact />
     </div>
   );

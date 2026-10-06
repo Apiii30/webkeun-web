@@ -12,11 +12,10 @@ const jost = Jost({ subsets: ["latin"], variable: "--font-jost" });
 // hanya untuk hiasan aksara Sunda
 const aksara = Noto_Sans_Sundanese({ subsets: ["sundanese"], weight: "500", variable: "--font-aksara" });
 
-// tamu: nama dari link (?to=...). Kosong berarti undangan umum.
-export function TemaSunda({ data, tamu }: { data: Undangan; tamu?: string }) {
+export function TemaSunda({ data }: { data: Undangan }) {
   return (
     <div className={`${rozha.variable} ${alex.variable} ${jost.variable} ${aksara.variable}`}>
-      <Sunda data={data} tamu={tamu} />
+      <Sunda data={data} />
     </div>
   );
 }

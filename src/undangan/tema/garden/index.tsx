@@ -10,11 +10,10 @@ const italiana = Italiana({ subsets: ["latin"], weight: "400", variable: "--font
 const cormorant = Cormorant_Garamond({ subsets: ["latin"], weight: ["400", "500"], style: ["normal", "italic"], variable: "--font-cormorant" });
 const jost = Jost({ subsets: ["latin"], weight: ["300", "400", "500"], variable: "--font-jost" });
 
-// tamu: nama dari link (?to=...). Kosong berarti undangan umum.
-export function TemaGarden({ data, tamu }: { data: Undangan; tamu?: string }) {
+export function TemaGarden({ data }: { data: Undangan }) {
   return (
     <div className={`${italiana.variable} ${cormorant.variable} ${jost.variable}`}>
-      <Garden data={data} tamu={tamu} />
+      <Garden data={data} />
     </div>
   );
 }

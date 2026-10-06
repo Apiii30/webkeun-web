@@ -1,25 +1,28 @@
 "use client";
 
-import { AnimatePresence, MotionConfig, motion, type Variants } from "motion/react";
+import { AnimatePresence, MotionConfig, motion, useReducedMotion, type Variants } from "motion/react";
 import { useEffect, useState } from "react";
 import { useBukaUndangan, useParalaks } from "../../pakai";
 import { SlotMusik, useMusik } from "../../musik";
+import { useTamu } from "../../tamu";
 import type { Undangan } from "../../types";
 import { RUMPUN_SUDUT, RUMPUN_SUDUT_KANAN } from "./aset";
 import { Isi } from "./bagian";
 import { tombolBata } from "./interaktif";
-import { Aksara, Bingkai, Kujang, MegaMendung, MelatiJatuh, Rumpun, Siger, Tumpal } from "./ornamen";
+import { Aksara, Bingkai, MegaMendung, MelatiJatuh, Rumpun, Siger } from "./ornamen";
+import { T_SELESAI } from "./pembuka";
 import s from "./sunda.module.css";
 import { TombolMusik } from "./musik";
 
-// Kerangka tema Art Sunda: sampul berupa dua daun pintu (lawang) bermotif mega mendung yang terbuka,
+// Kerangka tema Art Sunda: kartu sampul di depan pintu rumah panggung (animasi pembukanya di pembuka.tsx),
 // kolom undangan krem, latar nila di layar lebar, dan navigasi bawah.
 // Tampilan khusus HP; di layar lebar undangan tetap selebar HP di tengah.
 
 const ease = [0.22, 1, 0.36, 1] as const;
 const rozha = "font-[family-name:var(--font-rozha)]";
 
-export function Sunda({ data: u, tamu }: { data: Undangan; tamu?: string }) {
+export function Sunda({ data: u }: { data: Undangan }) {
+  const tamu = useTamu();
   const { opened, open } = useBukaUndangan({ halus: false });
   const musik = useMusik(u.musik);
   // lagu dimulai di dalam klik "Buka Undangan" (browser hanya mengizinkan audio sesudah ada interaksi)
@@ -38,7 +41,7 @@ export function Sunda({ data: u, tamu }: { data: Undangan; tamu?: string }) {
 
         <SlotMusik muncul={opened}>{u.musik && <TombolMusik main={musik.main} onUbah={musik.ubah} lagu={u.musik} />}</SlotMusik>
 
-        <main className={`${s.kertas} relative z-10 mx-auto w-full max-w-[440px] overflow-x-clip`}>
+        <main className={`${s.kertas} relative z-10 mx-auto w-full max-w-[440px] overflow-clip`}>
           <Isi u={u} opened={opened} tamu={tamu} />
         </main>
 
@@ -68,7 +71,7 @@ function LatarSisi() {
     { c: "top-[76%] right-[12%] w-44", d: "-11s" },
   ];
   return (
-    <div className="pointer-events-none fixed inset-0 hidden overflow-hidden min-[480px]:block" aria-hidden="true">
+    <div className="pointer-events-none fixed inset-0 hidden overflow-clip min-[480px]:block" aria-hidden="true">
       <div className={`${s.nila} absolute inset-0`} />
       <div className={`${s.latarSisi} absolute inset-0`}>
         {awan.map((a) => (
@@ -79,47 +82,10 @@ function LatarSisi() {
   );
 }
 
-/* ───────── Sampul: kartu nama di depan dua daun pintu ───────── */
+/* ───────── Sampul: kartu nama di depan pintu rumah panggung ───────── */
 
-// Daun pintu: nila dengan bingkai lengkung keemasan, mega mendung, dan kujang di sisi tengah.
-// Saat dibuka berayun 3D ke arah tamu. Geraknya `transform` utuh supaya dijalankan mesin animasi browser.
-function Lawang({ sisi }: { sisi: "kiri" | "kanan" }) {
-  const kiri = sisi === "kiri";
-  const awan = kiri
-    ? [
-        { c: "top-[14%] -left-8 w-40", d: "0s" },
-        { c: "top-[44%] left-2 w-28", d: "-4s" },
-        { c: "bottom-[12%] -left-6 w-36", d: "-8s" },
-      ]
-    : [
-        { c: "top-[22%] -right-8 w-36", d: "-2s" },
-        { c: "top-[52%] right-0 w-32", d: "-6s" },
-        { c: "bottom-[8%] -right-10 w-40", d: "-10s" },
-      ];
-  return (
-    <motion.div
-      variants={{
-        hidden: { transform: "rotateY(0deg)" },
-        exit: { transform: `rotateY(${kiri ? -100 : 100}deg)`, transition: { duration: 1.7, ease: [0.65, 0, 0.35, 1], delay: 0.35 } },
-      }}
-      style={{ transformOrigin: kiri ? "0% 50%" : "100% 50%", backfaceVisibility: "hidden" }}
-      className={`${s.nila} absolute inset-y-0 ${kiri ? "left-0" : "right-0"} w-1/2 overflow-hidden`}
-    >
-      {awan.map((a) => (
-        <MegaMendung key={a.c} warna="emas" className={`${s.awan} absolute opacity-40 ${a.c}`} style={{ animationDelay: a.d }} />
-      ))}
-      {/* bingkai lengkung: separuh di tiap daun, bertemu di tengah */}
-      <div className={`absolute inset-y-5 ${kiri ? "right-0 left-4 rounded-tl-[11rem] border-l" : "right-4 left-0 rounded-tr-[11rem] border-r"} border-y border-[#d9bd85]/70`} />
-      <div className={`absolute inset-y-8 ${kiri ? "right-0 left-7 rounded-tl-[10rem] border-l" : "right-7 left-0 rounded-tr-[10rem] border-r"} border-y border-dashed border-[#d9bd85]/40`} />
-      <Tumpal warna="#d9bd85" className={`absolute bottom-1.5 opacity-60 ${kiri ? "left-0 w-full" : "right-0 w-full"}`} />
-      <Kujang className={`absolute top-1/2 h-48 w-auto -translate-y-1/2 drop-shadow-[0_8px_10px_rgb(0_0_0/0.35)] ${kiri ? "right-3 -scale-x-100" : "left-3"}`} />
-      {/* garis temu & gagang pintu */}
-      <span className={`absolute inset-y-0 w-px bg-[#d9bd85]/80 ${kiri ? "right-0" : "left-0"}`} />
-      <span className={`absolute top-[62%] size-5 rounded-full border-2 border-[#d9bd85] ${kiri ? "right-2" : "left-2"}`} />
-    </motion.div>
-  );
-}
-
+// Pintu, dinding bilik & isi rumahnya ada di beranda (pembuka.tsx) yang sudah tampak di belakang kartu ini; saat
+// dibuka hanya kartunya yang terangkat & memudar, lalu animasi pembuka di beranda berjalan.
 const isi: Variants = {
   hidden: { opacity: 0, transform: "translateY(22px)" },
   show: (d: number) => ({ opacity: 1, transform: "translateY(0px)", transition: { duration: 1, ease, delay: 0.5 + d } }),
@@ -128,19 +94,19 @@ const isi: Variants = {
 function Sampul({ u, tamu, onOpen }: { u: Undangan; tamu?: string; onOpen: () => void }) {
   return (
     <motion.div className="fixed inset-0 z-50 flex justify-center" initial="hidden" animate="show" exit="exit">
-      <motion.div
-        variants={{ exit: { opacity: 0, transition: { duration: 0.5, delay: 1.6 } } }}
-        className="relative h-full w-full max-w-[440px] overflow-hidden [perspective:1200px]"
-      >
-        <Lawang sisi="kiri" />
-        <Lawang sisi="kanan" />
+      <motion.div variants={{ hidden: { opacity: 1 }, exit: { opacity: 1, transition: { duration: 0.9 } } }} className="relative h-full w-full max-w-[440px] overflow-clip">
+        {/* rumah sedikit diredupkan supaya kartu menonjol */}
+        <motion.div
+          className="absolute inset-0 bg-[#1e140c]/35"
+          variants={{ hidden: { opacity: 0 }, show: { opacity: 1, transition: { duration: 1 } }, exit: { opacity: 0, transition: { duration: 0.8 } } }}
+        />
         <MelatiJatuh n={6} />
 
         <motion.div
           variants={{
             hidden: { opacity: 0, transform: "translateY(30px) scale(0.97)" },
             show: { opacity: 1, transform: "translateY(0px) scale(1)", transition: { duration: 1.2, ease, delay: 0.2 } },
-            exit: { opacity: 0, transform: "translateY(-24px) scale(0.95)", transition: { duration: 0.5 } },
+            exit: { opacity: 0, transform: "translateY(-46px) scale(0.94)", transition: { duration: 0.8, ease: [0.55, 0, 0.6, 1] } },
           }}
           className={`${s.kertas} absolute inset-x-[7%] top-[7%] bottom-[calc(6%+var(--demo-h,0px))] rounded-t-full border border-[#d9bd85] p-1.5 shadow-[0_30px_60px_-20px_rgb(0_0_0/0.7)]`}
         >
@@ -226,6 +192,7 @@ const MENU: { id: keyof typeof ikon; label: string }[] = [
 
 function Navigasi() {
   const [active, setActive] = useState<string>("beranda");
+  const kurangi = useReducedMotion();
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -245,7 +212,7 @@ function Navigasi() {
     <motion.nav
       initial={{ opacity: 0, transform: "translateY(90px)" }}
       animate={{ opacity: 1, transform: "translateY(0px)" }}
-      transition={{ delay: 1.8, duration: 0.9, ease }}
+      transition={{ delay: kurangi ? 0.4 : T_SELESAI, duration: 0.9, ease }}
       className="pointer-events-none fixed inset-x-0 bottom-[calc(0.75rem+var(--demo-h,0px))] z-40 flex justify-center px-3"
     >
       <ul className="pointer-events-auto flex items-center gap-1 rounded-2xl border border-[#d9bd85]/50 bg-[#2f4560]/95 p-1.5 shadow-[0_12px_30px_-10px_rgb(22_33_47/0.8)]">

@@ -11,11 +11,10 @@ const allura = Allura({ subsets: ["latin"], weight: "400", variable: "--font-all
 const prata = Prata({ subsets: ["latin"], weight: "400", variable: "--font-prata" });
 const crimson = Crimson_Pro({ subsets: ["latin"], style: ["normal", "italic"], variable: "--font-crimson" });
 
-// tamu: nama dari link (?to=...). Kosong berarti undangan umum.
-export function TemaDelima({ data, tamu }: { data: Undangan; tamu?: string }) {
+export function TemaDelima({ data }: { data: Undangan }) {
   return (
     <div className={`${allura.variable} ${prata.variable} ${crimson.variable}`}>
-      <Delima data={data} tamu={tamu} />
+      <Delima data={data} />
     </div>
   );
 }

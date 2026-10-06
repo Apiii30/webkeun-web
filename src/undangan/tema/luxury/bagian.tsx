@@ -9,6 +9,7 @@ import { Galeri } from "./galeri";
 import { Daun, GarisEmas, Kerlip, LabelTegak, Monogram, bodoni, script } from "./hias";
 import { Amplop, Countdown, Ucapan, tombolGaris } from "./interaktif";
 import s from "./luxury.module.css";
+import { KreditWebkeun } from "../../kredit";
 
 // Isi undangan tema Luxury: gaya majalah, blok taupe-ivory-espresso yang saling menumpuk dengan sudut lengkung besar.
 // - Parallax memakai CSS scroll-driven animation (luxury.module.css), digerakkan GPU tanpa JavaScript.
@@ -37,7 +38,9 @@ function Muncul({ as = "naik", delay = 0, className, children }: { as?: keyof ty
 }
 
 // Huruf naik satu per satu; pemicunya diwarisi dari elemen motion di atasnya
-function Huruf({ teks, jeda = 0, cepat = 0.04 }: { teks: string; jeda?: number; cepat?: number }) {
+// kelas: dipasang di tiap huruf, mis. teks emas (gradasi yang di-clip ke teks pada induknya tidak ikut ke huruf yang
+// bergerak sendiri, hurufnya jadi tak terlihat)
+function Huruf({ teks, jeda = 0, cepat = 0.04, kelas = "" }: { teks: string; jeda?: number; cepat?: number; kelas?: string }) {
   const kata = teks.split(" ");
   let n = 0;
   return (
@@ -47,7 +50,7 @@ function Huruf({ teks, jeda = 0, cepat = 0.04 }: { teks: string; jeda?: number; 
           {[...k].map((h) => (
             <motion.span
               key={n++}
-              className="inline-block"
+              className={`inline-block ${kelas}`}
               variants={{
                 hidden: { opacity: 0, transform: "translateY(0.5em)" },
                 show: { opacity: 1, transform: "translateY(0em)", transition: { duration: 0.8, ease } },
@@ -508,13 +511,14 @@ function Penutup({ u }: { u: Undangan }) {
         <motion.p variants={gaya.lembut} className="mt-8 text-[12px] tracking-[0.3em] text-[#2b2420]/60 uppercase">
           Kami yang berbahagia
         </motion.p>
-        <p className={`${bodoni} ${s.teksEmas} mt-2 text-[2.8rem] leading-tight font-medium`}>
-          <Huruf teks={`${u.wanita.panggilan} & ${u.pria.panggilan}`} cepat={0.07} />
+        <p className={`${bodoni} mt-2 text-[2.8rem] leading-tight font-medium`}>
+          <Huruf teks={`${u.wanita.panggilan} & ${u.pria.panggilan}`} cepat={0.07} kelas={s.teksEmas} />
         </p>
         <motion.div variants={gaya.zoom} className="mt-6 flex justify-center">
           <Monogram a={u.wanita.panggilan[0]} b={u.pria.panggilan[0]} className="size-20 text-[0.7rem]" />
         </motion.div>
       </motion.div>
+      <KreditWebkeun className="relative mt-10 px-7 text-[#2b2420]" />
     </section>
   );
 }

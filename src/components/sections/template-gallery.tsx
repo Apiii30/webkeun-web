@@ -2,6 +2,7 @@
 
 import { AnimatePresence, motion, MotionConfig } from "motion/react";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { type KategoriWebsite, kategoriWebsite, templateIntro, templates, waLink } from "@/lib/site";
 import { Badge, PillLink } from "../brand";
@@ -10,16 +11,29 @@ import { Mascot } from "../mascot";
 import { TemplateCard } from "../template-card";
 
 // Halaman /template: khusus template website (undangan punya halaman sendiri di /template/undangan).
-// Kategori awal dibaca di server (?kategori=), jadi kartu & judulnya sudah ada di HTML. Setelah itu filter
-// berjalan di browser: URL diganti tanpa memuat ulang, judul berganti, kartu bergeser ke posisi barunya.
+// Halamannya statis: HTML-nya berisi semua template, lalu kategori dari link (?kategori=) dipilih di browser.
+// Filter berjalan di browser: URL diganti tanpa memuat ulang, judul berganti, kartu bergeser ke posisi barunya.
 
 const website = templates.filter((t) => t.category !== "undangan");
 const jumlahUndangan = templates.length - website.length;
 const pilihan = [{ slug: null, label: "Semua" }, ...kategoriWebsite];
 const lembut = { duration: 0.45, ease: [0.16, 1, 0.3, 1] } as const;
 
+// Galeri yang mengikuti ?kategori= di link, termasuk saat kategori dipilih dari menu navbar di halaman ini juga
+export function TemplateGalleryDariLink() {
+  const k = useSearchParams().get("kategori");
+  return <TemplateGallery awal={kategoriWebsite.find((c) => c.slug === k)?.slug ?? null} />;
+}
+
 export function TemplateGallery({ awal }: { awal: KategoriWebsite | null }) {
   const [kat, setKat] = useState(awal);
+  // kategori di link berganti (menu navbar): ikuti. Pilihan lewat tombol filter juga mengganti link, tapi nilainya
+  // sudah sama dengan kat, jadi tidak mengubah apa-apa.
+  const [awalTadi, setAwalTadi] = useState(awal);
+  if (awal !== awalTadi) {
+    setAwalTadi(awal);
+    setKat(awal);
+  }
   const shown = kat ? website.filter((t) => t.category === kat) : website;
   const teks = templateIntro[kat ?? "semua"];
 

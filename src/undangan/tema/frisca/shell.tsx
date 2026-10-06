@@ -8,10 +8,10 @@ import "lenis/dist/lenis.css";
 import { useEffect, useRef, useState } from "react";
 import type { Photo } from "./photos";
 import { lockScroll, registerLenis, scrollToTop, unlockScroll } from "./scroll-lock";
+import { useTamu } from "../../tamu";
 import s from "./frisca.module.css";
 
 type Props = {
-  guestName: string | null;
   names: string;
   cover: Photo;
   music: string;
@@ -24,7 +24,8 @@ type Props = {
  * Disalin dari proyek undangan aslinya; yang diubah hanya warna/font (jadi nilai langsung, karena nama warnanya
  * bentrok dengan warna situs Webkeun), wadah modal (#fr-lapis), dan jarak dari bar demo (--demo-h).
  */
-export function InvitationShell({ guestName, names, cover, music, hasGifts, children }: Props) {
+export function InvitationShell({ names, cover, music, hasGifts, children }: Props) {
+  const guestName = useTamu(80) ?? null;
   const [opened, setOpened] = useState(false);
   const [playing, setPlaying] = useState(false);
   const [musicMissing, setMusicMissing] = useState(false);
@@ -146,7 +147,7 @@ export function InvitationShell({ guestName, names, cover, music, hasGifts, chil
         )}
       </AnimatePresence>
 
-      <main className="relative mx-auto min-h-dvh w-full max-w-[440px] overflow-x-clip bg-[#fbf6f2] shadow-2xl shadow-[#6b4d55]/20">
+      <main className="relative mx-auto min-h-dvh w-full max-w-[440px] overflow-clip bg-[#fbf6f2] shadow-2xl shadow-[#6b4d55]/20">
         {children}
       </main>
 

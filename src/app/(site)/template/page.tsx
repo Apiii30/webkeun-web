@@ -1,12 +1,12 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { redirect } from "next/navigation";
+import { Suspense } from "react";
 import { SectionHeading } from "@/components/brand";
 import { CoverFan } from "@/components/cover-fan";
 import { Icon } from "@/components/icons";
 import { ClosingCta } from "@/components/sections/closing";
-import { TemplateGallery } from "@/components/sections/template-gallery";
-import { type KategoriWebsite, kategoriWebsite, templateIntro, templates } from "@/lib/site";
+import { TemplateGallery, TemplateGalleryDariLink } from "@/components/sections/template-gallery";
+import { templates } from "@/lib/site";
 
 const steps = [
   { title: "Pilih template", desc: "Cari yang gayanya paling dekat sama usaha kamu." },
@@ -16,33 +16,20 @@ const steps = [
 
 const jumlahUndangan = templates.filter((t) => t.category === "undangan").length;
 
-async function bacaKategori(searchParams: PageProps<"/template">["searchParams"]) {
-  const k = (await searchParams).kategori;
-  const slug = Array.isArray(k) ? k[0] : k;
-  return { slug, kategori: kategoriWebsite.find((c) => c.slug === slug) ?? null };
-}
+export const metadata: Metadata = {
+  title: "Template Website",
+  description: "Pilih template website UMKM, company profile, atau portofolio. Warna, foto, dan isinya kami sesuaikan buat kamu.",
+};
 
-export async function generateMetadata({ searchParams }: PageProps<"/template">): Promise<Metadata> {
-  const { kategori } = await bacaKategori(searchParams);
-  if (!kategori) {
-    return {
-      title: "Template Website",
-      description: "Pilih template website UMKM, company profile, atau portofolio. Warna, foto, dan isinya kami sesuaikan buat kamu.",
-    };
-  }
-  return { title: `Template ${kategori.label}`, description: templateIntro[kategori.slug].intro };
-}
-
-export default async function TemplatePage({ searchParams }: PageProps<"/template">) {
-  const { slug, kategori } = await bacaKategori(searchParams);
-  // Undangan sekarang punya halaman sendiri; link lama /template?kategori=undangan diarahkan ke sana
-  if (slug === "undangan") redirect("/template/undangan");
-  const awal: KategoriWebsite | null = kategori?.slug ?? null;
-
+// Halaman ini statis (dibuat sekali saat build). Kategori dari link (?kategori=umkm) dibaca galerinya di browser;
+// link lama ?kategori=undangan diarahkan ke /template/undangan lewat next.config.ts.
+export default function TemplatePage() {
   return (
     <>
-      {/* key: kalau kategori diganti lewat link (mis. menu navbar), galeri mulai ulang dari kategori itu */}
-      <TemplateGallery key={awal ?? "semua"} awal={awal} />
+      {/* HTML statisnya menampilkan semua template; kategori dari link dipilih begitu halaman jalan di browser */}
+      <Suspense fallback={<TemplateGallery awal={null} />}>
+        <TemplateGalleryDariLink />
+      </Suspense>
 
       <section className="mx-auto max-w-6xl px-4 pb-16 sm:px-6 md:pb-20">
         <Link

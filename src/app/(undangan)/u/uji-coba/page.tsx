@@ -6,6 +6,7 @@ import { TemaPorselen } from "@/undangan/tema/porselen";
 
 // Undangan sungguhan (bukan demo): RSVP & ucapan tamu tersimpan di Supabase.
 // Alamatnya /u/<slug>?to=<nama tamu>; link per tamu dibuat di /rekap/<slug>?kunci=...
+// Nama tamu dibaca di browser (useTamu), jadi halaman ini statis: dibuat sekali saat build, ringan di hosting.
 //
 // Membuat undangan baru: salin folder ini ke /u/<slug-baru>, ganti data & tema, lalu daftarkan slug-nya
 // di Supabase (supabase/daftar-undangan.sql). Tanpa didaftarkan, ucapan tamu ditolak.
@@ -24,13 +25,10 @@ export const metadata: Metadata = {
   robots: { index: false, follow: false },
 };
 
-export default async function UndanganUjiCoba({ searchParams }: PageProps<"/u/uji-coba">) {
-  const to = (await searchParams).to;
-  const tamu = (Array.isArray(to) ? to[0] : to)?.trim().slice(0, 60) || undefined;
-
+export default function UndanganUjiCoba() {
   return (
-    <BukuTamu slug={SLUG} tamu={tamu}>
-      <TemaPorselen data={data} tamu={tamu} />
+    <BukuTamu slug={SLUG}>
+      <TemaPorselen data={data} />
     </BukuTamu>
   );
 }

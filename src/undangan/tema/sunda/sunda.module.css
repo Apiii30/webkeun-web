@@ -15,6 +15,22 @@
     url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 .05 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>"),
     radial-gradient(90% 50% at 50% 0%, #3b5574 0%, transparent 75%);
 }
+/* Versi polos (tanpa sorot di atas) untuk latar bagian: warnanya harus sama persis dengan tepi awan pembatas */
+.kertasPolos {
+  background-color: #f4eee2;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 .35 0 0 0 0 .3 0 0 0 0 .25 0 0 0 .06 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+}
+.nilaPolos {
+  background-color: #2f4560;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 .05 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+}
+
+/* Dinding bilik: anyaman bambu (sasak) di rumah panggung pembuka */
+.bilik {
+  background-color: #d6bb86;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='26' height='26'><rect width='13' height='13' fill='%23dfc895'/><rect x='13' y='13' width='13' height='13' fill='%23dfc895'/><rect x='13' width='13' height='13' fill='%23c9aa70'/><rect y='13' width='13' height='13' fill='%23c9aa70'/><g fill='%23b08e55'><rect y='4' width='13' height='.8'/><rect y='8.5' width='13' height='.8'/><rect x='13' y='17' width='13' height='.8'/><rect x='13' y='21.5' width='13' height='.8'/><rect x='17' width='.8' height='13'/><rect x='21.5' width='.8' height='13'/><rect x='4' y='13' width='.8' height='13'/><rect x='8.5' y='13' width='.8' height='13'/></g><path d='M13 0V26M0 13H26' stroke='%23977443' stroke-width='.7'/></svg>");
+  background-size: 26px 26px;
+}
 
 /* Tanaman bergoyang tertiup angin, berporos di pangkal */
 .goyang {
@@ -81,6 +97,55 @@
 @keyframes kepak {
   to {
     transform: scaleY(0.3);
+  }
+}
+
+/* Nyala lampu gantung yang bergetar pelan */
+.nyala {
+  animation: nyala 2.6s ease-in-out infinite alternate;
+}
+@keyframes nyala {
+  from {
+    opacity: 0.75;
+    transform: scale(0.94);
+  }
+  45% {
+    opacity: 1;
+    transform: scale(1.04);
+  }
+  to {
+    opacity: 0.85;
+    transform: scale(0.98);
+  }
+}
+
+/* Lampu gantung berayun pelan dari kaitnya */
+.ayun {
+  transform-origin: 50% 0%;
+  animation: ayun 5s ease-in-out infinite alternate;
+}
+@keyframes ayun {
+  from {
+    transform: rotate(-3deg);
+  }
+  to {
+    transform: rotate(3deg);
+  }
+}
+
+/* Petunjuk gulir di beranda */
+.petunjuk {
+  animation: petunjuk 1.8s ease-in-out infinite;
+}
+@keyframes petunjuk {
+  0%,
+  100% {
+    transform: translateY(0);
+    opacity: 0.5;
+  }
+  50% {
+    transform: translateY(7px);
+    opacity: 1;
   }
 }
 
@@ -160,14 +225,36 @@
 }
 
 /* ── Parallax: efek yang mengikuti scroll ──
-   Murni CSS (scroll-driven animation), hanya transform. Aktif hanya di bawah atribut data-paralaks yang dipasang
-   shell.tsx untuk browser yang menjalankannya di GPU (lihat useParalaks). Di browser lain elemen diam di tempat.
-   Nilai ditulis langsung di keyframes (tanpa var()) supaya browser bisa menjalankannya di GPU. */
-.sek {
-  view-timeline-name: --sek;
+   Murni CSS (scroll-driven animation), hanya transform & opacity. Aktif hanya di bawah atribut data-paralaks yang
+   dipasang shell.tsx untuk browser yang menjalankannya di GPU (lihat useParalaks). Di browser lain elemen diam di
+   posisi akhirnya (versi berbasis waktu ada di komponen Gulir). Nilai ditulis langsung di keyframes (tanpa var())
+   supaya browser bisa menjalankannya di GPU.
+   Peralihan antarbagian:
+   - isi bagian yang sedang ditinggalkan mundur menjauh (turun lebih lambat dari scroll) & meredup sementara bagian
+     berikutnya naik menutupinya (mundur, redup);
+   - di tepi atas tiap bagian ada gugusan awan mega mendung dua lapis yang bergerak beda kecepatan (awanJauh/Dekat);
+   - isi bagian baru masuk dengan gerak 3D yang mengikuti scroll (kPintu, kAngkat, kKain, kDrum, …). */
+/* Semua efek scroll memakai timeline view() milik elemennya sendiri (tidak ada timeline bernama dari bagian
+   induknya): timeline bernama dari elemen besar ikut membuat scroll bergetar di Safari. Pembungkus yang efeknya
+   harus mengikuti seluruh bagian dibuat seukuran bagian itu (absolute inset-0). */
+.redup {
+  opacity: 0;
 }
 .progres {
   display: none;
+}
+.kPintuKiri {
+  transform-origin: 0% 50%;
+}
+.kPintuKanan {
+  transform-origin: 100% 50%;
+}
+.kAngkat,
+.kTimbul {
+  transform-origin: 50% 100%;
+}
+.kKain {
+  transform-origin: 50% 0%;
 }
 @supports (animation-timeline: view()) {
   [data-paralaks] .latarSisi {
@@ -179,34 +266,80 @@
     animation: progres linear both;
     animation-timeline: scroll(root);
   }
-  /* bagian pembuka saat keluar dari atas layar: isi naik pelan & memudar, gedung turun lebih lambat */
-  [data-paralaks] .keluarTurun {
-    animation: keluarTurun linear both;
-    animation-timeline: --sek;
-    animation-range: exit 0% exit 80%;
-  }
-  [data-paralaks] .keluarPelan {
-    animation: keluarPelan linear both;
-    animation-timeline: --sek;
+
+  /* beranda saat ditinggalkan: tiap lapisan pemandangan bergeser beda kecepatan */
+  [data-paralaks] .keluarLangit,
+  [data-paralaks] .keluarJauh,
+  [data-paralaks] .keluarDesa,
+  [data-paralaks] .keluarGedung,
+  [data-paralaks] .keluarBunga,
+  [data-paralaks] .keluarFoto {
+    animation-timing-function: linear;
+    animation-fill-mode: both;
+    animation-timeline: view();
     animation-range: exit 0% exit 100%;
   }
-  [data-paralaks] .geserLambat {
-    animation: geserLambat linear both;
-    animation-timeline: --sek;
-    animation-range: cover;
+  [data-paralaks] .keluarLangit {
+    animation-name: keluarLangit;
   }
-  [data-paralaks] .mendekat {
-    animation: mendekat linear both;
-    animation-timeline: --sek;
-    animation-range: entry 0% entry 100%;
+  [data-paralaks] .keluarJauh {
+    animation-name: keluarJauh;
   }
-  [data-paralaks] .pJauh {
-    animation: pJauh linear both;
+  [data-paralaks] .keluarDesa {
+    animation-name: keluarDesa;
+  }
+  [data-paralaks] .keluarGedung {
+    animation-name: keluarGedung;
+  }
+  [data-paralaks] .keluarBunga {
+    animation-name: keluarBunga;
+  }
+  [data-paralaks] .keluarFoto {
+    animation-name: keluarFoto;
+  }
+  [data-paralaks] .keluarTeks {
+    animation: keluarTeks linear both;
+    animation-timeline: view();
+    animation-range: exit 0% exit 60%;
+  }
+
+  /* isi bagian yang ditinggalkan mundur menjauh & meredup */
+  [data-paralaks] .mundur {
+    animation: mundur linear both;
+    animation-timeline: view();
+    animation-range: exit 0% exit 100%;
+  }
+  [data-paralaks] .redup {
+    animation: redup linear both;
+    animation-timeline: view();
+    animation-range: exit 0% exit 100%;
+  }
+
+  /* awan pembatas antarbagian */
+  [data-paralaks] .awanJauh {
+    animation: awanJauh linear both;
     animation-timeline: view();
     animation-range: cover;
   }
-  [data-paralaks] .pJudul {
-    animation: pJudul linear both;
+  [data-paralaks] .awanDekat {
+    animation: awanDekat linear both;
+    animation-timeline: view();
+    animation-range: cover;
+  }
+
+  /* lapisan jauh/dekat */
+  [data-paralaks] .kJauh {
+    animation: kJauh linear both;
+    animation-timeline: view();
+    animation-range: cover;
+  }
+  [data-paralaks] .kDekat {
+    animation: kDekat linear both;
+    animation-timeline: view();
+    animation-range: cover;
+  }
+  [data-paralaks] .pJauh {
+    animation: pJauh linear both;
     animation-timeline: view();
     animation-range: cover;
   }
@@ -215,10 +348,82 @@
     animation-timeline: view();
     animation-range: cover;
   }
+  [data-paralaks] .geserLambat {
+    animation: geserLambat linear both;
+    animation-timeline: view();
+    animation-range: cover;
+  }
+
+  /* gerak masuk 3D yang mengikuti scroll */
+  [data-paralaks] .kSilangKiri {
+    animation: kSilangKiri linear both;
+    animation-timeline: view();
+    animation-range: entry 0% cover 42%;
+  }
+  [data-paralaks] .kSilangKanan {
+    animation: kSilangKanan linear both;
+    animation-timeline: view();
+    animation-range: entry 0% cover 42%;
+  }
+  [data-paralaks] .kPintuKiri {
+    animation: kPintuKiri linear both;
+    animation-timeline: view();
+    animation-range: entry 0% cover 45%;
+  }
+  [data-paralaks] .kPintuKanan {
+    animation: kPintuKanan linear both;
+    animation-timeline: view();
+    animation-range: entry 0% cover 45%;
+  }
+  [data-paralaks] .kAmpersand {
+    animation: kAmpersand linear both;
+    animation-timeline: view();
+    animation-range: entry 0% cover 50%;
+  }
+  [data-paralaks] .kAngkat {
+    animation: kAngkat linear both;
+    animation-timeline: view();
+    animation-range: entry 0% cover 32%;
+  }
+  [data-paralaks] .kTimbul {
+    animation: kTimbul linear both;
+    animation-timeline: view();
+    animation-range: entry 0% cover 40%;
+  }
+  [data-paralaks] .kDrum {
+    animation: kDrum linear both;
+    animation-timeline: view();
+    animation-range: cover;
+  }
+  [data-paralaks] .kKain {
+    animation: kKain linear both;
+    animation-timeline: view();
+    animation-range: entry 0% cover 42%;
+  }
+  [data-paralaks] .kTerbang {
+    animation: kTerbang linear both;
+    animation-timeline: view();
+    animation-range: cover;
+  }
+  [data-paralaks] .kSibakKiri {
+    animation: kSibakKiri linear both;
+    animation-timeline: view();
+    animation-range: cover 20% cover 55%;
+  }
+  [data-paralaks] .kSibakKanan {
+    animation: kSibakKanan linear both;
+    animation-timeline: view();
+    animation-range: cover 20% cover 55%;
+  }
+  [data-paralaks] .kBangkit {
+    animation: kBangkit linear both;
+    animation-timeline: view();
+    animation-range: entry 0% entry 100%;
+  }
   [data-paralaks] .tumbuhGaris {
     animation: tumbuhGaris linear both;
-    animation-timeline: --sek;
-    animation-range: entry 60% exit 20%;
+    animation-timeline: view();
+    animation-range: cover 15% cover 85%;
   }
 }
 @keyframes latarSisi {
@@ -237,31 +442,83 @@
     transform: scaleX(1);
   }
 }
-@keyframes keluarTurun {
+@keyframes keluarLangit {
   to {
-    transform: translateY(120px) scale(0.94);
+    transform: translateY(260px);
+  }
+}
+@keyframes keluarJauh {
+  to {
+    transform: translateY(190px);
+  }
+}
+@keyframes keluarDesa {
+  to {
+    transform: translateY(120px);
+  }
+}
+@keyframes keluarGedung {
+  to {
+    transform: translateY(60px);
+  }
+}
+@keyframes keluarBunga {
+  to {
+    transform: translateY(-50px);
+  }
+}
+@keyframes keluarFoto {
+  to {
+    transform: translateY(170px) scale(0.84);
+    opacity: 0.25;
+  }
+}
+@keyframes keluarTeks {
+  to {
+    transform: translateY(-110px);
     opacity: 0;
   }
 }
-@keyframes keluarPelan {
+@keyframes mundur {
   to {
-    transform: translateY(110px);
+    transform: translateY(150px);
   }
 }
-@keyframes geserLambat {
-  from {
-    transform: translateY(-9%);
-  }
+@keyframes redup {
   to {
-    transform: translateY(9%);
+    opacity: 0.75;
   }
 }
-@keyframes mendekat {
+@keyframes awanJauh {
   from {
-    transform: scale(0.82) translateY(40px);
+    transform: translate(-20px, 28px);
   }
   to {
-    transform: none;
+    transform: translate(20px, -28px);
+  }
+}
+@keyframes awanDekat {
+  from {
+    transform: translate(40px, 64px);
+  }
+  to {
+    transform: translate(-40px, -64px);
+  }
+}
+@keyframes kJauh {
+  from {
+    transform: translateY(-70px);
+  }
+  to {
+    transform: translateY(70px);
+  }
+}
+@keyframes kDekat {
+  from {
+    transform: translateY(56px);
+  }
+  to {
+    transform: translateY(-56px);
   }
 }
 @keyframes pJauh {
@@ -272,20 +529,164 @@
     transform: translateY(45px);
   }
 }
-@keyframes pJudul {
-  from {
-    transform: translateY(24px);
-  }
-  to {
-    transform: translateY(-24px);
-  }
-}
 @keyframes pDekat {
   from {
     transform: translateY(70px);
   }
   to {
     transform: translateY(-70px);
+  }
+}
+@keyframes geserLambat {
+  from {
+    transform: translateY(-8%);
+  }
+  to {
+    transform: translateY(8%);
+  }
+}
+@keyframes kSilangKiri {
+  from {
+    transform: translateX(-130px) rotate(-130deg);
+    opacity: 0;
+  }
+  40% {
+    opacity: 1;
+  }
+  to {
+    transform: translateX(0px) rotate(0deg);
+    opacity: 1;
+  }
+}
+@keyframes kSilangKanan {
+  from {
+    transform: translateX(130px) rotate(130deg);
+    opacity: 0;
+  }
+  40% {
+    opacity: 1;
+  }
+  to {
+    transform: translateX(0px) rotate(0deg);
+    opacity: 1;
+  }
+}
+@keyframes kPintuKiri {
+  from {
+    transform: perspective(900px) rotateY(78deg) scale(0.9);
+    opacity: 0;
+  }
+  35% {
+    opacity: 1;
+  }
+  to {
+    transform: perspective(900px) rotateY(0deg) scale(1);
+    opacity: 1;
+  }
+}
+@keyframes kPintuKanan {
+  from {
+    transform: perspective(900px) rotateY(-78deg) scale(0.9);
+    opacity: 0;
+  }
+  35% {
+    opacity: 1;
+  }
+  to {
+    transform: perspective(900px) rotateY(0deg) scale(1);
+    opacity: 1;
+  }
+}
+@keyframes kAmpersand {
+  from {
+    transform: rotate(-160deg) scale(0.2);
+    opacity: 0;
+  }
+  to {
+    transform: rotate(0deg) scale(1);
+    opacity: 1;
+  }
+}
+@keyframes kAngkat {
+  from {
+    transform: perspective(1000px) translateY(80px) rotateX(46deg) scale(0.9);
+    opacity: 0;
+  }
+  45% {
+    opacity: 1;
+  }
+  to {
+    transform: perspective(1000px) translateY(0px) rotateX(0deg) scale(1);
+    opacity: 1;
+  }
+}
+@keyframes kTimbul {
+  from {
+    transform: perspective(900px) rotateX(72deg);
+    opacity: 0;
+  }
+  40% {
+    opacity: 1;
+  }
+  to {
+    transform: perspective(900px) rotateX(0deg);
+    opacity: 1;
+  }
+}
+@keyframes kDrum {
+  from {
+    transform: perspective(800px) rotateX(34deg) scale(0.86);
+    opacity: 0.5;
+  }
+  42%,
+  58% {
+    transform: perspective(800px) rotateX(0deg) scale(1);
+    opacity: 1;
+  }
+  to {
+    transform: perspective(800px) rotateX(-34deg) scale(0.86);
+    opacity: 0.5;
+  }
+}
+@keyframes kKain {
+  from {
+    transform: perspective(1000px) rotateX(-88deg);
+    opacity: 0;
+  }
+  25% {
+    opacity: 1;
+  }
+  to {
+    transform: perspective(1000px) rotateX(0deg);
+    opacity: 1;
+  }
+}
+@keyframes kTerbang {
+  from {
+    transform: translate(-140px, 50px);
+  }
+  to {
+    transform: translate(560px, -60px);
+  }
+}
+@keyframes kSibakKiri {
+  to {
+    transform: translateX(-90%) scale(1.3);
+    opacity: 0;
+  }
+}
+@keyframes kSibakKanan {
+  to {
+    transform: translateX(90%) scale(1.3);
+    opacity: 0;
+  }
+}
+@keyframes kBangkit {
+  from {
+    transform: translateY(150px) scale(0.92);
+  }
+  to {
+    transform: translateY(0px) scale(1);
   }
 }
 @keyframes tumbuhGaris {
@@ -306,7 +707,10 @@
   .kilau,
   .melati,
   .detak,
-  .goyangKado {
+  .goyangKado,
+  .nyala,
+  .ayun,
+  .petunjuk {
     animation: none;
   }
   .melati,

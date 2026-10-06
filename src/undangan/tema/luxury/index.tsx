@@ -10,11 +10,10 @@ const bodoni = Bodoni_Moda({ subsets: ["latin"], style: ["normal", "italic"], va
 const script = Monsieur_La_Doulaise({ subsets: ["latin"], weight: "400", variable: "--font-script" });
 const manrope = Manrope({ subsets: ["latin"], variable: "--font-manrope" });
 
-// tamu: nama dari link (?to=...). Kosong berarti undangan umum.
-export function TemaLuxury({ data, tamu }: { data: Undangan; tamu?: string }) {
+export function TemaLuxury({ data }: { data: Undangan }) {
   return (
     <div className={`${bodoni.variable} ${script.variable} ${manrope.variable}`}>
-      <Luxury data={data} tamu={tamu} />
+      <Luxury data={data} />
     </div>
   );
 }

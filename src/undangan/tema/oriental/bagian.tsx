@@ -10,6 +10,7 @@ import { Amplop, Countdown, Ucapan, tombolMerah } from "./interaktif";
 import { Kisah } from "./kisah";
 import s from "./oriental.module.css";
 import { Beranda } from "./pembuka";
+import { KreditWebkeun } from "../../kredit";
 
 // Isi undangan tema Oriental Peony. Bagian bergantian antara kertas krem dan panel merah pernis, disambung tepi
 // genteng dengan koin keberuntungan emas di tengah sambungannya. Bagian-bagiannya mengalir menyambung: tidak ada lagi efek bagian yang lewat mengecil & meredup di bawah bagian
@@ -360,6 +361,7 @@ function Penutup({ u }: { u: Undangan }) {
             {u.wanita.panggilan} <span className="text-[#c99a3e]">&amp;</span> {u.pria.panggilan}
           </p>
         </Muncul>
+        <KreditWebkeun className="relative mt-12 text-[#9e1c22]" />
       </div>
       <div className="pointer-events-none absolute inset-x-0 bottom-[var(--demo-h,0px)] h-56">
         <div className="absolute inset-x-0 bottom-0 h-[60%] bg-[linear-gradient(180deg,rgb(207_227_223/0),#cfe3df_40%,#b8d6d1)]" />

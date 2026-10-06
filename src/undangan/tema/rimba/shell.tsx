@@ -5,6 +5,7 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 import { useBukaUndangan, useParalaks } from "../../pakai";
 import { SlotMusik, useMusik } from "../../musik";
+import { useTamu } from "../../tamu";
 import type { Undangan } from "../../types";
 import { Awan, Bingkai, Burung, Kabut, Kunang, Kupu, Latar, Rumpun, Sinar } from "./alam";
 import { ASET, RUMPUN_ATAS, RUMPUN_BAWAH } from "./aset";
@@ -18,7 +19,8 @@ import { TombolMusik } from "./musik";
 
 const cinzel = "font-[family-name:var(--font-cinzel)]";
 
-export function Rimba({ data: u, tamu }: { data: Undangan; tamu?: string }) {
+export function Rimba({ data: u }: { data: Undangan }) {
+  const tamu = useTamu();
   const { opened, open } = useBukaUndangan({ halus: false });
   const musik = useMusik(u.musik);
   // lagu dimulai di dalam klik "Buka Undangan" (browser hanya mengizinkan audio sesudah ada interaksi)
@@ -37,7 +39,7 @@ export function Rimba({ data: u, tamu }: { data: Undangan; tamu?: string }) {
 
         <SlotMusik muncul={opened}>{u.musik && <TombolMusik main={musik.main} onUbah={musik.ubah} lagu={u.musik} />}</SlotMusik>
 
-        <main className="relative z-10 mx-auto w-full max-w-[440px] overflow-x-clip">
+        <main className="relative z-10 mx-auto w-full max-w-[440px] overflow-clip">
           <Isi u={u} opened={opened} tamu={tamu} />
         </main>
 

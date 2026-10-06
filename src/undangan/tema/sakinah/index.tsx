@@ -13,11 +13,10 @@ const marcellus = Marcellus({ subsets: ["latin"], weight: "400", variable: "--fo
 const garamond = EB_Garamond({ subsets: ["latin"], style: ["normal", "italic"], variable: "--font-garamond" });
 const amiri = Amiri_Quran({ subsets: ["arabic"], weight: "400", variable: "--font-amiri" });
 
-// tamu: nama dari link (?to=...). Kosong berarti undangan umum.
-export function TemaSakinah({ data, tamu }: { data: Undangan; tamu?: string }) {
+export function TemaSakinah({ data }: { data: Undangan }) {
   return (
     <div className={`${corinthia.variable} ${marcellus.variable} ${garamond.variable} ${amiri.variable}`}>
-      <Sakinah data={data} tamu={tamu} />
+      <Sakinah data={data} />
     </div>
   );
 }

@@ -11,6 +11,7 @@ import { Beranda } from "./gerbang";
 import { Bunga, FotoBingkai, Gambar, HALUS, Kawanan, KelopakJatuh, Lengkung, Medali, Merak, Monogram, Muncul, Pembatas, Renda, naskah, prata } from "./hias";
 import { Amplop, Countdown, Ucapan, tombolEmas, tombolMarun } from "./interaktif";
 import { Kisah } from "./kisah";
+import { KreditWebkeun } from "../../kredit";
 
 // Isi undangan tema Merah Delima. Bagian bergantian antara kertas blush dan panel marun beludru, disambung tepi
 // renda bergerigi. Saat sebuah bagian lewat, ia tertinggal & mengecil di bawah bagian berikutnya (bertumpuk),
@@ -333,6 +334,7 @@ function Penutup({ u }: { u: Undangan }) {
             {u.wanita.panggilan} <span className="text-[#c9a35c]">&amp;</span> {u.pria.panggilan}
           </p>
         </Muncul>
+        <KreditWebkeun className="relative mt-12" />
       </div>
       <div className="pointer-events-none absolute inset-x-0 bottom-[var(--demo-h,0px)] h-56">
         <Bunga a="mawarTua" className="bottom-[-10%] left-[-1%] w-[36%]" sizes="180px" asal="40% 100%" />

@@ -11,14 +11,11 @@ export const metadata: Metadata = {
 };
 
 // Demo tema Art Sunda dengan data contoh Fara & Aditya
-export default async function UndanganFaraAdityaSunda({ searchParams }: PageProps<"/template/undangan-fara-aditya-sunda">) {
-  const to = (await searchParams).to;
-  const tamu = (Array.isArray(to) ? to[0] : to)?.slice(0, 60) || undefined;
-
+export default function UndanganFaraAdityaSunda() {
   return (
     // --demo-h: tinggi bar demo, supaya navigasi & tombol undangan tidak tertutup
     <div style={{ "--demo-h": "3.75rem" } as CSSProperties}>
-      <TemaSunda data={{ ...faraAditya, musik: LAGU.hinggaTuaBersama }} tamu={tamu} />
+      <TemaSunda data={{ ...faraAditya, musik: LAGU.hinggaTuaBersama }} />
       <DemoBanner name="Undangan Art Sunda" compact />
     </div>
   );

@@ -11,14 +11,11 @@ export const metadata: Metadata = {
 };
 
 // Demo tema Putih Sakinah dengan data contoh Fara & Aditya
-export default async function UndanganFaraAdityaPutihSakinah({ searchParams }: PageProps<"/template/undangan-fara-aditya-putih-sakinah">) {
-  const to = (await searchParams).to;
-  const tamu = (Array.isArray(to) ? to[0] : to)?.slice(0, 60) || undefined;
-
+export default function UndanganFaraAdityaPutihSakinah() {
   return (
     // --demo-h: tinggi bar demo, supaya navigasi & tombol undangan tidak tertutup
     <div style={{ "--demo-h": "3.75rem" } as CSSProperties}>
-      <TemaSakinah data={{ ...faraAditya, musik: LAGU.anugerahTerindah }} tamu={tamu} />
+      <TemaSakinah data={{ ...faraAditya, musik: LAGU.anugerahTerindah }} />
       <DemoBanner name="Undangan Putih Sakinah" compact />
     </div>
   );

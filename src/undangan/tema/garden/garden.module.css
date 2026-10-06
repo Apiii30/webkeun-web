@@ -18,6 +18,24 @@
   border-radius: 50% 50% 0 0 / 2.6rem 2.6rem 0 0;
 }
 
+/* Dinding taman di sekeliling gerbang pembuka: teralis kayu bersilang dengan sulur daun di tiap simpulnya */
+.teralis {
+  background-color: #e6ece8;
+  background-image:
+    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='44' height='44'><path d='M0 0 44 44M44 0 0 44' stroke='%2334596a' stroke-opacity='.22' stroke-width='2'/><g fill='%235f8a7a' fill-opacity='.45'><ellipse cx='22' cy='16' rx='2.4' ry='5' transform='rotate(-30 22 16)'/><ellipse cx='27' cy='24' rx='2.4' ry='5' transform='rotate(60 27 24)'/><ellipse cx='17' cy='26' rx='2.2' ry='4.4' transform='rotate(-70 17 26)'/></g><circle cx='22' cy='22' r='1.6' fill='%23b9975b' fill-opacity='.6'/></svg>"),
+    radial-gradient(closest-side, rgb(255 255 255 / 0.5), transparent);
+  background-size: 44px 44px, 100% 100%;
+}
+
+/* Halaman rumput di depan gerbang pembuka: belang potongan rumput & rumpun kecil */
+.rumput {
+  background-color: #b7c9bf;
+  background-image:
+    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='36' height='28'><path d='M6 22l2-7 1 7M8 22l3-6 0 6M24 12l1-6 2 6M26 12l3-5-1 5' fill='none' stroke='%234d7066' stroke-opacity='.5' stroke-width='1' stroke-linecap='round'/></svg>"),
+    repeating-linear-gradient(100deg, rgb(255 255 255 / 0.09) 0 22px, transparent 22px 44px),
+    linear-gradient(#c3d3ca, #a9bdb2);
+}
+
 /* Bingkai pigura emas untuk galeri */
 .pigura {
   background: linear-gradient(135deg, #7d5f2e 0%, #e8d29a 22%, #a5823f 45%, #f3e4b6 62%, #8b6a33 82%, #d9bf82 100%);
@@ -97,6 +115,36 @@
 @keyframes kepak {
   to {
     transform: scaleY(0.3);
+  }
+}
+
+/* Kupu-kupu terbang melintas berkelok, sayap mengepak */
+.kupu {
+  animation: kupu var(--d, 16s) ease-in-out var(--j, 0s) infinite;
+}
+@keyframes kupu {
+  0% {
+    transform: translate(-30px, 20px);
+  }
+  25% {
+    transform: translate(110px, -24px);
+  }
+  50% {
+    transform: translate(220px, 16px);
+  }
+  75% {
+    transform: translate(330px, -30px);
+  }
+  100% {
+    transform: translate(470px, 6px);
+  }
+}
+.sayap {
+  animation: sayap 0.26s ease-in-out infinite alternate;
+}
+@keyframes sayap {
+  to {
+    transform: scaleX(0.25);
   }
 }
 
@@ -221,19 +269,9 @@
     animation: progres linear both;
     animation-timeline: scroll(root);
   }
-  /* beranda saat digulir keluar: tiap lapisan adegan pergi dengan kecepatan berbeda */
-  [data-paralaks] .keluarJauh {
-    animation: keluarJauh linear both;
-    animation-timeline: --sek;
-    animation-range: exit 0% exit 100%;
-  }
+  /* nama & foto di beranda saat digulir keluar (pemandangannya bergerak utuh) */
   [data-paralaks] .keluarTengah {
     animation: keluarTengah linear both;
-    animation-timeline: --sek;
-    animation-range: exit 0% exit 100%;
-  }
-  [data-paralaks] .keluarDekat {
-    animation: keluarDekat linear both;
     animation-timeline: --sek;
     animation-range: exit 0% exit 100%;
   }
@@ -262,15 +300,30 @@
     animation-timeline: view();
     animation-range: cover;
   }
+  [data-paralaks] .kJauh {
+    animation: kJauh linear both;
+    animation-timeline: view();
+    animation-range: cover;
+  }
+  [data-paralaks] .kGapura {
+    animation: kGapura linear both;
+    animation-timeline: view();
+    animation-range: cover;
+  }
+  [data-paralaks] .kTimbulA {
+    animation: kTimbulA linear both;
+    animation-timeline: view();
+    animation-range: cover;
+  }
+  [data-paralaks] .kTimbulB {
+    animation: kTimbulB linear both;
+    animation-timeline: view();
+    animation-range: cover;
+  }
   [data-paralaks] .mendekat {
     animation: mendekat linear both;
     animation-timeline: --sek;
     animation-range: entry 0% entry 100%;
-  }
-  [data-paralaks] .tumbuhGaris {
-    animation: tumbuhGaris linear both;
-    animation-timeline: --sek;
-    animation-range: entry 50% cover 70%;
   }
 }
 @keyframes latarSisi {
@@ -289,19 +342,9 @@
     transform: scaleX(1);
   }
 }
-@keyframes keluarJauh {
-  to {
-    transform: translateY(55%);
-  }
-}
 @keyframes keluarTengah {
   to {
     transform: translateY(30%) scale(0.96);
-  }
-}
-@keyframes keluarDekat {
-  to {
-    transform: translateY(-8%) scale(1.08);
   }
 }
 @keyframes keluarTeks {
@@ -342,20 +385,66 @@
     transform: translateY(-20px);
   }
 }
+/* kisah cinta "lorong gapura": angka tahun jauh, gapura yang dilewati, foto yang bangkit berdiri */
+@keyframes kJauh {
+  from {
+    transform: translateY(-90px);
+  }
+  to {
+    transform: translateY(90px);
+  }
+}
+@keyframes kGapura {
+  0% {
+    transform: translateY(70px) scale(0.84);
+    opacity: 0.3;
+  }
+  32%,
+  62% {
+    transform: translateY(0px) scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-30px) scale(1.45);
+    opacity: 0;
+  }
+}
+@keyframes kTimbulA {
+  0% {
+    transform: rotateX(72deg) rotateY(12deg);
+    opacity: 0.2;
+  }
+  34%,
+  66% {
+    transform: rotateX(0deg) rotateY(0deg);
+    opacity: 1;
+  }
+  100% {
+    transform: rotateX(30deg) rotateY(-6deg);
+    opacity: 0.8;
+  }
+}
+@keyframes kTimbulB {
+  0% {
+    transform: rotateX(72deg) rotateY(-12deg);
+    opacity: 0.2;
+  }
+  34%,
+  66% {
+    transform: rotateX(0deg) rotateY(0deg);
+    opacity: 1;
+  }
+  100% {
+    transform: rotateX(30deg) rotateY(6deg);
+    opacity: 0.8;
+  }
+}
 @keyframes mendekat {
   from {
     transform: scale(0.85) translateY(50px);
   }
   to {
     transform: none;
-  }
-}
-@keyframes tumbuhGaris {
-  from {
-    transform: scaleY(0);
-  }
-  to {
-    transform: scaleY(1);
   }
 }
 
@@ -366,6 +455,8 @@
   .kabut,
   .burung,
   .kepak,
+  .kupu,
+  .sayap,
   .titik,
   .kelopak,
   .kilau,
@@ -376,6 +467,7 @@
   }
   .kelopak,
   .burung,
+  .kupu,
   .titik {
     display: none;
   }

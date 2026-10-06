@@ -12,6 +12,7 @@ import { Arkade, Bintang, Bunga, DefsEmas, EMAS, FotoLengkung, HALUS, Kawanan, K
 import { Amplop, Countdown, Ucapan, tombolEmas, tombolZamrud } from "./interaktif";
 import { Kisah } from "./kisah";
 import s from "./sakinah.module.css";
+import { KreditWebkeun } from "../../kredit";
 
 // Isi undangan tema Putih Sakinah. Bagian bergantian antara marmer putih mutiara dan panel zamrud beludru, disambung
 // tepi arkade (deretan lengkung mihrab kecil). Saat sebuah bagian lewat, ia tertinggal & mengecil di bawah bagian
@@ -371,6 +372,7 @@ function Penutup({ u }: { u: Undangan }) {
             {u.wanita.panggilan} <span className="text-[#b8955a]">&amp;</span> {u.pria.panggilan}
           </p>
         </Muncul>
+        <KreditWebkeun className="relative mt-12 text-[#0f3a31]" />
       </div>
       <div className="pointer-events-none absolute inset-x-0 bottom-[var(--demo-h,0px)] h-56">
         <Bunga a="melati" className="bottom-[-4%] left-[28%] w-[21%]" sizes="100px" asal="50% 100%" style={{ rotate: "-14deg" }} />

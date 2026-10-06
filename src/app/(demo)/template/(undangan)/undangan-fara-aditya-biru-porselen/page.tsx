@@ -11,14 +11,11 @@ export const metadata: Metadata = {
 };
 
 // Demo tema Biru Porselen dengan data contoh Fara & Aditya
-export default async function UndanganFaraAdityaBiruPorselen({ searchParams }: PageProps<"/template/undangan-fara-aditya-biru-porselen">) {
-  const to = (await searchParams).to;
-  const tamu = (Array.isArray(to) ? to[0] : to)?.slice(0, 60) || undefined;
-
+export default function UndanganFaraAdityaBiruPorselen() {
   return (
     // --demo-h: tinggi bar demo, supaya navigasi & tombol undangan tidak tertutup
     <div style={{ "--demo-h": "3.75rem" } as CSSProperties}>
-      <TemaPorselen data={{ ...faraAditya, musik: LAGU.bermuara }} tamu={tamu} />
+      <TemaPorselen data={{ ...faraAditya, musik: LAGU.bermuara }} />
       <DemoBanner name="Undangan Biru Porselen" compact />
     </div>
   );

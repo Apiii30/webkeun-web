@@ -3,6 +3,7 @@
 import { motion } from "motion/react";
 import Image from "next/image";
 import { type CSSProperties, type ReactNode, useId } from "react";
+import { tepiPudar } from "../../tepi";
 import { ASET, type NamaAset } from "./aset";
 import s from "./garden.module.css";
 
@@ -47,9 +48,28 @@ export function Muncul({
   );
 }
 
+// Masuk berputar seperti panel komidi putar (carousel 3D): berayun dari samping pada sumbu tegak lalu menghadap depan.
+// arah 1 = datang dari kanan, -1 = dari kiri.
+export function Putar({ arah = 1, jeda = 0, durasi = 1.4, amount = 0.3, className, style, children }: { arah?: 1 | -1; jeda?: number; durasi?: number; amount?: number; className?: string; style?: CSSProperties; children: ReactNode }) {
+  return (
+    <motion.div
+      className={className}
+      style={style}
+      initial={{ opacity: 0, transform: `perspective(1000px) translateX(${arah * 34}%) rotateY(${arah * -62}deg) scale(0.9)` }}
+      whileInView={{ opacity: 1, transform: "perspective(1000px) translateX(0%) rotateY(0deg) scale(1)" }}
+      viewport={{ once: true, amount }}
+      transition={{ duration: durasi, ease: LEMBUT, delay: jeda, opacity: { duration: durasi * 0.5, delay: jeda } }}
+    >
+      {children}
+    </motion.div>
+  );
+}
+
 export function Gambar({ a, className = "", sizes = "200px", flip = false, preload }: { a: NamaAset; className?: string; sizes?: string; flip?: boolean; preload?: boolean }) {
-  const g = ASET[a];
-  return <Image src={g.src} alt="" width={g.w} height={g.h} sizes={sizes} preload={preload} className={`h-auto w-full ${flip ? "-scale-x-100" : ""} ${className}`} />;
+  const g: (typeof ASET)[NamaAset] & { tepi?: string; pudar?: number } = ASET[a];
+  return (
+    <Image src={g.src} alt="" width={g.w} height={g.h} sizes={sizes} preload={preload} style={tepiPudar(g)} className={`h-auto w-full ${flip ? "-scale-x-100" : ""} ${className}`} />
+  );
 }
 
 // Untaian wisteria yang menggantung & bergoyang dari titik gantungnya
@@ -148,7 +168,8 @@ export function Kameo({ src, alt, sizes, className = "", posisi = "50% 25%", pre
   const kanan = daunLaurel(150, 190, 142, 182, 80, 12, 7);
   return (
     <div className={`relative aspect-[300/380] ${className}`}>
-      <div className="absolute inset-[7%_8%] overflow-hidden rounded-[50%]">
+      {/* overflow-clip (bukan hidden): geserLambat di dalamnya mengikuti scroll halaman, tidak terkunci di kotak ini */}
+      <div className="absolute inset-[7%_8%] overflow-clip rounded-[50%]">
         <div className={`${s.geserLambat} absolute inset-x-0 inset-y-[-10%]`}>
           <Image src={src} alt={alt} fill sizes={sizes} preload={preload} className="object-cover" style={{ objectPosition: posisi }} />
         </div>

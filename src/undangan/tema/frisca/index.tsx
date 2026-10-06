@@ -25,20 +25,19 @@ const arab = Amiri({ subsets: ["arabic"], weight: ["400", "700"], variable: "--f
 
 const names = `${wedding.bride.nickname} & ${wedding.groom.nickname}`;
 
-// tamu: nama dari link (?to=...). Kosong berarti "Tamu Undangan".
-export function TemaFrisca({ tamu }: { tamu?: string }) {
-  const guestName = tamu ?? null;
+// Nama tamu dari link (?to=...) dibaca di browser (useTamu); kosong berarti "Tamu Undangan".
+export function TemaFrisca() {
   return (
     <div className={`${serif.variable} ${sans.variable} ${script.variable} ${arab.variable}`}>
-      <InvitationShell guestName={guestName} names={names} cover={photo(wedding.photos.cover)} music={wedding.music} hasGifts={wedding.gifts.length > 0 || !!wedding.giftAddress}>
+      <InvitationShell names={names} cover={photo(wedding.photos.cover)} music={wedding.music} hasGifts={wedding.gifts.length > 0 || !!wedding.giftAddress}>
         <Hero />
         <Opening />
         <Couple />
         <LoveStorySection />
         <Events />
         <GallerySection />
-        <RsvpSection tamu={guestName} />
-        <GiftSection guestName={guestName} />
+        <RsvpSection />
+        <GiftSection />
         <Closing />
       </InvitationShell>
     </div>

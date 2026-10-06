@@ -1,8 +1,8 @@
 "use client";
 
-import { AnimatePresence, motion } from "motion/react";
+import { AnimatePresence, motion, useInView, useReducedMotion } from "motion/react";
 import Image from "next/image";
-import { type FormEvent, type ReactNode, useEffect, useState, useSyncExternalStore } from "react";
+import { type FormEvent, type ReactNode, useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { useBukuTamu } from "@/undangan/buku-tamu";
 import { createPortal } from "react-dom";
 import { useHitungMundur } from "../../pakai";
@@ -10,7 +10,7 @@ import type { Foto, Undangan } from "../../types";
 import { LEMBUT, cormorant, italiana } from "./hias";
 import s from "./garden.module.css";
 
-// Bagian tema Garden Premium yang butuh state: hitung mundur, galeri dinding, amplop digital, RSVP.
+// Bagian tema Garden Premium yang butuh state: hitung mundur, galeri carousel, amplop digital, RSVP.
 
 const spring = { type: "spring", stiffness: 260, damping: 28 } as const;
 export const tombolEmas = `${s.kilau} inline-flex items-center justify-center gap-2 rounded-full border border-[#f2e3b5]/60 bg-[linear-gradient(110deg,#a8843f_20%,#f1e0ae_40%,#a8843f_60%)] px-6 py-2.5 text-[12px] font-medium tracking-[0.22em] text-[#24434e] uppercase shadow-[0_10px_24px_-12px_rgb(20_40_48/0.8)]`;
@@ -24,7 +24,7 @@ function Lapis({ children }: { children: ReactNode }) {
   return el ? createPortal(children, el) : null;
 }
 
-/* ───────── Hitung mundur: kotak berpuncak lengkung bergaris emas ───────── */
+/* ───────── Hitung mundur: kotak berpuncak lengkung bergaris emas, masuk berputar satu per satu ───────── */
 
 export function Countdown({ target }: { target: string }) {
   const units = useHitungMundur(target);
@@ -33,7 +33,10 @@ export function Countdown({ target }: { target: string }) {
       {units.map(([n, label]) => (
         <motion.div
           key={label}
-          variants={{ hidden: { opacity: 0, transform: "translateY(26px) scale(0.9)" }, show: { opacity: 1, transform: "translateY(0px) scale(1)", transition: { duration: 1, ease: LEMBUT } } }}
+          variants={{
+            hidden: { opacity: 0, transform: "perspective(700px) rotateY(-75deg) translateY(14px)" },
+            show: { opacity: 1, transform: "perspective(700px) rotateY(0deg) translateY(0px)", transition: { duration: 1.1, ease: LEMBUT } },
+          }}
           className="flex flex-col-reverse rounded-t-full rounded-b-lg border border-[#dcc58f]/60 bg-[#f3efe3]/8 px-1 pt-5 pb-2.5 text-center"
         >
           <dt className="mt-1 text-[9px] tracking-[0.25em] text-[#f3efe3]/75 uppercase">{label}</dt>
@@ -50,13 +53,57 @@ export function Countdown({ target }: { target: string }) {
   );
 }
 
-/* ───────── Galeri dinding: pigura emas yang tergantung di paku & berayun saat muncul ───────── */
+/* ───────── Galeri: tumpukan kartu foto berpigura emas ───────── */
 
-// Susunan pigura ala dinding museum: satu besar, lalu berpasangan dengan tinggi berbeda
-const SUSUN = ["col-span-2 aspect-[4/3]", "aspect-[3/4]", "aspect-[3/4] mt-8", "col-span-2 aspect-[16/10]", "aspect-[4/5]", "aspect-[4/5] -mt-6", "col-span-2 aspect-[4/3]"];
+// Foto-foto bertumpuk seperti kartu di atas meja taman: pigura emas berpasparto krem, kartu di belakangnya sedikit
+// bergeser & miring. Geser (atau tombol panah) melempar kartu teratas ke samping sambil berputar, lalu kartu itu
+// masuk lagi ke dasar tumpukan; mundur menarik kartu terakhir kembali ke atas. Berganti sendiri tiap ±4 detik saat
+// terlihat (berhenti sebentar setelah disentuh). Ketuk kartu teratas: diperbesar.
+const TUMPUK = [
+  { x: 0, y: 0, r: 0, s: 1 },
+  { x: 7, y: 3, r: 5, s: 0.95 },
+  { x: -7, y: 6, r: -6, s: 0.91 },
+  { x: 3, y: 9, r: 3, s: 0.87 },
+];
+const posisi = (p: number) => {
+  const q = TUMPUK[Math.min(p, TUMPUK.length - 1)];
+  return `translate(${q.x}%, ${q.y}%) rotate(${q.r}deg) scale(${q.s})`;
+};
+const LEMPAR = "translate(-128%, -6%) rotate(-26deg) scale(1)";
 
 export function Galeri({ photos }: { photos: Foto[] }) {
+  const n = photos.length;
+  const [aktif, setAktif] = useState(0);
+  const [arah, setArah] = useState<1 | -1>(1);
   const [open, setOpen] = useState<number | null>(null);
+  // setelah disentuh, putar otomatis berhenti dulu & baru jalan lagi 8 detik sesudah sentuhan terakhir
+  const [sentuh, setSentuh] = useState(0);
+  const [diam, setDiam] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+  const terlihat = useInView(ref, { amount: 0.4 });
+  const kurangi = useReducedMotion();
+
+  const ke = (i: number, dir: 1 | -1 = i >= aktif ? 1 : -1) => {
+    setArah(dir);
+    setAktif(((i % n) + n) % n);
+    setDiam(true);
+    setSentuh((x) => x + 1);
+  };
+
+  useEffect(() => {
+    if (!diam) return;
+    const id = setTimeout(() => setDiam(false), 8000);
+    return () => clearTimeout(id);
+  }, [diam, sentuh]);
+
+  useEffect(() => {
+    if (!terlihat || open !== null || kurangi || diam) return;
+    const id = setTimeout(() => {
+      setArah(1);
+      setAktif((a) => (a + 1) % n);
+    }, 4200);
+    return () => clearTimeout(id);
+  }, [terlihat, open, kurangi, diam, aktif, n]);
 
   useEffect(() => {
     if (open === null) return;
@@ -71,39 +118,72 @@ export function Galeri({ photos }: { photos: Foto[] }) {
 
   return (
     <>
-      <div className="grid grid-cols-2 gap-x-4 gap-y-7">
-        {photos.map((p, i) => (
-          <motion.div
-            key={p.src}
-            className={`relative ${SUSUN[i % SUSUN.length]}`}
-            style={{ transformOrigin: "50% -14px" }}
-            initial={{ opacity: 0, transform: `rotate(${i % 2 ? 9 : -9}deg)` }}
-            whileInView={{ opacity: 1, transform: "rotate(0deg)" }}
-            viewport={{ once: true, amount: 0.3 }}
-            transition={{ opacity: { duration: 0.5 }, transform: { type: "spring", stiffness: 70, damping: 7, mass: 1.1 } }}
-          >
-            {/* tali & paku */}
-            <svg viewBox="0 0 60 18" className="pointer-events-none absolute -top-[17px] left-1/2 w-14 -translate-x-1/2" aria-hidden="true">
-              <path d="M6 18 30 3 54 18" fill="none" stroke="#b9975b" strokeWidth="1.2" />
-              <circle cx="30" cy="3" r="2.6" fill="#dcc58f" stroke="#7a5c2a" strokeWidth=".8" />
-            </svg>
-            <motion.button
-              type="button"
-              onClick={() => setOpen(i)}
-              whileTap={{ scale: 0.97 }}
-              className={`${s.pigura} absolute inset-0 block rounded-[3px] p-[7px]`}
-              aria-label={`Lihat foto: ${p.alt}`}
-            >
-              <span className="relative block h-full w-full overflow-hidden bg-[#eef1ec] p-[3px] shadow-[inset_0_0_0_1px_rgb(122_92_42/0.5)]">
-                <span className="relative block h-full w-full overflow-hidden">
-                  <span className={`${s.geserLambat} absolute inset-x-0 inset-y-[-10%]`}>
-                    <Image src={p.src} alt={p.alt} fill sizes={SUSUN[i % SUSUN.length].includes("col-span-2") ? "400px" : "200px"} className="object-cover" />
+      <div ref={ref}>
+        <motion.div
+          className="relative mx-auto aspect-[4/5] w-[70%] max-w-[17.5rem]"
+          style={{ touchAction: "pan-y" }}
+          onPanEnd={(_, info) => {
+            if (Math.abs(info.offset.x) > 40) ke(aktif + (info.offset.x < 0 ? 1 : -1), info.offset.x < 0 ? 1 : -1);
+          }}
+          role="region"
+          aria-roledescription="carousel"
+          aria-label="Galeri foto"
+        >
+          {photos.map((p, i) => {
+            const k = (i - aktif + n) % n; // urutan dalam tumpukan, 0 = teratas
+            const dilempar = arah === 1 && k === n - 1; // baru saja dilempar dari atas
+            const kembali = arah === -1 && k === 0; // ditarik kembali dari dasar ke atas
+            const target = dilempar
+              ? { transform: [null, LEMPAR, posisi(3)], opacity: [1, 1, 0], zIndex: [n + 1, n + 1, 0] }
+              : kembali
+                ? { transform: [LEMPAR, posisi(0)], opacity: [1, 1], zIndex: n + 1 }
+                : { transform: posisi(k), opacity: k < TUMPUK.length ? 1 : 0, zIndex: n - k };
+            return (
+              <motion.button
+                key={p.src}
+                type="button"
+                onClick={() => setOpen(i)}
+                disabled={k !== 0}
+                className={`${s.pigura} absolute inset-0 block rounded-[4px] p-[7px] disabled:cursor-default`}
+                initial={false}
+                animate={target as never}
+                transition={dilempar ? { duration: 0.95, times: [0, 0.55, 1], ease: [0.4, 0, 0.2, 1] } : { duration: 0.75, ease: LEMBUT }}
+                aria-label={`Perbesar foto: ${p.alt}`}
+                aria-hidden={k !== 0}
+                tabIndex={k === 0 ? 0 : -1}
+              >
+                <span className="block h-full w-full bg-[#f6f2e6] p-[9px] shadow-[inset_0_0_0_1px_rgb(122_92_42/0.45),inset_0_2px_8px_rgb(122_92_42/0.25)]">
+                  <span className="relative block h-full w-full overflow-clip shadow-[0_0_0_1px_rgb(122_92_42/0.5)]">
+                    <Image src={p.src} alt={p.alt} fill sizes="(min-width: 440px) 260px, 62vw" className="object-cover" />
                   </span>
                 </span>
-              </span>
-            </motion.button>
-          </motion.div>
-        ))}
+              </motion.button>
+            );
+          })}
+        </motion.div>
+
+        {/* panah, nomor foto, thumbnail */}
+        <div className="mt-10 flex items-center justify-center gap-5">
+          <TombolGeser arah="kiri" onClick={() => ke(aktif - 1, -1)} />
+          <p className={`${italiana} min-w-[4.5rem] text-center text-[1.15rem] tracking-[0.18em] text-[#f3efe3]`}>
+            {String(aktif + 1).padStart(2, "0")} <span className="text-[#dcc58f]">/</span> {String(n).padStart(2, "0")}
+          </p>
+          <TombolGeser arah="kanan" onClick={() => ke(aktif + 1, 1)} />
+        </div>
+        <div className="mt-5 flex justify-center gap-2">
+          {photos.map((p, i) => (
+            <button
+              key={p.src}
+              type="button"
+              onClick={() => ke(i)}
+              aria-label={`Foto ${i + 1}`}
+              className={`relative size-10 overflow-clip rounded-md ring-1 transition-[transform,opacity] duration-500 ${i === aktif ? "-translate-y-1 opacity-100 ring-2 ring-[#dcc58f]" : "opacity-50 ring-[#f3efe3]/30"}`}
+            >
+              <Image src={p.src} alt="" fill sizes="40px" className="object-cover" />
+            </button>
+          ))}
+        </div>
+        <p className="mt-4 text-center text-[11px] tracking-[0.12em] text-[#f3efe3]/60">Geser kartu untuk foto berikutnya · ketuk untuk memperbesar</p>
       </div>
 
       <Lapis>
@@ -154,6 +234,22 @@ export function Galeri({ photos }: { photos: Foto[] }) {
         </AnimatePresence>
       </Lapis>
     </>
+  );
+}
+
+function TombolGeser({ arah, onClick }: { arah: "kiri" | "kanan"; onClick: () => void }) {
+  return (
+    <motion.button
+      type="button"
+      whileTap={{ scale: 0.9 }}
+      onClick={onClick}
+      aria-label={arah === "kiri" ? "Foto sebelumnya" : "Foto berikutnya"}
+      className="grid size-10 place-items-center rounded-full border border-[#dcc58f]/70 bg-[#24434e]/60 text-[#f2e3b5]"
+    >
+      <svg viewBox="0 0 24 24" className="size-4" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+        <path d={arah === "kiri" ? "m15 6-6 6 6 6" : "m9 6 6 6-6 6"} />
+      </svg>
+    </motion.button>
   );
 }
 

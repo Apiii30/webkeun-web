@@ -1,5 +1,9 @@
 import type { NextConfig } from "next";
 
+if (process.env.NODE_ENV === "production" && !process.env.SITUS_URL) {
+  console.warn("⚠ SITUS_URL belum diisi (.env.production): gambar pratinjau link di WhatsApp akan mengarah ke localhost.");
+}
+
 const nextConfig: NextConfig = {
   // Supaya website bisa dicoba dari HP lewat WiFi yang sama (mis. http://192.168.1.7:3000) saat `npm run dev`.
   // Tanpa ini Next memblokir file JavaScript untuk alamat selain localhost, jadi tombol & animasi tidak jalan.
@@ -12,6 +16,8 @@ const nextConfig: NextConfig = {
   // Halaman "Contoh" sudah diganti jadi "Template"
   async redirects() {
     return [
+      // Undangan punya halaman sendiri; link lama /template?kategori=undangan diarahkan ke sana
+      { source: "/template", has: [{ type: "query", key: "kategori", value: "undangan" }], destination: "/template/undangan", permanent: false },
       { source: "/contoh", destination: "/template", permanent: true },
       { source: "/contoh/:slug", destination: "/template/:slug", permanent: true },
       // Tema Floral sudah dihapus, alamat lamanya diarahkan ke tema Rimba

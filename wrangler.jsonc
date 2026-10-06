@@ -1,0 +1,17 @@
+// Pengaturan hosting di Cloudflare Workers (paket gratis). Situs dibangun dengan adapter OpenNext:
+//   npm run preview  → coba versi Cloudflare di komputer sendiri
+//   npm run deploy   → bangun & unggah ke Cloudflare
+// Hentikan `npm run dev` dulu sebelum menjalankan keduanya (sama-sama memakai folder .next).
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "webkeun",
+  "main": ".open-next/worker.js",
+  "compatibility_date": "2026-10-01",
+  "compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
+  // File statis (JS, CSS, foto, musik, dan halaman yang sudah jadi saat build) disajikan langsung oleh Cloudflare:
+  // gratis & tidak dihitung kuota permintaan
+  "assets": { "directory": ".open-next/assets", "binding": "ASSETS" },
+  // Pengecil foto next/image lewat Cloudflare Images (paket gratis: 5.000 ukuran foto berbeda per bulan)
+  "images": { "binding": "IMAGES" },
+  "observability": { "enabled": true },
+}

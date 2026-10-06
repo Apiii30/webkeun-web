@@ -10,11 +10,10 @@ const script = Pinyon_Script({ subsets: ["latin"], weight: "400", variable: "--f
 const cormorant = Cormorant_Garamond({ subsets: ["latin"], style: ["italic"], weight: ["400", "500"], variable: "--font-cormorant" });
 const montserrat = Montserrat({ subsets: ["latin"], variable: "--font-montserrat" });
 
-// tamu: nama dari link (?to=...). Kosong berarti undangan umum.
-export function TemaRimba({ data, tamu }: { data: Undangan; tamu?: string }) {
+export function TemaRimba({ data }: { data: Undangan }) {
   return (
     <div className={`${cinzel.variable} ${script.variable} ${cormorant.variable} ${montserrat.variable}`}>
-      <Rimba data={data} tamu={tamu} />
+      <Rimba data={data} />
     </div>
   );
 }

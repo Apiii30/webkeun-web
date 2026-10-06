@@ -2,7 +2,8 @@
 
 import { motion } from "motion/react";
 import Image from "next/image";
-import { type CSSProperties, useId } from "react";
+import { type CSSProperties, type ReactNode, useId } from "react";
+import { useParalaks } from "../../pakai";
 import { ASET, type Kembang } from "./aset";
 import s from "./sunda.module.css";
 
@@ -59,10 +60,17 @@ const MEGA = "M14 78 C2 74 4 56 18 56 C14 46 24 38 34 44 C36 30 54 26 62 36 C70 
 const PITA_NILA = ["#c3d0de", "#a9bbcf", "#90a6bf", "#7790ad", "#5f7a9a", "#476283", "#2f4560"];
 // versi untuk latar nila: pita keemasan pudar
 const PITA_EMAS = ["#46607d", "#56708a", "#6b8197", "#8a93a0", "#a99f8c", "#c4ab7a", "#d9bd85"];
+// versi krem bertepi bata, untuk awan krem yang naik di atas latar nila
+const PITA_KREM = ["#f4eee2", "#efe5d1", "#e7d7b9", "#dcc49c", "#c9a57a", "#a8714f", "#8a4b35"];
+const WARNA_MEGA = {
+  nila: { pita: PITA_NILA, isi: "#e3e9f0", garis: "#24364d" },
+  emas: { pita: PITA_EMAS, isi: "#3a5370", garis: "#e3c98f" },
+  krem: { pita: PITA_KREM, isi: "#f4eee2", garis: "#7a3f2c" },
+};
 
-export function MegaMendung({ className = "", style, warna = "nila" }: { className?: string; style?: CSSProperties; warna?: "nila" | "emas" }) {
+export function MegaMendung({ className = "", style, warna = "nila" }: { className?: string; style?: CSSProperties; warna?: keyof typeof WARNA_MEGA }) {
   const id = useId();
-  const pita = warna === "nila" ? PITA_NILA : PITA_EMAS;
+  const { pita, isi, garis } = WARNA_MEGA[warna];
   return (
     <svg viewBox="0 0 200 104" className={className} style={style} aria-hidden="true">
       <defs>
@@ -70,13 +78,13 @@ export function MegaMendung({ className = "", style, warna = "nila" }: { classNa
           <path d={MEGA} />
         </clipPath>
       </defs>
-      <path d={MEGA} fill={warna === "nila" ? "#e3e9f0" : "#3a5370"} />
+      <path d={MEGA} fill={isi} />
       <g clipPath={`url(#${id}c)`} fill="none" strokeLinejoin="round">
         {pita.map((w, i) => (
           <path key={w} d={MEGA} stroke={w} strokeWidth={(pita.length - i) * 5} />
         ))}
       </g>
-      <path d={MEGA} fill="none" stroke={warna === "nila" ? "#24364d" : "#e3c98f"} strokeWidth="1.4" />
+      <path d={MEGA} fill="none" stroke={garis} strokeWidth="1.4" />
     </svg>
   );
 }
@@ -133,11 +141,24 @@ export function Kuntul({ className = "", delay = 0, size = 26 }: { className?: s
   );
 }
 
+// Kuntul tanpa gerak melintas sendiri, untuk digerakkan dari luar (kawanan di pembuka, kisah yang mengikuti scroll)
+export function Burung({ w, jeda = 0 }: { w: number; jeda?: number }) {
+  return (
+    <svg viewBox="0 0 40 20" style={{ width: w }} aria-hidden="true">
+      <g className={s.kepak} style={{ animationDelay: `${jeda}s` }}>
+        <path d="M2 9Q10 0 20 10Q30 0 38 9Q30 5 20 13Q10 5 2 9Z" fill="#fbf8f1" stroke="#5b6574" strokeWidth=".8" />
+      </g>
+      <path d="M17 11Q21 9 26 12L31 11L26 13.5Q21 14 17 11Z" fill="#fbf8f1" stroke="#5b6574" strokeWidth=".7" />
+      <path d="M31 11l4 .6" stroke="#d1a43c" strokeWidth="1.2" strokeLinecap="round" />
+    </svg>
+  );
+}
+
 /* ───────── Kuncup melati yang jatuh pelan ───────── */
 
 export function MelatiJatuh({ n = 7, className = "" }: { n?: number; className?: string }) {
   return (
-    <div className={`pointer-events-none absolute inset-0 overflow-hidden ${className}`} aria-hidden="true">
+    <div className={`pointer-events-none absolute inset-0 overflow-clip ${className}`} aria-hidden="true">
       {Array.from({ length: n }, (_, i) => (
         <span
           key={i}
@@ -230,7 +251,7 @@ export function Bingkai({
   return (
     <div className={`relative ${className}`}>
       <div className={`${r} relative h-full w-full border-[1.5px] ${terang ? "border-[#d9bd85]" : "border-[#8a4b35]"} p-[5px] shadow-[0_18px_40px_-20px_rgb(47_69_96/0.7)]`}>
-        <div className={`${r} relative h-full w-full overflow-hidden bg-[#e9e0cf]`}>
+        <div className={`${r} relative h-full w-full overflow-clip bg-[#e9e0cf]`}>
           <div className={`absolute inset-x-0 inset-y-[-8%] ${fotoClass}`}>
             <Image src={src} alt={alt} fill preload={preload} sizes={sizes} className="object-cover" style={{ objectPosition: posisi }} />
           </div>
@@ -254,13 +275,58 @@ export function Pemisah({ className = "", terang = false }: { className?: string
   );
 }
 
-/* ───────── Gelombang: tepi lengkung antarbagian (seperti kain yang tersingkap) ───────── */
+/* ───────── Awan pembatas antarbagian ───────── */
 
-export function Gelombang({ warna, atas = true, className = "" }: { warna: string; atas?: boolean; className?: string }) {
+// Tepi atas sebuah bagian: gugusan awan bergelombang berwarna latar bagian itu, menjorok ke bagian sebelumnya, dengan
+// dua lapis mega mendung yang bergerak beda kecepatan saat di-scroll (awanJauh di belakang, awanDekat di depan).
+const BUKIT_AWAN =
+  "M0 96V62C14 50 34 46 50 56C58 34 92 26 112 44C124 24 160 18 180 38C194 22 226 22 238 42C252 28 286 30 296 50C310 36 342 38 352 56C366 44 394 44 406 58C418 50 434 52 440 58V96Z";
+
+export function AwanBatas({ warna }: { warna: "nila" | "krem" }) {
+  const isi = warna === "nila" ? "#2f4560" : "#f4eee2";
   return (
-    <svg viewBox="0 0 440 40" preserveAspectRatio="none" className={`pointer-events-none block h-8 w-full ${atas ? "" : "rotate-180"} ${className}`} aria-hidden="true">
-      <path d="M0 40 V22 C60 2 120 2 170 16 C200 24 210 6 220 6 C230 6 240 24 270 16 C320 2 380 2 440 22 V40 Z" fill={warna} />
-    </svg>
+    <div className="pointer-events-none absolute inset-x-0 bottom-[calc(100%-1px)] h-24" aria-hidden="true">
+      <div className={`${s.awanJauh} absolute inset-0`}>
+        <MegaMendung warna={warna} className="absolute bottom-[34%] -left-[4%] w-[30%] opacity-80" />
+        <MegaMendung warna={warna} className="absolute bottom-[44%] left-[38%] w-[22%] opacity-70" />
+        <MegaMendung warna={warna} className="absolute -right-[3%] bottom-[30%] w-[28%] opacity-80" />
+      </div>
+      <svg viewBox="0 0 440 96" preserveAspectRatio="none" className="absolute inset-0 h-full w-full">
+        <path d={BUKIT_AWAN} fill={isi} />
+      </svg>
+      <div className={`${s.awanDekat} absolute inset-0`}>
+        <MegaMendung warna={warna} className="absolute -bottom-[38%] left-[12%] w-[36%]" />
+        <MegaMendung warna={warna} className="absolute -right-[8%] -bottom-[24%] w-[34%]" />
+      </div>
+    </div>
+  );
+}
+
+/* ───────── Gerak masuk yang mengikuti scroll ───────── */
+
+// k: kelas CSS scroll-driven animation (sunda.module.css) yang menggerakkan elemen dari `dari` ke posisi akhirnya.
+// Browser yang tidak menjalankannya dengan mulus (lihat useParalaks) mendapat gerak yang sama berbasis waktu saat
+// elemen terlihat. Kelas k tetap dipasang di keduanya untuk transform-origin-nya.
+export function Gulir({ k, dari, ke, className = "", style, jeda = 0, children }: { k: string; dari: string; ke: string; className?: string; style?: CSSProperties; jeda?: number; children: ReactNode }) {
+  const paralaks = useParalaks();
+  if (paralaks) {
+    return (
+      <div className={`${k} ${className}`} style={style}>
+        {children}
+      </div>
+    );
+  }
+  return (
+    <motion.div
+      className={`${k} ${className}`}
+      style={style}
+      initial={{ opacity: 0, transform: dari }}
+      whileInView={{ opacity: 1, transform: ke }}
+      viewport={{ once: true, amount: 0.2 }}
+      transition={{ duration: 1.3, ease: [0.22, 1, 0.36, 1], delay: jeda }}
+    >
+      {children}
+    </motion.div>
   );
 }
 

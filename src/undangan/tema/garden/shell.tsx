@@ -5,8 +5,10 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 import { useBukaUndangan, useParalaks } from "../../pakai";
 import { SlotMusik, useMusik } from "../../musik";
+import { useTamu } from "../../tamu";
 import type { Undangan } from "../../types";
 import { ASET } from "./aset";
+import { T_SELESAI } from "./adegan";
 import { Isi } from "./bagian";
 import { Burung, Gambar, Kameo, LEMBUT, Wisteria, italiana } from "./hias";
 import { tombolTeal } from "./interaktif";
@@ -14,10 +16,11 @@ import s from "./garden.module.css";
 import { TombolMusik } from "./musik";
 
 // Kerangka tema Garden Premium: sampul yang pergi berlapis saat dibuka (isi naik, wisteria terangkat, merak & peony
-// turun, latar memudar) sementara adegan taman di baliknya mulai "kamera mundur". Kolom undangan selebar HP,
+// turun, latar memudar), memperlihatkan gerbang taman tempat animasi pembuka dimulai (adegan.tsx). Kolom undangan selebar HP,
 // latar redup di layar lebar, dan navigasi bawah. Khusus tampilan HP seperti tema lain.
 
-export function Garden({ data: u, tamu }: { data: Undangan; tamu?: string }) {
+export function Garden({ data: u }: { data: Undangan }) {
+  const tamu = useTamu();
   const { opened, open } = useBukaUndangan({ halus: false });
   const musik = useMusik(u.musik);
   // lagu dimulai di dalam klik "Buka Undangan" (browser hanya mengizinkan audio sesudah ada interaksi)
@@ -39,7 +42,7 @@ export function Garden({ data: u, tamu }: { data: Undangan; tamu?: string }) {
 
         <SlotMusik muncul={opened}>{u.musik && <TombolMusik main={musik.main} onUbah={musik.ubah} lagu={u.musik} />}</SlotMusik>
 
-        <main className={`${s.kertas} relative z-10 mx-auto w-full max-w-[440px] overflow-x-clip`}>
+        <main className={`${s.kertas} relative z-10 mx-auto w-full max-w-[440px] overflow-clip`}>
           <Isi u={u} opened={opened} tamu={tamu} />
         </main>
 
@@ -71,7 +74,8 @@ function LatarSisi() {
 const PERGI = [0.7, 0, 0.3, 1] as const;
 
 // Saat dibuka, sampul pergi berlapis: isi naik & memudar, wisteria terangkat ke atas, merak & peony turun,
-// lalu kertasnya memudar dan memperlihatkan adegan taman yang sedang "kamera mundur" di baliknya.
+// lalu kertasnya memudar dan memperlihatkan gerbang taman di baliknya. Isi sampul di atas lapisan merak & peony (z-10)
+// dan keduanya dibatasi tinggi layar, supaya tombol tidak tertutup di layar pendek.
 function Sampul({ u, tamu, onOpen }: { u: Undangan; tamu?: string; onOpen: () => void }) {
   return (
     <motion.div className="fixed inset-0 z-50 flex justify-center" initial="ada" animate="ada" exit="pergi" variants={{ ada: { opacity: 1 }, pergi: { opacity: 1, transition: { duration: 1.6 } } }}>
@@ -95,14 +99,14 @@ function Sampul({ u, tamu, onOpen }: { u: Undangan; tamu?: string; onOpen: () =>
 
         {/* isi sampul */}
         <motion.div
-          className="absolute inset-x-0 top-[9%] flex flex-col items-center px-8 text-center"
+          className="absolute inset-x-0 top-[max(7%,2.5rem)] z-10 flex flex-col items-center px-8 text-center"
           variants={{ ada: { opacity: 1, transform: "translateY(0px)" }, pergi: { opacity: 0, transform: "translateY(-90px)", transition: { duration: 0.9, ease: PERGI } } }}
         >
           <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 1.2, delay: 0.2 }} className="text-[10px] tracking-[0.45em] text-[#34596a] uppercase">
             The Wedding of
           </motion.p>
           <motion.div
-            className="mt-4 w-[48%] min-w-[150px]"
+            className="mt-4 w-[min(46%,24svh)] min-w-[120px]"
             initial={{ opacity: 0, transform: "scale(0.85)" }}
             animate={{ opacity: 1, transform: "scale(1)" }}
             transition={{ duration: 1.6, ease: LEMBUT, delay: 0.3 }}
@@ -133,13 +137,13 @@ function Sampul({ u, tamu, onOpen }: { u: Undangan; tamu?: string; onOpen: () =>
 
         {/* merak & peony di bawah */}
         <motion.div
-          className="pointer-events-none absolute inset-x-0 bottom-[var(--demo-h,0px)] h-[34%]"
+          className="pointer-events-none absolute inset-x-0 bottom-[var(--demo-h,0px)] h-[min(30%,28svh)]"
           variants={{ ada: { opacity: 1, transform: "translateY(0%)" }, pergi: { opacity: 0, transform: "translateY(45%)", transition: { duration: 1.2, ease: PERGI } } }}
         >
-          <motion.div className="absolute right-0 bottom-0 w-[40%]" initial={{ opacity: 0, transform: "translateX(30%)" }} animate={{ opacity: 1, transform: "translateX(0%)" }} transition={{ duration: 1.6, ease: LEMBUT, delay: 0.5 }}>
+          <motion.div className="absolute right-0 bottom-0 w-[32%]" initial={{ opacity: 0, transform: "translateX(30%)" }} animate={{ opacity: 1, transform: "translateX(0%)" }} transition={{ duration: 1.6, ease: LEMBUT, delay: 0.5 }}>
             <Gambar a="merakSakura" sizes="180px" />
           </motion.div>
-          <motion.div className="absolute bottom-[-10%] left-0 w-[50%]" initial={{ opacity: 0, transform: "translateY(30%)" }} animate={{ opacity: 1, transform: "translateY(0%)" }} transition={{ duration: 1.6, ease: LEMBUT, delay: 0.7 }}>
+          <motion.div className="absolute bottom-[-6%] left-0 w-[40%]" initial={{ opacity: 0, transform: "translateY(30%)" }} animate={{ opacity: 1, transform: "translateY(0%)" }} transition={{ duration: 1.6, ease: LEMBUT, delay: 0.7 }}>
             <div className={s.ayunA} style={{ transformOrigin: "30% 100%" }}>
               <Gambar a="peony" sizes="220px" />
             </div>
@@ -206,7 +210,7 @@ function Navigasi() {
     <motion.nav
       initial={{ opacity: 0, transform: "translateY(90px)" }}
       animate={{ opacity: 1, transform: "translateY(0px)" }}
-      transition={{ delay: 3.6, duration: 0.9, ease: LEMBUT }}
+      transition={{ delay: T_SELESAI, duration: 0.9, ease: LEMBUT }}
       className="pointer-events-none fixed inset-x-0 bottom-[calc(0.75rem+var(--demo-h,0px))] z-40 flex justify-center px-3"
     >
       <ul className="pointer-events-auto flex items-center gap-1 rounded-full bg-[#24434e]/92 p-1.5 shadow-[0_12px_28px_-12px_rgb(20_40_48/0.9)] ring-1 ring-[#dcc58f]/40 backdrop-blur-sm">

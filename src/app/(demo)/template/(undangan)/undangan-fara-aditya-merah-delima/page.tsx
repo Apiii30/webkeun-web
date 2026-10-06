@@ -11,14 +11,11 @@ export const metadata: Metadata = {
 };
 
 // Demo tema Merah Delima dengan data contoh Fara & Aditya
-export default async function UndanganFaraAdityaMerahDelima({ searchParams }: PageProps<"/template/undangan-fara-aditya-merah-delima">) {
-  const to = (await searchParams).to;
-  const tamu = (Array.isArray(to) ? to[0] : to)?.slice(0, 60) || undefined;
-
+export default function UndanganFaraAdityaMerahDelima() {
   return (
     // --demo-h: tinggi bar demo, supaya navigasi & tombol undangan tidak tertutup
     <div style={{ "--demo-h": "3.75rem" } as CSSProperties}>
-      <TemaDelima data={{ ...faraAditya, musik: LAGU.perfect }} tamu={tamu} />
+      <TemaDelima data={{ ...faraAditya, musik: LAGU.perfect }} />
       <DemoBanner name="Undangan Merah Delima" compact />
     </div>
   );

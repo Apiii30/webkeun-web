@@ -1,6 +1,7 @@
 "use client";
 
 import { createContext, type ReactNode, useContext, useEffect, useRef, useState, useSyncExternalStore } from "react";
+import { useTamu } from "../tamu";
 import { ambilUcapan, kirimUcapan, type UcapanTamu } from "./aksi";
 
 // Buku tamu (RSVP & ucapan) yang dipakai bersama semua tema.
@@ -12,7 +13,8 @@ export type Surat = { id: number; name: string; hadir: boolean; message: string;
 
 const Konteks = createContext<{ slug: string; tamu?: string } | null>(null);
 
-export function BukuTamu({ slug, tamu, children }: { slug: string; tamu?: string; children: ReactNode }) {
+export function BukuTamu({ slug, children }: { slug: string; children: ReactNode }) {
+  const tamu = useTamu();
   return <Konteks.Provider value={{ slug, tamu }}>{children}</Konteks.Provider>;
 }
 

@@ -5,6 +5,7 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 import { useBukaUndangan, useParalaks } from "../../pakai";
 import { SlotMusik, useMusik } from "../../musik";
+import { useTamu } from "../../tamu";
 import type { Undangan } from "../../types";
 import { ASET } from "./aset";
 import { Isi } from "./bagian";
@@ -18,7 +19,8 @@ import { TombolMusik } from "./musik";
 // lalu animasi jendela gunungan di beranda (gerbang.tsx). Kolom undangan selebar HP, latar redup di layar lebar,
 // dan navigasi bawah. Khusus tampilan HP seperti tema lain.
 
-export function Porselen({ data: u, tamu }: { data: Undangan; tamu?: string }) {
+export function Porselen({ data: u }: { data: Undangan }) {
+  const tamu = useTamu();
   const { opened, open } = useBukaUndangan({ halus: false });
   const musik = useMusik(u.musik);
   // lagu dimulai di dalam klik "Buka Undangan" (browser hanya mengizinkan audio sesudah ada interaksi)
@@ -40,7 +42,7 @@ export function Porselen({ data: u, tamu }: { data: Undangan; tamu?: string }) {
 
         <SlotMusik muncul={opened}>{u.musik && <TombolMusik main={musik.main} onUbah={musik.ubah} lagu={u.musik} />}</SlotMusik>
 
-        <main className={`${s.kertas} relative z-10 mx-auto w-full max-w-[440px] overflow-x-clip`}>
+        <main className={`${s.kertas} relative z-10 mx-auto w-full max-w-[440px] overflow-clip`}>
           <Isi u={u} opened={opened} tamu={tamu} />
         </main>
 

@@ -9,14 +9,11 @@ export const metadata: Metadata = {
 };
 
 // Demo undangan Frisca & Arif (undangan pertama yang dibuat), memakai datanya sendiri
-export default async function UndanganFriscaArif({ searchParams }: PageProps<"/template/undangan-frisca-arif">) {
-  const to = (await searchParams).to;
-  const tamu = (Array.isArray(to) ? to[0] : to)?.trim().slice(0, 80) || undefined;
-
+export default function UndanganFriscaArif() {
   return (
     // --demo-h: tinggi bar demo, supaya navigasi & tombol undangan tidak tertutup
     <div style={{ "--demo-h": "3.75rem" } as CSSProperties}>
-      <TemaFrisca tamu={tamu} />
+      <TemaFrisca />
       <DemoBanner name="Undangan Frisca & Arif" compact />
     </div>
   );

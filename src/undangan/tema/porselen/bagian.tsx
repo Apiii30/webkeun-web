@@ -10,6 +10,7 @@ import { Bunga, Burung, Danau, FotoGunungan, HALUS, Kapsul, KelopakJatuh, Medali
 import { Amplop, Countdown, Ucapan, tombolBiru, tombolEmas } from "./interaktif";
 import { Kisah } from "./kisah";
 import s from "./porselen.module.css";
+import { KreditWebkeun } from "../../kredit";
 
 // Isi undangan tema Biru Porselen. Bagian bergantian antara kertas gading dan panel kobalt, disambung tepi
 // bergelombang seperti permukaan danau. Hampir semua elemen punya lapisan parallax (porselen.module.css).
@@ -344,6 +345,7 @@ function Penutup({ u }: { u: Undangan }) {
             {u.wanita.panggilan} <span className="text-[#b8934f]">&amp;</span> {u.pria.panggilan}
           </p>
         </Muncul>
+        <KreditWebkeun className="relative mt-12" />
       </div>
       {/* danau sampai ke dasar halaman (juga di balik bilah demo), supaya ujung scroll tidak tampak terpotong */}
       <Danau className="inset-x-0 bottom-0 h-[calc(9rem+var(--demo-h,0px))]" />

@@ -11,14 +11,11 @@ export const metadata: Metadata = {
 };
 
 // Demo tema Oriental Peony dengan data contoh Fara & Aditya
-export default async function UndanganFaraAdityaOrientalPeony({ searchParams }: PageProps<"/template/undangan-fara-aditya-oriental-peony">) {
-  const to = (await searchParams).to;
-  const tamu = (Array.isArray(to) ? to[0] : to)?.slice(0, 60) || undefined;
-
+export default function UndanganFaraAdityaOrientalPeony() {
   return (
     // --demo-h: tinggi bar demo, supaya navigasi & tombol undangan tidak tertutup
     <div style={{ "--demo-h": "3.75rem" } as CSSProperties}>
-      <TemaOriental data={{ ...faraAditya, musik: LAGU.penjagaHati }} tamu={tamu} />
+      <TemaOriental data={{ ...faraAditya, musik: LAGU.penjagaHati }} />
       <DemoBanner name="Undangan Oriental Peony" compact />
     </div>
   );

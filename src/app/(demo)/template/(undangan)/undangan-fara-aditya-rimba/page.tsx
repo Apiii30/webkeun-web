@@ -11,14 +11,11 @@ export const metadata: Metadata = {
 };
 
 // Demo tema Rimba dengan data contoh Fara & Aditya
-export default async function UndanganFaraAdityaRimba({ searchParams }: PageProps<"/template/undangan-fara-aditya-rimba">) {
-  const to = (await searchParams).to;
-  const tamu = (Array.isArray(to) ? to[0] : to)?.slice(0, 60) || undefined;
-
+export default function UndanganFaraAdityaRimba() {
   return (
     // --demo-h: tinggi bar demo, supaya navigasi & tombol undangan tidak tertutup
     <div style={{ "--demo-h": "3.75rem" } as CSSProperties}>
-      <TemaRimba data={{ ...faraAditya, musik: LAGU.nantiKitaSepertiIni }} tamu={tamu} />
+      <TemaRimba data={{ ...faraAditya, musik: LAGU.nantiKitaSepertiIni }} />
       <DemoBanner name="Undangan Rimba" compact />
     </div>
   );

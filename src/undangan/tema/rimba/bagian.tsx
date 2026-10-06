@@ -9,6 +9,7 @@ import { Bingkai, Depan, Kunang, Kupu, Rumpun } from "./alam";
 import { ASET, RUMPUN_BAWAH } from "./aset";
 import { Amplop, Countdown, Galeri, Ucapan, tombolEmas } from "./interaktif";
 import s from "./rimba.module.css";
+import { KreditWebkeun } from "../../kredit";
 
 // Isi undangan tema Rimba.
 // - Efek yang mengikuti scroll (parallax, garis tumbuh) memakai CSS scroll-driven animation
@@ -543,6 +544,7 @@ function Penutup({ u }: { u: Undangan }) {
           <Huruf teks={`${u.wanita.panggilan} & ${u.pria.panggilan}`} cepat={0.07} />
         </p>
       </motion.div>
+      <KreditWebkeun gelap className="relative mt-10 text-[#f3ede0]" />
       <div className="absolute inset-x-0 bottom-[var(--demo-h,0px)] aspect-[1/0.62]">
         <Rumpun items={RUMPUN_BAWAH} className="inset-0" />
       </div>

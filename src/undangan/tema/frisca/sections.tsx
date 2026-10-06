@@ -15,6 +15,8 @@ import { LoveStory } from "./love-story";
 import { RsvpForm } from "./rsvp-form";
 import { WishList } from "./wish-list";
 import s from "./frisca.module.css";
+import { KreditWebkeun } from "../../kredit";
+import { useTamu } from "../../tamu";
 
 const names = `${wedding.bride.nickname} & ${wedding.groom.nickname}`;
 
@@ -286,7 +288,8 @@ export function GallerySection() {
   );
 }
 
-export function RsvpSection({ tamu }: { tamu: string | null }) {
+export function RsvpSection() {
+  const tamu = useTamu(80) ?? null;
   // Ucapan baru langsung ditambahkan di paling atas (versi demo, tanpa database)
   const [wishes, setWishes] = useState<Wish[]>(CONTOH_UCAPAN);
   const nextId = useRef(100);
@@ -315,7 +318,8 @@ export function RsvpSection({ tamu }: { tamu: string | null }) {
   );
 }
 
-export function GiftSection({ guestName }: { guestName: string | null }) {
+export function GiftSection() {
+  const guestName = useTamu(80) ?? null;
   if (wedding.gifts.length === 0 && !wedding.giftAddress) return null;
   return (
     <section id="hadiah" className={`${panel} ${shell} px-6 pt-20 pb-28 text-center`}>
@@ -360,7 +364,7 @@ export function Closing() {
         </Parallax>
         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent via-45% to-[#6b4d55]" />
       </Scrub>
-      <div className="relative -mt-44 px-7 pb-32 text-center text-[#fbf6f2]">
+      <div className="relative -mt-44 px-7 pb-[calc(6.5rem+var(--demo-h,0px))] text-center text-[#fbf6f2]">
         <Reveal variant="rise">
           <p className="text-sm leading-relaxed">
             Merupakan suatu kehormatan dan kebahagiaan bagi kami apabila Bapak/Ibu/Saudara/i berkenan hadir dan
@@ -379,6 +383,7 @@ export function Closing() {
             <SplitText text={names} stagger={0.15} delay={0.2} />
           </p>
         </Scrub>
+        <KreditWebkeun gelap className="mt-10" />
       </div>
     </section>
   );

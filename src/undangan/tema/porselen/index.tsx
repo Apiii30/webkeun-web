@@ -12,11 +12,10 @@ const naskah = Imperial_Script({ subsets: ["latin"], weight: "400", variable: "-
 const gilda = Gilda_Display({ subsets: ["latin"], weight: "400", variable: "--font-gilda" });
 const lora = Lora({ subsets: ["latin"], style: ["normal", "italic"], variable: "--font-lora" });
 
-// tamu: nama dari link (?to=...). Kosong berarti undangan umum.
-export function TemaPorselen({ data, tamu }: { data: Undangan; tamu?: string }) {
+export function TemaPorselen({ data }: { data: Undangan }) {
   return (
     <div className={`${naskah.variable} ${gilda.variable} ${lora.variable}`}>
-      <Porselen data={data} tamu={tamu} />
+      <Porselen data={data} />
     </div>
   );
 }
