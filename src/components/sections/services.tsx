@@ -35,9 +35,9 @@ export function Services() {
   return (
     <section id="layanan" className="relative">
       <div className="mx-auto grid max-w-6xl gap-6 px-4 pt-20 sm:px-6 md:grid-cols-2 md:items-end md:pt-28">
-        <SectionHeading top="Kamu butuh" bottom="website yang mana?" />
+        <SectionHeading top="Undangan atau website," bottom="kamu butuh yang mana?" />
         <p className="max-w-md text-lg text-ink/70 md:justify-self-end">
-          Bingung pilih? Chat aja dan ceritain usaha kamu. Nanti kami bantu tentuin yang paling pas.
+          Bingung pilih? Chat aja dan ceritain acara atau usaha kamu. Nanti kami bantu tentuin yang paling pas.
         </p>
       </div>
 

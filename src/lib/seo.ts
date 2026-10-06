@@ -6,7 +6,8 @@ import { site } from "./site";
 // localhost. Dipakai untuk link gambar pratinjau, alamat kanonik, sitemap, robots, dan data terstruktur.
 export const SITUS = new URL(process.env.SITUS_URL ?? "http://localhost:3000");
 
-export const judulUtama = `${site.name}: Jasa Pembuatan Website UMKM, Company Profile & Portofolio`;
+// Judul di hasil Google. Produk utama (undangan digital) disebut duluan, lalu jasa website.
+export const judulUtama = `${site.name}: Undangan Digital Pernikahan & Jasa Pembuatan Website`;
 
 // Bagian pratinjau link (WhatsApp, Facebook, dll.) yang sama untuk semua halaman. Gambarnya dibuat dari
 // src/app/_og/opengraph-image.tsx. Undangan sungguhan memakai foto mempelai sebagai gantinya.
@@ -14,7 +15,7 @@ export const ogDasar = {
   siteName: site.name,
   locale: "id_ID",
   type: "website",
-  images: [{ url: "/brand/pratinjau.png", width: 1200, height: 630, alt: "Webkeun: jasa pembuatan website dan undangan digital" }],
+  images: [{ url: "/brand/pratinjau.png?v=2", width: 1200, height: 630, alt: "Webkeun: undangan digital pernikahan dan jasa pembuatan website" }],
 };
 
 // Metadata halaman yang ingin ditemukan di Google: judul, deskripsi, alamat kanonik (satu alamat resmi walaupun

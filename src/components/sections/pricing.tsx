@@ -11,7 +11,8 @@ export function Pricing() {
           <Badge>Harga</Badge>
           <SectionHeading center className="mt-5" top="Harganya jelas," bottom="nggak pakai drama" />
           <p className="mt-4 max-w-xl text-lg text-ink/70">
-            Sekali bayar, domain &amp; hosting tahun pertama sudah termasuk. Tahun berikutnya cukup bayar perpanjangan.
+            Paket website: sekali bayar, domain &amp; hosting tahun pertama sudah termasuk. Tahun berikutnya cukup bayar
+            perpanjangan. Untuk undangan digital, tanya harganya langsung lewat WhatsApp.
           </p>
         </div>
 

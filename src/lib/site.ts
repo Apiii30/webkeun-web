@@ -4,18 +4,19 @@
 export const site = {
   name: "Webkeun",
   tagline: "Yuk webkeun",
+  // produk utama Webkeun: undangan digital pernikahan, lalu jasa pembuatan website
   description:
-    "Jasa pembuatan website UMKM, company profile, dan portofolio. Rapi, cepat, enak dilihat di HP, dan harganya masuk akal.",
+    "Undangan digital pernikahan (nama tamu, RSVP, musik) dan jasa pembuatan website UMKM, company profile, serta portofolio. Rapi di HP, harga masuk akal.",
   whatsapp: "6283125043525", // format internasional, tanpa + dan tanpa 0 di depan
   whatsappDisplay: "0831-2504-3525",
   email: "yukwebkeun@gmail.com",
 };
 
-export function mailLink(subject = "Tanya soal pembuatan website") {
+export function mailLink(subject = "Tanya soal undangan digital & website") {
   return `mailto:${site.email}?subject=${encodeURIComponent(subject)}`;
 }
 
-export function waLink(message = "Halo Webkeun, aku mau tanya-tanya soal pembuatan website.") {
+export function waLink(message = "Halo Webkeun, aku mau tanya-tanya soal undangan digital atau website.") {
   return `https://wa.me/${site.whatsapp}?text=${encodeURIComponent(message)}`;
 }
 
@@ -29,7 +30,8 @@ export const resourcesLinks = [
 ] as const;
 
 export const footerLinks = [
-  { href: "/template", label: "Template" },
+  { href: "/template/undangan", label: "Undangan Digital" },
+  { href: "/template", label: "Template Website" },
   { href: "/#harga", label: "Harga" },
   { href: "/#faq", label: "FAQ" },
   { href: "/tentang", label: "Tentang Kami" },
@@ -47,8 +49,8 @@ export const aboutLinks = [
 
 // Ringkasan singkat di bawah hero
 export const facts = [
-  { icon: "wallet", title: "Mulai 499rb", desc: "Sekali bayar, domain & hosting tahun pertama sudah termasuk." },
-  { icon: "clock", title: "Jadi ±3–7 hari", desc: "Dihitung sejak materi lengkap sampai website online." },
+  { icon: "heart", title: "Nama tamu di tiap link", desc: "Undangan digital tinggal disebar lewat WhatsApp, tiap tamu disapa namanya." },
+  { icon: "wallet", title: "Website mulai 499rb", desc: "Sekali bayar, domain & hosting tahun pertama sudah termasuk." },
   { icon: "chat", title: "Konsultasi gratis", desc: "Ngobrol dulu lewat WhatsApp, tanpa kewajiban apa-apa." },
 ] as const;
 
@@ -98,6 +100,15 @@ export const features = [
 
 export const services = [
   {
+    icon: "heart",
+    slug: "undangan",
+    title: "Undangan Digital",
+    short: "Undangan pernikahan online",
+    desc: "Undangan pernikahan yang tinggal disebar lewat WhatsApp. Ada nama tamu, RSVP, galeri foto, dan peta lokasi acara.",
+    fit: "Akad, resepsi, lamaran, tasyakuran",
+    price: "harga menyusul", // TODO: isi setelah harga paket undangan disepakati tim
+  },
+  {
     icon: "store",
     slug: "website-umkm",
     title: "Website UMKM",
@@ -123,15 +134,6 @@ export const services = [
     desc: "Tunjukin karya dan pengalaman kamu dengan cara yang lebih keren daripada PDF.",
     fit: "Desainer, fotografer, freelancer, pencari kerja",
     price: "mulai 499rb",
-  },
-  {
-    icon: "heart",
-    slug: "undangan",
-    title: "Undangan Digital",
-    short: "Undangan pernikahan online",
-    desc: "Undangan pernikahan yang tinggal disebar lewat WhatsApp. Ada nama tamu, RSVP, galeri foto, dan peta lokasi acara.",
-    fit: "Akad, resepsi, lamaran, tasyakuran",
-    price: "harga menyusul", // TODO: isi setelah harga paket undangan disepakati tim
   },
   {
     icon: "sliders",
@@ -277,7 +279,7 @@ export const packages = [
 export const steps = [
   {
     title: "Ngobrol dulu",
-    desc: "Ceritain usaha kamu lewat WhatsApp. Gratis, nggak ada kewajiban apa-apa.",
+    desc: "Ceritain acara atau usaha kamu lewat WhatsApp. Gratis, nggak ada kewajiban apa-apa.",
   },
   {
     title: "Kami rancang",
@@ -289,11 +291,15 @@ export const steps = [
   },
   {
     title: "Online!",
-    desc: "Website tayang pakai domain kamu sendiri. Tinggal share link-nya ke pelanggan.",
+    desc: "Undangan atau website kamu tayang. Tinggal sebar link-nya ke tamu atau pelanggan.",
   },
 ];
 
 export const faqs = [
+  {
+    q: "Webkeun juga bikin undangan digital?",
+    a: "Bisa banget, malah itu layanan andalan kami. Undangan pernikahan yang tinggal disebar lewat WhatsApp: nama tiap tamu tertulis di link-nya, ada RSVP & ucapan, galeri foto, peta lokasi, musik, dan amplop digital. Semua temanya bisa dicoba di halaman Undangan Digital.",
+  },
   {
     q: "Aku nggak ngerti teknis sama sekali. Bisa?",
     a: "Bisa banget. Kamu cukup kirim info usaha, foto, dan logo (kalau ada). Urusan teknis, domain, dan hosting biar kami yang beresin.",
@@ -357,10 +363,10 @@ export const testimonials: Testimoni[] = [
 // Kategori template. Kategori website difilter di /template?kategori=<slug>; undangan punya halaman sendiri
 // (/template/undangan) karena pengunjung, isi, dan cara pesannya beda.
 export const templateCategories = [
+  { slug: "undangan", label: "Undangan Digital", desc: "Pernikahan online", icon: "heart" },
   { slug: "umkm", label: "Website UMKM", desc: "Kafe, toko, usaha jasa", icon: "store" },
   { slug: "company-profile", label: "Company Profile", desc: "CV, PT, kontraktor", icon: "building" },
   { slug: "portofolio", label: "Portofolio", desc: "Desainer, fotografer", icon: "user" },
-  { slug: "undangan", label: "Undangan Digital", desc: "Pernikahan online", icon: "heart" },
 ] as const;
 
 export const kategoriWebsite = templateCategories.filter((c) => c.slug !== "undangan");
@@ -543,28 +549,31 @@ const kawalu = "kawalucoffee.id";
 const bahtera = "bahteralogistik.co.id";
 const laras = "laraskinanti.com";
 const faraAditya = "faraaditya.my.id";
+// Undangan digital (produk utama) & website tampil selang-seling, undangan lebih dulu
 export const heroShots = {
   desktop: [
+    { src: "/preview/undangan/laptop-undangan-garden.webp", url: faraAditya },
     { src: "/preview/umkm/laptop-kawalu-coffee.webp", url: kawalu },
+    { src: "/preview/undangan/laptop-undangan-frisca.webp", url: "friscaarif.my.id" },
     { src: "/preview/company-profile/web-bahtera-2.webp", url: bahtera },
+    { src: "/preview/undangan/laptop-undangan-porselen.webp", url: faraAditya },
     { src: "/preview/portofolio/laptop-laras-kinanti.webp", url: laras },
+    { src: "/preview/undangan/laptop-undangan-sunda.webp", url: faraAditya },
     { src: "/preview/umkm/web-kawalu-2.webp", url: kawalu },
     { src: "/preview/company-profile/laptop-bahtera-logistik.webp", url: bahtera },
-    { src: "/preview/portofolio/web-laras-2.webp", url: laras },
-    { src: "/preview/company-profile/web-bahtera-3.webp", url: bahtera },
   ],
   phone: [
-    { src: "/preview/company-profile/hp-bahtera-1.webp", url: bahtera },
-    { src: "/preview/umkm/hp-kawalu-1.webp", url: kawalu },
-    { src: "/preview/portofolio/hp-laras-1.webp", url: laras },
-    { src: "/preview/company-profile/hp-bahtera-2.webp", url: bahtera },
-    { src: "/preview/umkm/hp-kawalu-2.webp", url: kawalu },
-    { src: "/preview/portofolio/hp-laras-2.webp", url: laras },
-    { src: "/preview/undangan/hp-undangan-rimba-1.webp", url: faraAditya },
     { src: "/preview/undangan/hp-undangan-sunda-1.webp", url: faraAditya },
-    { src: "/preview/undangan/hp-undangan-luxury-1.webp", url: faraAditya },
+    { src: "/preview/umkm/hp-kawalu-1.webp", url: kawalu },
     { src: "/preview/undangan/hp-undangan-frisca-1.webp", url: "friscaarif.my.id" },
+    { src: "/preview/company-profile/hp-bahtera-1.webp", url: bahtera },
+    { src: "/preview/undangan/hp-undangan-luxury-1.webp", url: faraAditya },
+    { src: "/preview/portofolio/hp-laras-1.webp", url: laras },
     { src: "/preview/undangan/hp-undangan-garden-1.webp", url: faraAditya },
+    { src: "/preview/umkm/hp-kawalu-2.webp", url: kawalu },
     { src: "/preview/undangan/hp-undangan-porselen-1.webp", url: faraAditya },
+    { src: "/preview/company-profile/hp-bahtera-2.webp", url: bahtera },
+    { src: "/preview/undangan/hp-undangan-rimba-1.webp", url: faraAditya },
+    { src: "/preview/portofolio/hp-laras-2.webp", url: laras },
   ],
 };

@@ -1,6 +1,6 @@
 import Image from "next/image";
 import type { CSSProperties } from "react";
-import { facts, heroShots, waLink } from "@/lib/site";
+import { facts, heroShots } from "@/lib/site";
 import { PillLink, StrokeUnderline } from "../brand";
 import { HeroCameo } from "../hero-cameo";
 import { HeroMascot } from "../hero-mascot";
@@ -31,7 +31,7 @@ function DesktopCard({ shot, eager, hidden }: { shot: Shot; eager: boolean; hidd
       </div>
       <Image
         src={shot.src}
-        alt={hidden ? "" : `Tampilan desktop website contoh ${shot.url}`}
+        alt={hidden ? "" : `Contoh tampilan desktop ${shot.url}`}
         width={1280}
         height={800}
         sizes="(min-width: 768px) 340px, 58vw"
@@ -47,7 +47,7 @@ function PhoneCard({ shot, eager, hidden }: { shot: Shot; eager: boolean; hidden
     <div className="relative rounded-[1.4rem] bg-white p-1.5 shadow-[0_18px_40px_-18px_rgb(21_19_43/0.35)]">
       <Image
         src={shot.src}
-        alt={hidden ? "" : `Tampilan HP website contoh ${shot.url}`}
+        alt={hidden ? "" : `Contoh tampilan HP ${shot.url}`}
         width={480}
         height={960}
         sizes="(min-width: 768px) 190px, 34vw"
@@ -121,13 +121,14 @@ export function Hero() {
           </p>
 
           <h1 className="text-[2.5rem] leading-[1.08] font-bold tracking-[-0.03em] sm:text-5xl lg:text-[3.6rem]">
+            {/* produk utama (undangan digital) disebut duluan, lalu website */}
             <span className="block">
-              <Rise words="Jasa Pembuatan Website" />
+              <Rise words="Undangan Digital & Website" />
             </span>
             <span className="block text-brand">
-              <Rise words="biar usaha kamu" start={280} />
+              <Rise words="tinggal kamu" start={350} />
               <span className="inline-block animate-rise" style={{ animationDelay: "490ms" }}>
-                <StrokeUnderline>dicari</StrokeUnderline>
+                <StrokeUnderline>sebar</StrokeUnderline>
               </span>
             </span>
           </h1>
@@ -136,26 +137,22 @@ export function Hero() {
             className="mt-6 max-w-lg animate-rise text-lg leading-relaxed text-ink/70"
             style={{ animationDelay: "650ms" }}
           >
-            Website UMKM, company profile, dan portofolio yang rapi, cepat, dan enak dilihat di HP. Kamu fokus jualan,
-            urusan web biar <strong className="font-semibold text-ink">Webkeun</strong> yang beresin.
+            Undangan pernikahan digital dengan nama tiap tamu, RSVP, dan musik, juga website UMKM, company profile, dan
+            portofolio yang rapi di HP. Kamu fokus ke acara dan usaha, urusan teknis biar{" "}
+            <strong className="font-semibold text-ink">Webkeun</strong> yang beresin.
           </p>
 
           <div className="mt-8 flex animate-rise flex-wrap items-center gap-3" style={{ animationDelay: "780ms" }}>
-            <PillLink
-              href={waLink("Halo Webkeun! Aku mau bikin website, bisa ngobrol dulu?")}
-              external
-              size="lg"
-              className="hero-cta"
-            >
-              Yuk webkeun
+            <PillLink href="/template/undangan" size="lg" icon="heart" className="hero-cta">
+              Tema undangan
             </PillLink>
             <PillLink href="/template" tone="white" size="lg" icon="browser">
-              Lihat template
+              Template website
             </PillLink>
           </div>
         </div>
 
-        {/* Kolom tampilan desktop & HP yang terus bergulir, dari demo website buatan Webkeun */}
+        {/* Kolom tampilan desktop & HP yang terus bergulir, dari demo undangan & website buatan Webkeun */}
         <div className="relative -mx-4 h-104 mask-[linear-gradient(to_bottom,transparent,black_12%,black_88%,transparent)] sm:mx-0 sm:h-128 md:h-auto md:mask-none">
           <div className="stage-shots absolute inset-0 grid grid-cols-[1.7fr_1fr] gap-3 px-4 sm:gap-4 sm:px-0 xl:grid-cols-[1fr_1.9fr_1fr]">
             <ShotColumn

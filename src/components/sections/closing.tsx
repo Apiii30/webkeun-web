@@ -15,10 +15,10 @@ export function ClosingCta() {
             <span className="block text-mint">Yuk webkeun.</span>
           </h2>
           <p className="mt-5 max-w-lg text-lg text-white/80">
-            Konsultasi gratis. Ceritain usaha kamu, nanti kami kasih saran paket yang paling pas, tanpa paksaan.
+            Konsultasi gratis. Ceritain acara atau usaha kamu, nanti kami kasih saran yang paling pas, tanpa paksaan.
           </p>
           <PillLink
-            href={waLink("Halo Webkeun! Aku udah kebayang websitenya, yuk ngobrol.")}
+            href={waLink("Halo Webkeun! Aku udah kebayang undangan/website-nya, yuk ngobrol.")}
             external
             tone="white"
             size="lg"

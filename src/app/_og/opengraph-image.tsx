@@ -8,7 +8,7 @@ import { ImageResponse } from "next/og";
 // Membuat ulang setelah desain diubah: salin berkas ini ke src/app/opengraph-image.tsx di salinan project, jalankan
 // `next build` di sana, lalu ambil .next/server/app/opengraph-image.body sebagai pratinjau.png yang baru.
 
-export const alt = "Webkeun: jasa pembuatan website dan undangan digital";
+export const alt = "Webkeun: undangan digital pernikahan dan jasa pembuatan website";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -35,12 +35,12 @@ export default async function Image() {
           </div>
 
           <div style={{ display: "flex", flexDirection: "column" }}>
-            <div style={{ fontSize: 66, fontWeight: 800, letterSpacing: -2, lineHeight: 1.08 }}>Jasa Pembuatan Website</div>
-            <div style={{ display: "flex", alignItems: "flex-end", fontSize: 66, fontWeight: 800, letterSpacing: -2, lineHeight: 1.08, color: "#5B3DF5" }}>
-              & Undangan Digital
+            <div style={{ fontSize: 70, fontWeight: 800, letterSpacing: -2, lineHeight: 1.08 }}>Undangan Digital</div>
+            <div style={{ display: "flex", alignItems: "flex-end", fontSize: 62, fontWeight: 800, letterSpacing: -2, lineHeight: 1.1, color: "#5B3DF5" }}>
+              & Pembuatan Website
               <div style={{ width: 20, height: 20, borderRadius: 10, background: "#2FD3B0", marginLeft: 10, marginBottom: 16 }} />
             </div>
-            <div style={{ marginTop: 26, fontSize: 25, fontWeight: 600, color: "rgba(21,19,43,0.68)" }}>UMKM · Company Profile · Portofolio · Pernikahan</div>
+            <div style={{ marginTop: 26, fontSize: 25, fontWeight: 600, color: "rgba(21,19,43,0.68)" }}>Pernikahan · UMKM · Company Profile · Portofolio</div>
           </div>
 
           <div style={{ display: "flex", alignItems: "center", gap: 18 }}>

@@ -16,11 +16,12 @@ export function Why() {
       <div>
         <SectionHeading top="Kenapa" bottom="harus Webkeun?" />
         <p className="mt-6 max-w-2xl text-lg leading-relaxed text-ink/70">
-          Website itu etalase usaha kamu di internet. Webkeun bikinin website yang{" "}
+          Undangan dan website sama-sama kesan pertama: yang dilihat tamu sebelum datang ke acaramu, dan pelanggan
+          sebelum mampir ke usahamu. Webkeun bikinin undangan digital dan website yang{" "}
           <strong className="font-semibold text-ink">rapi di HP</strong>,{" "}
           <strong className="font-semibold text-ink">cepat dibuka</strong>, dan{" "}
-          <strong className="font-semibold text-ink">gampang dicari di Google</strong>, tanpa kamu harus pusing urusan
-          teknis. Kamu cukup cerita soal usaha kamu, sisanya kami yang kerjakan.
+          <strong className="font-semibold text-ink">gampang dibagikan</strong>, tanpa kamu harus pusing urusan teknis.
+          Kamu cukup cerita, sisanya kami yang kerjakan.
         </p>
         <ul className="mt-8 flex flex-wrap gap-3">
           {promises.map((p) => (

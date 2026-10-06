@@ -8,16 +8,16 @@ import { Icon } from "./icons";
 import { Mascot } from "./mascot";
 
 const topics = [
+  { label: "Undangan digital", msg: "Halo Webkeun! Aku mau pesan undangan digital." },
   { label: "Website UMKM", msg: "Halo Webkeun! Aku mau bikin website buat usahaku." },
   { label: "Company profile", msg: "Halo Webkeun! Aku mau bikin company profile perusahaan." },
   { label: "Portofolio", msg: "Halo Webkeun! Aku mau bikin website portofolio." },
-  { label: "Undangan digital", msg: "Halo Webkeun! Aku mau pesan undangan digital." },
   { label: "Tanya harga", msg: "Halo Webkeun! Aku mau tanya-tanya soal harga paketnya." },
 ];
 
 // Sapaan menyesuaikan halaman. Halaman tanpa sapaan (mis. /kontak) tidak disapa.
 const greetings: Record<string, string> = {
-  "/": "Halo! 👋 Mau dibikinin website apa?",
+  "/": "Halo! 👋 Mau bikin undangan digital atau website?",
   "/template": "Naksir template yang mana? Tanya aja 😄",
   "/template/undangan": "Lagi cari tema undangan? Tanya aja 😄",
   "/tentang": "Ada yang mau ditanyain soal Webkeun?",

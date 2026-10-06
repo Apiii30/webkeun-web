@@ -14,8 +14,8 @@ import { site } from "@/lib/site";
 
 export const metadata: Metadata = halaman({ deskripsi: site.description, path: "/" });
 
-// Data terstruktur untuk Google: siapa Webkeun (nama, logo, kontak) dan nama situsnya, supaya hasil pencarian
-// menampilkan "Webkeun" sebagai nama situs, bukan alamat domainnya.
+// Data terstruktur untuk Google: siapa Webkeun (nama, logo, kontak, layanan) dan nama situsnya, supaya hasil pencarian
+// menampilkan "Webkeun" sebagai nama situs, bukan alamat domainnya. Layanan utama: undangan digital pernikahan.
 const asal = SITUS.origin;
 const dataTerstruktur = {
   "@context": "https://schema.org",
@@ -30,6 +30,33 @@ const dataTerstruktur = {
       slogan: site.tagline,
       email: site.email,
       areaServed: { "@type": "Country", name: "Indonesia" },
+      knowsAbout: ["Undangan digital pernikahan", "Undangan pernikahan online", "Pembuatan website UMKM", "Company profile", "Website portofolio"],
+      hasOfferCatalog: {
+        "@type": "OfferCatalog",
+        name: "Layanan Webkeun",
+        itemListElement: [
+          {
+            "@type": "Offer",
+            itemOffered: {
+              "@type": "Service",
+              name: "Undangan Digital Pernikahan",
+              serviceType: "Undangan digital",
+              url: `${asal}/template/undangan`,
+              description: "Undangan pernikahan online yang disebar lewat WhatsApp: nama tamu di tiap link, RSVP & ucapan, galeri foto, peta lokasi, musik, dan amplop digital.",
+            },
+          },
+          {
+            "@type": "Offer",
+            itemOffered: {
+              "@type": "Service",
+              name: "Jasa Pembuatan Website",
+              serviceType: "Pembuatan website",
+              url: `${asal}/template`,
+              description: "Website UMKM, company profile, dan portofolio yang rapi di HP, cepat, dan gampang dicari di Google.",
+            },
+          },
+        ],
+      },
       contactPoint: {
         "@type": "ContactPoint",
         contactType: "customer service",

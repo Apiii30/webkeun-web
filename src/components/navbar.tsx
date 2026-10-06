@@ -35,7 +35,7 @@ function LayananMenu({ onNavigate }: { onNavigate: () => void }) {
     <>
       <div className="grid gap-2 md:grid-cols-[1.25fr_1fr]">
         <div className="p-2">
-          <p className="px-3 pb-2 text-xs font-bold tracking-[0.14em] text-ink/45 uppercase">Jenis website</p>
+          <p className="px-3 pb-2 text-xs font-bold tracking-[0.14em] text-ink/45 uppercase">Layanan kami</p>
           <ul>
             {services.map((s) => (
               <li key={s.slug}>
@@ -300,6 +300,21 @@ export function Navbar() {
         </Link>
 
         <ul className="hidden items-center gap-1 md:flex">
+          {/* Produk utama Webkeun: langsung ke galeri tema undangan */}
+          <li>
+            <Link
+              href="/template/undangan"
+              onClick={close}
+              aria-current={pathname === "/template/undangan" ? "page" : undefined}
+              className={`flex items-center gap-1.5 rounded-xl px-3 py-2 text-[15px] font-semibold transition-colors hover:bg-lilac-soft hover:text-brand ${
+                pathname === "/template/undangan" ? "bg-lilac-soft text-brand" : "text-ink/80"
+              }`}
+            >
+              <Icon name="heart" className="size-4 text-brand" />
+              <span className="lg:hidden">Undangan</span>
+              <span className="hidden lg:inline">Undangan Digital</span>
+            </Link>
+          </li>
           {/* Dari halaman lain, "Layanan" membuka landing page dari atas; di landing page, menggulir ke section-nya */}
           {menuTrigger("layanan", "Layanan", "layers", pathname === "/" ? "/#layanan" : "/", false)}
           {menuTrigger(
@@ -307,7 +322,7 @@ export function Navbar() {
             "Template",
             "browser",
             "/template",
-            pathname.startsWith("/template"),
+            pathname.startsWith("/template") && pathname !== "/template/undangan",
             <div
               id="menu-template"
               inert={open !== "template"}
@@ -451,8 +466,9 @@ export function BottomNav() {
       >
         <ul className="mx-auto flex max-w-md justify-between px-2">
           {link("/#beranda", "Beranda", "home", false)}
+          {link("/template/undangan", "Undangan", "heart", pathname === "/template/undangan")}
           {sheetButton("layanan", "layers", false)}
-          {sheetButton("template", "browser", pathname.startsWith("/template"))}
+          {sheetButton("template", "browser", pathname.startsWith("/template") && pathname !== "/template/undangan")}
           {sheetButton("resources", "book", resourcesLinks.some((l) => pathname === l.href))}
           {link("/#faq", "FAQ", "help", false)}
         </ul>
