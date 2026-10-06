@@ -249,7 +249,7 @@ export function Beranda({ u, buka }: { u: Undangan; buka: boolean }) {
   // "kurangi gerakan": gerak transform dilewati motion, jadi pintu langsung dihilangkan saat dibuka
   const kurangi = useReducedMotion();
   return (
-    <section id="beranda" className={`${s.sek} ${s.langit} relative h-svh min-h-[42rem] overflow-hidden`}>
+    <section id="beranda" className={`${s.sek} ${s.langit} relative h-svh min-h-[42rem] overflow-clip`}>
       {/* berkas cahaya & Taj Mahal (paling jauh) */}
       <Lapis awal={1.45} buka={buka} keluar={s.keluarJauh}>
         <div className="absolute top-[47%] left-1/2 aspect-square w-[190%] -translate-x-1/2 -translate-y-1/2">

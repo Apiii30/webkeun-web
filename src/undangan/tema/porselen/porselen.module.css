@@ -23,6 +23,36 @@
   background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='36' height='36'><g fill='none' stroke='%23dbe5f3' stroke-width='1.3'><ellipse cx='18' cy='8.5' rx='5.5' ry='8'/><ellipse cx='18' cy='27.5' rx='5.5' ry='8'/><ellipse cx='8.5' cy='18' rx='8' ry='5.5'/><ellipse cx='27.5' cy='18' rx='8' ry='5.5'/></g><circle cx='18' cy='18' r='1.8' fill='%23dbe5f3'/><g fill='%23dbe5f3'><circle cx='0' cy='0' r='2.4'/><circle cx='36' cy='0' r='2.4'/><circle cx='0' cy='36' r='2.4'/><circle cx='36' cy='36' r='2.4'/></g></svg>");
   background-size: 36px 36px;
 }
+/* Ubin porselen biru-putih di dinding kamar pembuka: tiap ubin punya seperempat bunga di keempat sudutnya (bersambung
+   jadi bunga utuh dengan ubin sebelahnya, seperti ubin Delft) dan satu motif di tengah. Kilau glasir di pojok kiri atas. */
+.ubin {
+  background-color: #f7f3ea;
+  background-size: 100% 100%;
+  box-shadow:
+    inset 0 0 0 1.5px #d6cfbe,
+    inset 0 0 14px rgb(255 255 255 / 0.6);
+  backface-visibility: hidden;
+}
+.ubinBunga {
+  background-image:
+    radial-gradient(120% 120% at 28% 22%, rgb(255 255 255 / 0.55), transparent 55%),
+    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><g fill='%2327427a'><path d='M0 0H13A13 13 0 0 1 0 13Z'/><path d='M100 0V13A13 13 0 0 1 87 0Z'/><path d='M100 100H87A13 13 0 0 1 100 87Z'/><path d='M0 100V87A13 13 0 0 1 13 100Z'/></g><path d='M0 20A20 20 0 0 0 20 0M80 0A20 20 0 0 0 100 20M100 80A20 20 0 0 0 80 100M20 100A20 20 0 0 0 0 80' fill='none' stroke='%2327427a' stroke-width='1.2'/><g transform='translate(50 50)' fill='%23c8d4ea' stroke='%2327427a' stroke-width='1.4'><ellipse rx='6' ry='19'/><ellipse rx='6' ry='19' transform='rotate(45)'/><ellipse rx='6' ry='19' transform='rotate(90)'/><ellipse rx='6' ry='19' transform='rotate(135)'/><circle r='5.5' fill='%2327427a'/></g></svg>");
+}
+.ubinKawung {
+  background-image:
+    radial-gradient(120% 120% at 28% 22%, rgb(255 255 255 / 0.55), transparent 55%),
+    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><g fill='%2327427a'><path d='M0 0H13A13 13 0 0 1 0 13Z'/><path d='M100 0V13A13 13 0 0 1 87 0Z'/><path d='M100 100H87A13 13 0 0 1 100 87Z'/><path d='M0 100V87A13 13 0 0 1 13 100Z'/></g><path d='M0 20A20 20 0 0 0 20 0M80 0A20 20 0 0 0 100 20M100 80A20 20 0 0 0 80 100M20 100A20 20 0 0 0 0 80' fill='none' stroke='%2327427a' stroke-width='1.2'/><g fill='%23c8d4ea' stroke='%2327427a' stroke-width='1.4'><ellipse cx='50' cy='33' rx='8' ry='14'/><ellipse cx='50' cy='67' rx='8' ry='14'/><ellipse cx='33' cy='50' rx='14' ry='8'/><ellipse cx='67' cy='50' rx='14' ry='8'/></g><circle cx='50' cy='50' r='3' fill='%2327427a'/></svg>");
+}
+.ubinOmbak {
+  background-image:
+    radial-gradient(120% 120% at 28% 22%, rgb(255 255 255 / 0.55), transparent 55%),
+    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><g fill='%2327427a'><path d='M0 0H13A13 13 0 0 1 0 13Z'/><path d='M100 0V13A13 13 0 0 1 87 0Z'/><path d='M100 100H87A13 13 0 0 1 100 87Z'/><path d='M0 100V87A13 13 0 0 1 13 100Z'/></g><path d='M0 20A20 20 0 0 0 20 0M80 0A20 20 0 0 0 100 20M100 80A20 20 0 0 0 80 100M20 100A20 20 0 0 0 0 80' fill='none' stroke='%2327427a' stroke-width='1.2'/><circle cx='50' cy='38' r='9' fill='%23c8d4ea' stroke='%2327427a' stroke-width='1.4'/><path d='M26 58q6-7 12 0t12 0 12 0 12 0M30 67q5-6 10 0t10 0 10 0 10 0' fill='none' stroke='%2327427a' stroke-width='1.6' stroke-linecap='round'/></svg>");
+}
+.ubinPerahu {
+  background-image:
+    radial-gradient(120% 120% at 28% 22%, rgb(255 255 255 / 0.55), transparent 55%),
+    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><g fill='%2327427a'><path d='M0 0H13A13 13 0 0 1 0 13Z'/><path d='M100 0V13A13 13 0 0 1 87 0Z'/><path d='M100 100H87A13 13 0 0 1 100 87Z'/><path d='M0 100V87A13 13 0 0 1 13 100Z'/></g><path d='M0 20A20 20 0 0 0 20 0M80 0A20 20 0 0 0 100 20M100 80A20 20 0 0 0 80 100M20 100A20 20 0 0 0 0 80' fill='none' stroke='%2327427a' stroke-width='1.2'/><path d='M30 62h40l-7 8H37Z' fill='%2327427a'/><path d='M50 30v32' stroke='%2327427a' stroke-width='1.4'/><path d='M52 32 67 59H52Z' fill='%23c8d4ea' stroke='%2327427a' stroke-width='1.3'/><path d='M48 36 37 59H48Z' fill='%23c8d4ea' stroke='%2327427a' stroke-width='1.3'/><path d='M28 75q5-4 10 0t10 0 10 0 10 0 10 0' fill='none' stroke='%2327427a' stroke-width='1.3' stroke-linecap='round'/></svg>");
+}
 /* Pita tumpal (segitiga berjajar) untuk tepi bagian */
 .tumpal {
   background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='22'><path d='M0 0h16v22H0Z' fill='%23233c70'/><path d='M3 22 8 4l5 18Z' fill='none' stroke='%23dbe5f3' stroke-width='1.1'/><circle cx='8' cy='15' r='1.4' fill='%23dbe5f3'/></svg>");
@@ -254,18 +284,8 @@
     animation: progres linear both;
     animation-timeline: scroll(root);
   }
-  [data-paralaks] .keluarJauh {
-    animation: keluarJauh linear both;
-    animation-timeline: --sek;
-    animation-range: exit 0% exit 100%;
-  }
   [data-paralaks] .keluarTengah {
     animation: keluarTengah linear both;
-    animation-timeline: --sek;
-    animation-range: exit 0% exit 100%;
-  }
-  [data-paralaks] .keluarDekat {
-    animation: keluarDekat linear both;
     animation-timeline: --sek;
     animation-range: exit 0% exit 100%;
   }
@@ -299,6 +319,51 @@
     animation-timeline: view();
     animation-range: cover;
   }
+  [data-paralaks] .kJauh {
+    animation: kJauh linear both;
+    animation-timeline: view();
+    animation-range: cover;
+  }
+  [data-paralaks] .kTimbulA {
+    animation: kTimbulA linear both;
+    animation-timeline: view();
+    animation-range: cover;
+  }
+  [data-paralaks] .kTimbulB {
+    animation: kTimbulB linear both;
+    animation-timeline: view();
+    animation-range: cover;
+  }
+  [data-paralaks] .kLayarKanan {
+    animation: kLayarKanan linear both;
+    animation-timeline: view();
+    animation-range: cover;
+  }
+  [data-paralaks] .kLayarKiri {
+    animation: kLayarKiri linear both;
+    animation-timeline: view();
+    animation-range: cover;
+  }
+  [data-paralaks] .kTemuKiri {
+    animation: kTemuKiri linear both;
+    animation-timeline: view();
+    animation-range: cover 0% cover 55%;
+  }
+  [data-paralaks] .kTemuKanan {
+    animation: kTemuKanan linear both;
+    animation-timeline: view();
+    animation-range: cover 0% cover 55%;
+  }
+  [data-paralaks] .kBertemu {
+    animation: kBertemu linear both;
+    animation-timeline: view();
+    animation-range: cover 40% cover 60%;
+  }
+  [data-paralaks] .kDekat {
+    animation: kDekat linear both;
+    animation-timeline: view();
+    animation-range: cover;
+  }
   [data-paralaks] .mendekat {
     animation: mendekat linear both;
     animation-timeline: --sek;
@@ -321,19 +386,9 @@
     transform: scaleX(1);
   }
 }
-@keyframes keluarJauh {
-  to {
-    transform: translateY(55%);
-  }
-}
 @keyframes keluarTengah {
   to {
     transform: translateY(32%) scale(0.96);
-  }
-}
-@keyframes keluarDekat {
-  to {
-    transform: translateY(-8%) scale(1.08);
   }
 }
 @keyframes keluarTeks {
@@ -380,6 +435,96 @@
   }
   to {
     transform: translateY(-20px);
+  }
+}
+/* kisah cinta "Pelayaran": angka tahun jauh & bunga dekat (kedalaman), kartu bab yang bangkit berdiri dari danau
+   dalam 3D lalu rebah lagi saat lewat, perahu yang menyeberangi selat, dan dua perahu yang bertemu di akhir */
+@keyframes kJauh {
+  from {
+    transform: translateY(-90px);
+  }
+  to {
+    transform: translateY(90px);
+  }
+}
+@keyframes kTimbulA {
+  0% {
+    transform: rotateX(72deg) rotateY(12deg);
+    opacity: 0.2;
+  }
+  32%,
+  70% {
+    transform: rotateX(0deg) rotateY(0deg);
+    opacity: 1;
+  }
+  100% {
+    transform: rotateX(32deg) rotateY(-6deg);
+    opacity: 0.85;
+  }
+}
+@keyframes kTimbulB {
+  0% {
+    transform: rotateX(72deg) rotateY(-12deg);
+    opacity: 0.2;
+  }
+  32%,
+  70% {
+    transform: rotateX(0deg) rotateY(0deg);
+    opacity: 1;
+  }
+  100% {
+    transform: rotateX(32deg) rotateY(6deg);
+    opacity: 0.85;
+  }
+}
+@keyframes kLayarKanan {
+  from {
+    transform: translateX(0%);
+  }
+  to {
+    transform: translateX(84%);
+  }
+}
+@keyframes kLayarKiri {
+  from {
+    transform: translateX(0%);
+  }
+  to {
+    transform: translateX(-84%);
+  }
+}
+@keyframes kTemuKiri {
+  from {
+    transform: translateX(-46%);
+  }
+  to {
+    transform: translateX(0%);
+  }
+}
+@keyframes kTemuKanan {
+  from {
+    transform: translateX(46%);
+  }
+  to {
+    transform: translateX(0%);
+  }
+}
+@keyframes kBertemu {
+  from {
+    transform: scale(0.3);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+@keyframes kDekat {
+  from {
+    transform: translateY(120px);
+  }
+  to {
+    transform: translateY(-120px);
   }
 }
 @keyframes mendekat {

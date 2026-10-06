@@ -251,7 +251,7 @@ export function Kawanan({ className = "", jeda = 0, warna = "#a98544", n = 7 }: 
 // Kuntum melati kecil yang jatuh berputar
 export function MelatiJatuh({ n = 7 }: { n?: number }) {
   return (
-    <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden="true">
+    <div className="pointer-events-none absolute inset-0 overflow-clip" aria-hidden="true">
       {Array.from({ length: n }, (_, i) => (
         <span
           key={i}
@@ -348,7 +348,7 @@ export function FotoLengkung({
   const buka = berpintu && pintu !== false;
   return (
     <div className={`relative aspect-[300/420] ${className}`}>
-      <div className="absolute inset-0 overflow-hidden" style={{ ...maskerLengkung, perspective: berpintu ? "700px" : undefined }}>
+      <div className="absolute inset-0 overflow-clip" style={{ ...maskerLengkung, perspective: berpintu ? "700px" : undefined }}>
         {/* foto mundur pelan ke ukuran asli saat pintunya terbuka (pembungkus terpisah dari parallax scroll-nya) */}
         <motion.div
           className="absolute inset-0"

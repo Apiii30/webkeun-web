@@ -1,5 +1,5 @@
-/* Tema Oriental Peony: latar, gerak terus-menerus & parallax. Semua hanya mengubah transform/opacity supaya dijalankan
-   GPU. Gerak pembuka (lanskap, gerbang paifang, kolam teratai, bingkai merah) ada di gerbang.tsx (motion). */
+/* Tema Oriental Peony: latar & gerak terus-menerus. Semua hanya mengubah transform/opacity supaya dijalankan GPU.
+   Gerak pembuka (lanskap, gerbang paifang, kolam teratai, bingkai merah) ada di pembuka.tsx (motion). */
 
 /* Kertas krem bertekstur serat halus, dengan awan keberuntungan samar (puncaknya polos supaya menyatu dengan tepi genteng) */
 .kertas {
@@ -82,17 +82,16 @@
     transform: rotate(calc(var(--a, 3deg) * -1));
   }
 }
+/* cahaya lentera bernapas pelan (dulu 0.5 ↔ 1 + membesar-mengecil tiap 2,4 detik: terlihat berkedip) */
 .nyala {
-  animation: nyala 2.4s ease-in-out infinite alternate;
+  animation: nyala 6s ease-in-out infinite alternate;
 }
 @keyframes nyala {
   from {
-    opacity: 0.5;
-    transform: scale(0.9);
+    opacity: 0.8;
   }
   to {
     opacity: 1;
-    transform: scale(1.08);
   }
 }
 /* jumbai lentera bergoyang lebih cepat */
@@ -263,33 +262,18 @@
   }
 }
 
-/* ── Parallax ──
-   Murni CSS (scroll-driven animation), hanya transform/opacity. Aktif hanya bila pembungkus tema punya
-   data-paralaks (dipasang shell.tsx untuk browser yang menjalankannya di GPU: Chrome/Edge/Android, Safari 26.4+).
-   Nilai ditulis langsung di keyframes (tanpa var()) supaya bisa dijalankan GPU. Longhand dipakai di mana-mana:
-   di CSS module, "animation: linear both" tanpa nama membuat "linear" dibaca sebagai nama animasi. */
-.sek {
-  view-timeline-name: --sek;
-}
+/* ── Gerak mengikuti scroll ──
+   Hanya latar samping (layar lebar) & garis progres di atas. Isi undangan sengaja tanpa parallax scroll: dulu
+   beranda yang pergi berlapis & ornamen yang bergeser di tiap bagian membuat layar HP bergetar dan berkedip.
+   Murni CSS (scroll-driven animation), aktif hanya bila pembungkus tema punya data-paralaks (dipasang shell.tsx untuk
+   browser yang menjalankannya di GPU: Chrome/Edge/Android, Safari 26.4+). Longhand dipakai di mana-mana: di CSS
+   module, "animation: linear both" tanpa nama membuat "linear" dibaca sebagai nama animasi. */
 .progres {
   display: none;
 }
 @supports (animation-timeline: view()) {
   [data-paralaks] .latarSisi,
-  [data-paralaks] .progres,
-  [data-paralaks] .keluarJauh,
-  [data-paralaks] .keluarTengah,
-  [data-paralaks] .keluarDekat,
-  [data-paralaks] .keluarTeks,
-  [data-paralaks] .geserLambat,
-  [data-paralaks] .zoomKeluar,
-  [data-paralaks] .pJauh,
-  [data-paralaks] .pDekat,
-  [data-paralaks] .pJudul,
-  [data-paralaks] .pKiri,
-  [data-paralaks] .pKanan,
-  [data-paralaks] .pLentera,
-  [data-paralaks] .mendekat {
+  [data-paralaks] .progres {
     animation-duration: auto;
     animation-timing-function: linear;
     animation-fill-mode: both;
@@ -302,68 +286,6 @@
     display: block;
     animation-name: progres;
     animation-timeline: scroll(root);
-  }
-  [data-paralaks] .keluarJauh,
-  [data-paralaks] .keluarTengah,
-  [data-paralaks] .keluarDekat {
-    animation-timeline: --sek;
-    animation-range: exit 0% exit 100%;
-  }
-  [data-paralaks] .keluarJauh {
-    animation-name: keluarJauh;
-  }
-  [data-paralaks] .keluarTengah {
-    animation-name: keluarTengah;
-  }
-  [data-paralaks] .keluarDekat {
-    animation-name: keluarDekat;
-  }
-  [data-paralaks] .keluarTeks {
-    animation-name: keluarTeks;
-    animation-timeline: --sek;
-    animation-range: exit 0% exit 70%;
-  }
-  [data-paralaks] .geserLambat {
-    animation-name: geserLambat;
-    animation-timeline: view();
-    animation-range: cover;
-  }
-  [data-paralaks] .zoomKeluar {
-    animation-name: zoomKeluar;
-    animation-timeline: view();
-    animation-range: entry 0% cover 55%;
-  }
-  [data-paralaks] .pJauh,
-  [data-paralaks] .pDekat,
-  [data-paralaks] .pJudul,
-  [data-paralaks] .pKiri,
-  [data-paralaks] .pKanan,
-  [data-paralaks] .pLentera {
-    animation-timeline: view();
-    animation-range: cover;
-  }
-  [data-paralaks] .pJauh {
-    animation-name: pJauh;
-  }
-  [data-paralaks] .pDekat {
-    animation-name: pDekat;
-  }
-  [data-paralaks] .pJudul {
-    animation-name: pJudul;
-  }
-  [data-paralaks] .pKiri {
-    animation-name: pKiri;
-  }
-  [data-paralaks] .pKanan {
-    animation-name: pKanan;
-  }
-  [data-paralaks] .pLentera {
-    animation-name: pLentera;
-  }
-  [data-paralaks] .mendekat {
-    animation-name: mendekat;
-    animation-timeline: --sek;
-    animation-range: entry 0% entry 100%;
   }
 }
 @keyframes latarSisi {
@@ -380,100 +302,6 @@
   }
   to {
     transform: scaleX(1);
-  }
-}
-@keyframes keluarJauh {
-  to {
-    transform: translateY(55%);
-  }
-}
-@keyframes keluarTengah {
-  to {
-    transform: translateY(30%) scale(0.97);
-  }
-}
-@keyframes keluarDekat {
-  to {
-    transform: translateY(-10%) scale(1.1);
-  }
-}
-@keyframes keluarTeks {
-  to {
-    transform: translateY(180px) scale(0.9);
-    opacity: 0;
-  }
-}
-@keyframes geserLambat {
-  from {
-    transform: translateY(-9%);
-  }
-  to {
-    transform: translateY(9%);
-  }
-}
-@keyframes zoomKeluar {
-  from {
-    transform: scale(1.3);
-  }
-  to {
-    transform: scale(1);
-  }
-}
-@keyframes pJauh {
-  from {
-    transform: translateY(-50px);
-  }
-  to {
-    transform: translateY(50px);
-  }
-}
-@keyframes pDekat {
-  from {
-    transform: translateY(80px);
-  }
-  to {
-    transform: translateY(-80px);
-  }
-}
-@keyframes pJudul {
-  from {
-    transform: translateY(22px);
-  }
-  to {
-    transform: translateY(-22px);
-  }
-}
-@keyframes pKiri {
-  from {
-    transform: translate(-18px, 60px) rotate(-4deg);
-  }
-  to {
-    transform: translate(6px, -60px) rotate(2deg);
-  }
-}
-@keyframes pKanan {
-  from {
-    transform: translate(18px, 60px) rotate(4deg);
-  }
-  to {
-    transform: translate(-6px, -60px) rotate(-2deg);
-  }
-}
-/* lentera turun lebih lambat dari isi bagian (seolah tergantung lebih jauh) */
-@keyframes pLentera {
-  from {
-    transform: translateY(-70px);
-  }
-  to {
-    transform: translateY(70px);
-  }
-}
-@keyframes mendekat {
-  from {
-    transform: scale(0.86) translateY(60px);
-  }
-  to {
-    transform: none;
   }
 }
 

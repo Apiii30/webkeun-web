@@ -262,7 +262,7 @@ export function Beranda({ u, buka }: { u: Undangan; buka: boolean }) {
   // "kurangi gerakan": gerak transform dilewati motion, jadi gerbang langsung dihilangkan saat dibuka
   const kurangi = useReducedMotion();
   return (
-    <section id="beranda" className={`${s.sek} ${s.langit} relative h-svh min-h-[42rem] overflow-hidden`}>
+    <section id="beranda" className={`${s.sek} ${s.langit} relative h-svh min-h-[42rem] overflow-clip`}>
       {/* pegunungan bersalju (paling jauh) */}
       <Lapis awal={1.45} buka={buka} keluar={s.keluarJauh}>
         <div className="absolute top-[11%] left-[-28%] w-[156%] [mask-image:linear-gradient(to_bottom,transparent,black_18%,black_62%,transparent_92%)]">

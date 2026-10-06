@@ -228,7 +228,7 @@ export function FotoBingkai({
   const animasi = singkap !== undefined;
   return (
     <div className={`relative aspect-[300/420] ${className}`}>
-      <div className="absolute inset-0 overflow-hidden bg-[#f3e1dc]" style={{ maskImage: MASKER_BINGKAI, WebkitMaskImage: MASKER_BINGKAI, maskSize: "100% 100%", WebkitMaskSize: "100% 100%" }}>
+      <div className="absolute inset-0 overflow-clip bg-[#f3e1dc]" style={{ maskImage: MASKER_BINGKAI, WebkitMaskImage: MASKER_BINGKAI, maskSize: "100% 100%", WebkitMaskSize: "100% 100%" }}>
         <motion.div
           className="absolute inset-0"
           initial={animasi ? { clipPath: "circle(0% at 50% 45%)" } : false}
@@ -260,7 +260,7 @@ export function Lengkung({ src, alt, sizes, className = "", posisi = "50% 22%", 
   return (
     <div className={`relative aspect-[3/4.6] ${className}`}>
       <div className="absolute inset-0 rounded-full bg-[#fbf4f1] p-[7px] shadow-[0_22px_34px_-20px_rgb(74_18_25/0.85)]">
-        <div className="relative h-full w-full overflow-hidden rounded-full">
+        <div className="relative h-full w-full overflow-clip rounded-full">
           <div className={`${s.geserLambat} absolute inset-x-0 inset-y-[-10%]`}>
             <Image src={src} alt={alt} fill sizes={sizes} preload={preload} className="object-cover" style={{ objectPosition: posisi }} />
           </div>
@@ -286,7 +286,7 @@ export function Medali({ src, alt, sizes, className = "" }: { src: string; alt: 
         ))}
       </svg>
       <div className="absolute inset-[7%] rounded-full bg-[linear-gradient(135deg,#9a7638,#eed9a4_35%,#ae8a46_60%,#f5e6ba_82%,#9a7638)] p-[3px] shadow-[0_18px_30px_-16px_rgb(0_0_0/0.6)]">
-        <div className="relative h-full w-full overflow-hidden rounded-full">
+        <div className="relative h-full w-full overflow-clip rounded-full">
           <div className={`${s.zoomKeluar} absolute inset-0`}>
             <Image src={src} alt={alt} fill sizes={sizes} className="object-cover" />
           </div>

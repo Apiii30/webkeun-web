@@ -23,7 +23,7 @@ function Bagian({ id, zamrud = false, className = "", children }: { id?: string;
       <div className={`${s.tumpuk} relative ${zamrud ? `${s.zamrud} text-[#fbf8f1]` : `${s.marmer} text-[#1d3d34]`} ${className}`}>
         <Arkade warna={zamrud ? "#0f3a31" : "#fbfaf6"} />
         {/* kisi bintang samar, bergerak lebih lambat dari isinya (dipotong di dalam bagiannya sendiri) */}
-        <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden="true">
+        <div className="pointer-events-none absolute inset-0 overflow-clip" aria-hidden="true">
           <div className={`${zamrud ? s.polaTerang : s.pola} ${s.pJauh} absolute inset-x-0 -inset-y-16 ${zamrud ? "opacity-[0.07]" : "opacity-[0.09]"}`} />
         </div>
         {children}
@@ -88,7 +88,7 @@ function MedaliBintang({ src, sizes }: { src: string; sizes: string }) {
         <path d={garisBintang} fill="none" stroke={EMAS} strokeWidth=".008" strokeDasharray=".02 .03" transform="scale(.93)" />
       </svg>
       <div className={`absolute inset-[15%] rounded-full bg-[linear-gradient(135deg,#8f6d34,#f1e2b8_35%,#a98544_60%,#f6ebc8_82%,#8f6d34)] p-[3px] shadow-[0_18px_30px_-16px_rgb(0_0_0/0.6)]`}>
-        <div className="relative h-full w-full overflow-hidden rounded-full">
+        <div className="relative h-full w-full overflow-clip rounded-full">
           <div className={`${s.zoomKeluar} absolute inset-0`}>
             <Image src={src} alt="" fill sizes={sizes} className="object-cover" />
           </div>
@@ -197,7 +197,7 @@ function SimpanTanggal({ u }: { u: Undangan }) {
           <KartuMihrab className="text-[#1d3d34]">
             <div className="px-[7%] pt-[7%] pb-8">
               <div className="relative [container-type:inline-size]">
-                <div className="relative aspect-[4/3.6] overflow-hidden" style={maskerMihrab(0)}>
+                <div className="relative aspect-[4/3.6] overflow-clip" style={maskerMihrab(0)}>
                   <div className={`${s.geserLambat} absolute inset-x-0 inset-y-[-10%]`}>
                     <Image src={u.foto.galeri[1].src} alt={u.foto.galeri[1].alt} fill sizes="(min-width: 440px) 340px, 80vw" className="object-cover" />
                   </div>

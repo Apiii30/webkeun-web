@@ -12,19 +12,18 @@ import s from "./oriental.module.css";
 import { Beranda } from "./pembuka";
 
 // Isi undangan tema Oriental Peony. Bagian bergantian antara kertas krem dan panel merah pernis, disambung tepi
-// genteng dengan koin keberuntungan emas di tengah sambungannya, dan hampir semua elemen punya lapisan parallax
-// (oriental.module.css). Bagian-bagiannya mengalir menyambung: tidak ada lagi efek bagian yang lewat mengecil &
-// meredup di bawah bagian berikutnya (membuat perpindahan antarbagian terasa terputus).
+// genteng dengan koin keberuntungan emas di tengah sambungannya. Bagian-bagiannya mengalir menyambung: tidak ada lagi efek bagian yang lewat mengecil & meredup di bawah bagian
+// berikutnya (membuat perpindahan antarbagian terasa terputus). Ornamen di dalam bagian sengaja tidak diberi parallax
+// scroll lagi (dulu pola awan, lentera, judul, gunung & bambu bergeser mengikuti scroll dan membuat layar HP bergetar);
+// gerak hanya dari animasi masuk saat terlihat & goyangan pelan bunga/lentera.
 
 function Bagian({ id, merah = false, className = "", children }: { id?: string; merah?: boolean; className?: string; children: ReactNode }) {
   return (
-    <section id={id} className={`${s.sek} relative ${merah ? `${s.merah} text-[#fff6e6]` : `${s.kertas} text-[#3b1d16]`} ${className}`}>
+    <section id={id} className={`relative ${merah ? `${s.merah} text-[#fff6e6]` : `${s.kertas} text-[#3b1d16]`} ${className}`}>
       <Genteng warna={merah ? "#9e1c22" : "#f8efdc"} />
       <KoinSambung />
-      {/* awan keberuntungan samar, bergerak lebih lambat dari isinya (dipotong di dalam bagiannya sendiri) */}
-      <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden="true">
-        <div className={`${s.polaAwan} ${s.pJauh} absolute inset-x-0 -inset-y-16 ${merah ? "opacity-[0.12]" : "opacity-[0.16]"}`} />
-      </div>
+      {/* awan keberuntungan samar (diam: lapisan setinggi bagian yang ikut digeser saat scroll membuat layar bergetar) */}
+      <div className={`${s.polaAwan} pointer-events-none absolute inset-0 ${merah ? "opacity-[0.12]" : "opacity-[0.16]"}`} aria-hidden="true" />
       {children}
     </section>
   );
@@ -54,7 +53,7 @@ function KoinSambung() {
 
 function Judul({ children, terang = false, kecil }: { children: string; terang?: boolean; kecil?: string }) {
   return (
-    <div className={`${s.pJudul} relative z-10 text-center`}>
+    <div className="relative z-10 text-center">
       {kecil && (
         <Muncul>
           <p className={`${yuji} text-[10.5px] tracking-[0.42em] uppercase ${terang ? "text-[#f6dc94]" : "text-[#9e1c22]/80"}`}>{kecil}</p>
@@ -76,10 +75,11 @@ function hariTanggal(tanggal: string) {
   return { hari: hari.trim(), tgl, bulanTahun: bulanTahun.join(" ") };
 }
 
-// Sepasang lentera yang tergantung di puncak bagian, turun lebih lambat daripada isinya
+// Sepasang lentera yang tergantung di puncak bagian (diam di tempatnya: kalau ikut parallax, talinya sempat
+// menjulur melewati tepi genteng ke bagian sebelumnya)
 function LenteraBagian() {
   return (
-    <div className={`${s.pJauh} pointer-events-none absolute inset-x-0 top-0 h-full`} aria-hidden="true">
+    <div className="pointer-events-none absolute inset-x-0 top-0 h-full" aria-hidden="true">
       <Lentera className="left-[5%] w-[11%]" tali="4.5rem" d={5.4} a={3} />
       <Lentera className="right-[6%] w-[9%]" tali="7rem" d={4.6} a={3.4} jeda={-2} />
     </div>
@@ -135,7 +135,7 @@ function Mempelai({ u }: { u: Undangan }) {
             </Muncul>
           )}
           <div className={`relative mx-auto w-[70%] ${i === 0 ? "mt-12" : ""}`}>
-            <div className={`${s.pJauh} absolute top-[4%] w-[46%] opacity-90 ${i ? "-left-[30%]" : "-right-[30%]"}`} aria-hidden="true">
+            <div className={`absolute top-[4%] w-[46%] opacity-90 ${i ? "-left-[30%]" : "-right-[30%]"}`} aria-hidden="true">
               <Awan warna="#fff1d6" garis="#f6dc94" />
             </div>
             {/* peoni mengintip dari balik bingkai (di belakang foto, jadi tidak pernah menutupinya) */}
@@ -168,7 +168,7 @@ function SimpanTanggal({ u }: { u: Undangan }) {
   return (
     <Bagian className="overflow-x-clip px-6 pt-16 pb-24 text-center">
       <div
-        className={`${s.pJauh} pointer-events-none absolute inset-x-[-10%] top-[30%] opacity-30 [mask-image:linear-gradient(to_bottom,transparent,black_30%,black_60%,transparent)]`}
+        className={`pointer-events-none absolute inset-x-[-10%] top-[30%] opacity-30 [mask-image:linear-gradient(to_bottom,transparent,black_30%,black_60%,transparent)]`}
         aria-hidden="true"
       >
         <Gambar a="gunungPuncak" sizes="(min-width: 440px) 480px, 120vw" />
@@ -184,7 +184,7 @@ function SimpanTanggal({ u }: { u: Undangan }) {
       {/* lentera hitung mundur di atas panel merah melengkung */}
       <Muncul dari="translateY(60px)" durasi={1.3} amount={0.2} className="relative mx-auto mt-9 w-[96%]">
         {/* teratai di belakang panel, mengintip dari sudut kiri bawahnya */}
-        <Bunga a="teratai" className={`${s.pDekat} -bottom-[52%] -left-[16%] w-[42%]`} sizes="150px" />
+        <Bunga a="teratai" className="-bottom-[52%] -left-[16%] w-[42%]" sizes="150px" />
         <div className={`${s.merah} relative rounded-t-[3rem] rounded-b-[1.4rem] px-4 pt-3 pb-6 shadow-[0_26px_40px_-24px_rgb(60_10_10/0.8)] ring-2 ring-[#c99a3e]/80`}>
           <PitaMeander className="mx-auto mb-1 w-[70%] opacity-80" />
           <Countdown target={u.mulai} />
@@ -277,7 +277,7 @@ function Acara({ u }: { u: Undangan }) {
 function BagianGaleri({ u }: { u: Undangan }) {
   return (
     <Bagian id="galeri" merah className="overflow-x-clip px-3 pt-16 pb-24">
-      <div className={`${s.pJauh} pointer-events-none absolute inset-x-0 top-[4%] flex justify-between px-[4%] opacity-80`} aria-hidden="true">
+      <div className="pointer-events-none absolute inset-x-0 top-[4%] flex justify-between px-[4%] opacity-80" aria-hidden="true">
         <Awan className="w-[26%]" warna="#b4272e" garis="#f6dc94" />
         <Awan className="mt-8 w-[22%]" warna="#b4272e" garis="#f6dc94" />
       </div>
@@ -296,10 +296,10 @@ function BagianGaleri({ u }: { u: Undangan }) {
 function BagianKisah({ u }: { u: Undangan }) {
   return (
     <Bagian id="cerita" className="overflow-x-clip pt-16 pb-24">
-      <div className={`${s.pJauh} pointer-events-none absolute top-[14%] -left-[30%] w-[80%] opacity-30 [mask-image:radial-gradient(closest-side,black_40%,transparent)]`} aria-hidden="true">
+      <div className={`pointer-events-none absolute top-[14%] -left-[30%] w-[80%] opacity-30 [mask-image:radial-gradient(closest-side,black_40%,transparent)]`} aria-hidden="true">
         <Gambar a="bambu" sizes="(min-width: 440px) 350px, 80vw" />
       </div>
-      <div className={`${s.pJauh} pointer-events-none absolute -right-[30%] bottom-[18%] w-[80%] opacity-30 [mask-image:radial-gradient(closest-side,black_40%,transparent)]`} aria-hidden="true">
+      <div className={`pointer-events-none absolute -right-[30%] bottom-[18%] w-[80%] opacity-30 [mask-image:radial-gradient(closest-side,black_40%,transparent)]`} aria-hidden="true">
         <Gambar a="bambu" sizes="(min-width: 440px) 350px, 80vw" flip />
       </div>
       <Kisah u={u} />
@@ -342,7 +342,7 @@ function Penutup({ u }: { u: Undangan }) {
     <Bagian className="min-h-svh overflow-x-clip px-8 pt-20 pb-[calc(15rem+var(--demo-h,0px))] text-center">
       <LenteraBagian />
       <KawananBangau className="top-[3%]" d={28} jeda={-14} />
-      <div className={`${s.mendekat} relative`}>
+      <div className="relative">
         <div className="relative mx-auto w-[74%]">
           <JendelaBulan src={u.foto.belakang} alt={`${u.wanita.panggilan} & ${u.pria.panggilan}`} sizes="300px" />
         </div>

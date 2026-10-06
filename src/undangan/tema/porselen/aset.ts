@@ -31,3 +31,10 @@ export const GUNUNGAN =
   "M150 4C168 38 196 70 228 104C262 140 290 190 292 248C294 300 282 338 270 362L280 382L266 416H34L20 382L30 362C18 338 6 300 8 248C10 190 38 140 72 104C104 70 132 38 150 4Z";
 
 export const MASKER_GUNUNGAN = `url("data:image/svg+xml;utf8,${encodeURIComponent(`<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 420'><path d='${GUNUNGAN}'/></svg>`)}")`;
+
+// Bentuk medali haitang (海棠, bunga begonia) dalam kotak 300 × 380: empat lengkung menggembung dengan takik kecil
+// di keempat sudutnya, seperti panel bergambar (kaiguang) di badan guci porselen biru-putih
+export const HAITANG =
+  "M40 84A14 14 0 0 0 54 70A100.8 100.8 0 0 1 246 70A14 14 0 0 0 260 84A166.8 166.8 0 0 1 260 296A14 14 0 0 0 246 310A100.8 100.8 0 0 1 54 310A14 14 0 0 0 40 296A166.8 166.8 0 0 1 40 84Z";
+
+export const MASKER_HAITANG = `url("data:image/svg+xml;utf8,${encodeURIComponent(`<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 380'><path d='${HAITANG}'/></svg>`)}")`;

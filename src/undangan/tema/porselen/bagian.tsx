@@ -5,8 +5,8 @@ import type { ReactNode } from "react";
 import { calendarLink } from "../../pakai";
 import type { Undangan } from "../../types";
 import { Galeri } from "./galeri";
-import { Beranda, Medali } from "./gerbang";
-import { Bunga, Burung, Danau, FotoGunungan, HALUS, Kapsul, KelopakJatuh, Monogram, Muncul, Pembatas, Perahu, Piring, gilda, naskah } from "./hias";
+import { Beranda } from "./gerbang";
+import { Bunga, Burung, Danau, FotoGunungan, HALUS, Kapsul, KelopakJatuh, Medali, Monogram, Muncul, Pembatas, Perahu, Piring, gilda, naskah } from "./hias";
 import { Amplop, Countdown, Ucapan, tombolBiru, tombolEmas } from "./interaktif";
 import { Kisah } from "./kisah";
 import s from "./porselen.module.css";
@@ -316,7 +316,7 @@ function KadoUcapan({ u, tamu }: { u: Undangan; tamu?: string }) {
   );
 }
 
-/* ───────── 9. Penutup: jendela gunungan kembali, kini berisi foto ───────── */
+/* ───────── 9. Penutup: foto dalam jendela gunungan ───────── */
 
 function Penutup({ u }: { u: Undangan }) {
   return (
@@ -345,10 +345,11 @@ function Penutup({ u }: { u: Undangan }) {
           </p>
         </Muncul>
       </div>
-      <Danau className="inset-x-0 bottom-[var(--demo-h,0px)] h-36" />
+      {/* danau sampai ke dasar halaman (juga di balik bilah demo), supaya ujung scroll tidak tampak terpotong */}
+      <Danau className="inset-x-0 bottom-0 h-[calc(9rem+var(--demo-h,0px))]" />
       <Perahu className="bottom-[calc(5rem+var(--demo-h,0px))] left-[40%] w-[10%]" jeda={-4} />
       <Bunga a="peony" className="bottom-[var(--demo-h,0px)] left-[-8%] w-[52%]" sizes="250px" asal="30% 100%" />
-      <Bunga a="hortensia" className="right-[-4%] bottom-[var(--demo-h,0px)] w-[36%]" sizes="180px" varian="B" />
+      <Bunga a="hortensia" className="right-[1%] bottom-[calc(0.5rem+var(--demo-h,0px))] w-[32%]" sizes="180px" varian="B" />
       <KelopakJatuh n={7} />
     </Bagian>
   );

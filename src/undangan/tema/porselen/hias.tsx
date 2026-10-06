@@ -4,7 +4,7 @@ import { motion } from "motion/react";
 import Image from "next/image";
 import { type CSSProperties, type ReactNode, useId } from "react";
 import { tepiPudar } from "../../tepi";
-import { ASET, GUNUNGAN, MASKER_GUNUNGAN, type NamaAset } from "./aset";
+import { ASET, GUNUNGAN, HAITANG, MASKER_GUNUNGAN, MASKER_HAITANG, type NamaAset } from "./aset";
 import s from "./porselen.module.css";
 
 // Ornamen tema Biru Porselen: jendela gunungan bertepi timbul, bingkai kapsul berpita kawung, piring porselen,
@@ -129,13 +129,27 @@ export function Danau({ className = "" }: { className?: string }) {
 }
 
 // Perahu layar kecil yang hanyut & terombang-ambing
-export function Perahu({ className = "", jeda = 0 }: { className?: string; jeda?: number }) {
+export function Perahu({ className = "", jeda = 0, flip }: { className?: string; jeda?: number; flip?: boolean }) {
   return (
     <div className={`${s.hanyut} pointer-events-none absolute ${className}`} style={{ animationDelay: `${jeda}s` }} aria-hidden="true">
       <div className={s.ombang} style={{ animationDelay: `${jeda / 2}s` }}>
-        <Gambar a="perahu" sizes="70px" />
+        <Gambar a="perahu" sizes="70px" flip={flip} />
       </div>
     </div>
+  );
+}
+
+// Medali bunga di tengah pintu kartu acara (terbelah dua bersama pintunya)
+export function Medali({ className = "" }: { className?: string }) {
+  return (
+    <svg viewBox="-60 -60 120 120" className={`pointer-events-none absolute ${className}`} aria-hidden="true">
+      <circle r="52" fill="#27427a" stroke="#dbe5f3" strokeWidth="1.6" />
+      <circle r="45" fill="none" stroke="#dbe5f3" strokeWidth="1" strokeDasharray="2 4" />
+      {[0, 45, 90, 135, 180, 225, 270, 315].map((r) => (
+        <path key={r} d="M0-8C9-18 9-30 0-40-9-30-9-18 0-8Z" transform={`rotate(${r})`} fill="none" stroke="#dbe5f3" strokeWidth="1.4" />
+      ))}
+      <circle r="8" fill="#d8b56e" stroke="#dbe5f3" strokeWidth="1.2" />
+    </svg>
   );
 }
 
@@ -157,66 +171,171 @@ function DefsEmas({ id }: { id: string }) {
 
 /* ───────── Bingkai jendela gunungan bertepi timbul ───────── */
 
-// Cincin bertingkat di sekeliling jendela gunungan, seperti ukiran timbul di kertas (dipakai di gerbang & penutup)
-export function TepiGunungan({ className = "", emas = false }: { className?: string; emas?: boolean }) {
+// Cincin bertingkat di sekeliling jendela gunungan, seperti ukiran timbul di kertas, bergaris emas di tepi fotonya.
+// Garisnya digambar di tengah tepi jendela, jadi separuh tebalnya menutupi foto: dibuat ramping (±4% lebar foto).
+export function TepiGunungan({ className = "" }: { className?: string }) {
   const id = useId().replace(/:/g, "");
   return (
     <svg viewBox="-40 -40 380 500" className={`pointer-events-none absolute overflow-visible ${className}`} aria-hidden="true">
-      {emas && <DefsEmas id={`t${id}`} />}
-      <path d={GUNUNGAN} fill="none" stroke="#fbfaf6" strokeWidth="58" strokeLinejoin="round" style={{ filter: "drop-shadow(0 8px 12px rgb(39 66 122 / 0.22))" }} />
-      <path d={GUNUNGAN} fill="none" stroke="#ebe6da" strokeWidth="38" strokeLinejoin="round" />
-      <path d={GUNUNGAN} fill="none" stroke="#fbfaf6" strokeWidth="24" strokeLinejoin="round" />
-      <path d={GUNUNGAN} fill="none" stroke="#d9d1c0" strokeWidth="9" strokeLinejoin="round" />
-      <path d={GUNUNGAN} fill="none" stroke={emas ? `url(#t${id})` : "#fdfcf8"} strokeWidth={emas ? 4 : 3} strokeLinejoin="round" />
+      <DefsEmas id={`t${id}`} />
+      <path d={GUNUNGAN} fill="none" stroke="#fbfaf6" strokeWidth="24" strokeLinejoin="round" style={{ filter: "drop-shadow(0 8px 12px rgb(39 66 122 / 0.22))" }} />
+      <path d={GUNUNGAN} fill="none" stroke="#ebe6da" strokeWidth="15" strokeLinejoin="round" />
+      <path d={GUNUNGAN} fill="none" stroke="#fbfaf6" strokeWidth="9" strokeLinejoin="round" />
+      <path d={GUNUNGAN} fill="none" stroke="#d9d1c0" strokeWidth="4" strokeLinejoin="round" />
+      <path d={GUNUNGAN} fill="none" stroke={`url(#t${id})`} strokeWidth="2.6" strokeLinejoin="round" />
     </svg>
   );
 }
 
-// Foto di dalam jendela gunungan (beranda & penutup). singkap: detik mulai foto tersingkap dari bawah ke atas
-// (false = belum, undefined = langsung tampil), disusul kilau emas yang menyapu kacanya.
-export function FotoGunungan({
-  src,
-  alt,
-  sizes,
-  className = "",
-  posisi = "50% 50%",
-  preload,
-  singkap,
-}: {
-  src: string;
-  alt: string;
-  sizes: string;
-  className?: string;
-  posisi?: string;
-  preload?: boolean;
-  singkap?: number | false;
-}) {
-  const animasi = singkap !== undefined;
+// Foto di dalam jendela gunungan bertepi emas (penutup)
+export function FotoGunungan({ src, alt, sizes, className = "", posisi = "50% 50%" }: { src: string; alt: string; sizes: string; className?: string; posisi?: string }) {
   return (
     <div className={`relative aspect-[300/420] ${className}`}>
-      <div className="absolute inset-0 overflow-hidden bg-[#dfe6f1]" style={{ maskImage: MASKER_GUNUNGAN, WebkitMaskImage: MASKER_GUNUNGAN, maskSize: "100% 100%", WebkitMaskSize: "100% 100%" }}>
+      <div className="absolute inset-0 overflow-clip bg-[#dfe6f1]" style={{ maskImage: MASKER_GUNUNGAN, WebkitMaskImage: MASKER_GUNUNGAN, maskSize: "100% 100%", WebkitMaskSize: "100% 100%" }}>
+        <div className={`${s.geserLambat} absolute inset-x-0 inset-y-[-10%]`}>
+          <Image src={src} alt={alt} fill sizes={sizes} className="object-cover" style={{ objectPosition: posisi }} />
+        </div>
+      </div>
+      <TepiGunungan className="top-[-9.52%] left-[-13.33%] h-[119.05%] w-[126.67%]" />
+    </div>
+  );
+}
+
+/* ───────── Medali haitang: foto mempelai di beranda ───────── */
+
+// Garis bentuk haitang yang diperbesar k kali dari tengahnya (untuk cincin-cincin bingkai di luar foto)
+const lingkar = (k: number) => `translate(150 190) scale(${k}) translate(-150 -190)`;
+// Takik keempat sudut haitang, didorong sedikit keluar: tempat bunga porselen kecil
+const SUDUT = [
+  [22, 49],
+  [278, 49],
+  [278, 331],
+  [22, 331],
+];
+
+// Foto dalam medali porselen berbentuk haitang: piring gading berpita kobalt bertitik putih, garis emas di tepi foto,
+// bunga kobalt di keempat takiknya, mahkota teratai di puncaknya. Urutan masuk (detik dari `mulai`, false = belum):
+//   0.0  piring gading berputar masuk dari kecil
+//   0.3  pita kobalt "dilukis" mengelilingi piring seperti sapuan kuas, titik-titik putihnya menyusul
+//   0.6  garis emas tergambar ke arah sebaliknya
+//   1.0  foto merembes dari tengah seperti tinta di kertas, sambil sedikit mengecil ke ukurannya
+//   2.2  bunga di keempat takik mekar bergantian, mahkota teratai turun, lalu kilau emas menyapu foto
+export function FotoHaitang({ src, alt, sizes, posisi = "50% 30%", mulai }: { src: string; alt: string; sizes: string; posisi?: string; mulai: number | false }) {
+  const id = useId().replace(/:/g, "");
+  const jalan = mulai !== false;
+  const t = mulai || 0;
+  const garis = (jeda: number, durasi: number) => ({
+    initial: { pathLength: 0, opacity: 0 },
+    animate: jalan ? { pathLength: 1, opacity: 1 } : undefined,
+    transition: { pathLength: { duration: durasi, ease: [0.65, 0, 0.35, 1] as const, delay: t + jeda }, opacity: { duration: 0.2, delay: t + jeda } },
+  });
+  const tinta = {
+    maskImage: `radial-gradient(circle at 50% 46%, #000 var(--r), transparent calc(var(--r) + 24%)), ${MASKER_HAITANG}`,
+    WebkitMaskImage: `radial-gradient(circle at 50% 46%, #000 var(--r), transparent calc(var(--r) + 24%)), ${MASKER_HAITANG}`,
+    maskSize: "100% 100%",
+    WebkitMaskSize: "100% 100%",
+    maskComposite: "intersect",
+    WebkitMaskComposite: "source-in",
+  } as CSSProperties;
+  return (
+    <motion.div
+      className="relative aspect-[300/380]"
+      initial={{ opacity: 0, transform: "scale(0.6) rotate(-14deg)" }}
+      animate={jalan ? { opacity: 1, transform: "scale(1) rotate(0deg)" } : undefined}
+      transition={{ duration: 1.2, ease: [0.34, 1.35, 0.64, 1], delay: t, opacity: { duration: 0.5, delay: t } }}
+    >
+      {/* piring gading & pita kobalt di belakang foto */}
+      <svg viewBox="0 0 300 380" className="pointer-events-none absolute inset-0 h-full w-full overflow-visible" aria-hidden="true">
+        <path d={HAITANG} transform={lingkar(1.17)} fill="#fbfaf6" stroke="#27427a" strokeWidth="1.2" style={{ filter: "drop-shadow(0 14px 16px rgb(20 35 70 / 0.35))" }} />
+        <path d={HAITANG} transform={lingkar(1.145)} fill="none" stroke="#27427a" strokeWidth=".8" opacity=".6" />
+        <motion.path d={HAITANG} transform={lingkar(1.085)} fill="none" stroke="#27427a" strokeWidth="19" {...garis(0.3, 1.5)} />
+        <motion.path
+          d={HAITANG}
+          transform={lingkar(1.085)}
+          fill="none"
+          stroke="#dbe5f3"
+          strokeWidth="4.2"
+          strokeDasharray="0 10.5"
+          strokeLinecap="round"
+          initial={{ opacity: 0 }}
+          animate={jalan ? { opacity: 1 } : undefined}
+          transition={{ duration: 0.8, delay: t + 1.5 }}
+        />
+      </svg>
+
+      {/* foto: merembes dari tengah seperti tinta */}
+      <motion.div
+        className="absolute inset-0 bg-[#dfe6f1]"
+        style={{ ...tinta, "--r": "-25%" } as CSSProperties}
+        initial={{ "--r": "-25%" } as never}
+        animate={jalan ? ({ "--r": "110%" } as never) : undefined}
+        transition={{ duration: 1.6, ease: [0.45, 0, 0.2, 1], delay: t + 1 }}
+      >
         <motion.div
           className="absolute inset-0"
-          initial={animasi ? { clipPath: "inset(100% 0% 0% 0%)" } : false}
-          animate={animasi && singkap !== false ? { clipPath: "inset(0% 0% 0% 0%)" } : undefined}
-          transition={{ duration: 1.4, ease: [0.65, 0, 0.35, 1], delay: singkap || 0 }}
+          initial={{ transform: "scale(1.16)" }}
+          animate={jalan ? { transform: "scale(1)" } : undefined}
+          transition={{ duration: 2.2, ease: HALUS, delay: t + 1 }}
         >
           <div className={`${s.geserLambat} absolute inset-x-0 inset-y-[-10%]`}>
-            <Image src={src} alt={alt} fill sizes={sizes} preload={preload} className="object-cover" style={{ objectPosition: posisi }} />
+            <Image src={src} alt={alt} fill sizes={sizes} preload className="object-cover" style={{ objectPosition: posisi }} />
           </div>
         </motion.div>
-        {animasi && (
-          <motion.div
-            className="pointer-events-none absolute inset-y-0 left-0 w-[70%] bg-[linear-gradient(100deg,transparent_20%,rgb(255_247_222/0.75)_50%,transparent_80%)]"
-            initial={{ opacity: 0, transform: "translateX(-110%)" }}
-            animate={singkap !== false ? { opacity: [0, 1, 0], transform: "translateX(160%)" } : undefined}
-            transition={{ duration: 1.1, ease: "easeInOut", delay: (singkap || 0) + 1.1 }}
-            aria-hidden="true"
-          />
-        )}
-      </div>
-      <TepiGunungan className="top-[-9.52%] left-[-13.33%] h-[119.05%] w-[126.67%]" emas />
-    </div>
+        <motion.div
+          className="pointer-events-none absolute inset-y-0 left-0 w-[70%] bg-[linear-gradient(100deg,transparent_20%,rgb(255_247_222/0.7)_50%,transparent_80%)]"
+          initial={{ opacity: 0, transform: "translateX(-110%)" }}
+          animate={jalan ? { opacity: [0, 1, 0], transform: "translateX(160%)" } : undefined}
+          transition={{ duration: 1.2, ease: "easeInOut", delay: t + 2.5 }}
+          aria-hidden="true"
+        />
+      </motion.div>
+
+      {/* garis emas di tepi foto & bunga kobalt di takik */}
+      <svg viewBox="0 0 300 380" className="pointer-events-none absolute inset-0 h-full w-full overflow-visible" aria-hidden="true">
+        <DefsEmas id={`h${id}`} />
+        <motion.path d={HAITANG} transform={lingkar(1.012)} fill="none" stroke={`url(#h${id})`} strokeWidth="3.4" {...garis(0.6, 1.6)} />
+        <path d={HAITANG} transform={lingkar(1.035)} fill="none" stroke="#fbfaf6" strokeWidth="2.4" opacity=".9" />
+        {SUDUT.map(([x, y], k) => (
+          <motion.g
+            key={k}
+            initial={{ opacity: 0, scale: 0 }}
+            animate={jalan ? { opacity: 1, scale: 1 } : undefined}
+            transition={{ duration: 0.7, ease: [0.34, 1.6, 0.64, 1], delay: t + 2.2 + k * 0.12 }}
+          >
+            <g transform={`translate(${x} ${y})`}>
+              {[0, 90, 180, 270].map((r) => (
+                <path key={r} d="M0-2C8-10 8-20 0-25-8-20-8-10 0-2Z" transform={`rotate(${r + 45})`} fill="#27427a" stroke="#fbfaf6" strokeWidth="1.4" />
+              ))}
+              <circle r="5.5" fill={`url(#h${id})`} stroke="#fbfaf6" strokeWidth="1.2" />
+            </g>
+          </motion.g>
+        ))}
+        {/* mahkota teratai kobalt di puncak medali & permata emas di kakinya */}
+        <motion.g
+          initial={{ opacity: 0, y: 14 }}
+          animate={jalan ? { opacity: 1, y: 0 } : undefined}
+          transition={{ duration: 0.8, ease: HALUS, delay: t + 2.5 }}
+        >
+          <g transform="translate(150 -36)">
+            <path d="M0 14C-9 4-9-10 0-22 9-10 9 4 0 14Z" fill="#27427a" stroke="#fbfaf6" strokeWidth="1.4" />
+            {[-1, 1].map((k) => (
+              <path key={k} d="M-1 14C-16 12-26 0-24-12-13-9-5-2-1 14Z" transform={`scale(${k} 1)`} fill="#27427a" stroke="#fbfaf6" strokeWidth="1.4" />
+            ))}
+            <path d="M0 6C-3 1-3-6 0-12 3-6 3 1 0 6Z" fill={`url(#h${id})`} />
+            <circle cy="16" r="3.6" fill={`url(#h${id})`} stroke="#fbfaf6" strokeWidth="1" />
+          </g>
+        </motion.g>
+        <motion.path
+          d="M150 400l8 9-8 9-8-9Z"
+          fill={`url(#h${id})`}
+          stroke="#fbfaf6"
+          strokeWidth="1.2"
+          initial={{ opacity: 0 }}
+          animate={jalan ? { opacity: 1 } : undefined}
+          transition={{ duration: 0.6, delay: t + 2.6 }}
+        />
+      </svg>
+    </motion.div>
   );
 }
 
@@ -227,7 +346,7 @@ export function Kapsul({ src, alt, sizes, className = "", posisi = "50% 22%", pr
     <div className={`relative aspect-[3/4.4] ${className}`}>
       <div className={`${s.kawung} absolute inset-0 rounded-full p-[9px] shadow-[0_18px_30px_-18px_rgb(35_60_112/0.9)]`}>
         <div className="h-full w-full rounded-full bg-[#fbfaf6] p-[3px]">
-          <div className="relative h-full w-full overflow-hidden rounded-full">
+          <div className="relative h-full w-full overflow-clip rounded-full">
             <div className={`${s.geserLambat} absolute inset-x-0 inset-y-[-10%]`}>
               <Image src={src} alt={alt} fill sizes={sizes} preload={preload} className="object-cover" style={{ objectPosition: posisi }} />
             </div>
@@ -257,7 +376,9 @@ export function Piring({ src, alt, sizes, className = "" }: { src: string; alt: 
   });
   return (
     <div className={`relative aspect-square ${className}`}>
-      <svg viewBox="0 0 200 200" className="absolute inset-0 h-full w-full drop-shadow-[0_16px_20px_rgb(35_60_112/0.3)]" aria-hidden="true">
+      {/* overflow-visible: gerigi tepi piring menonjol sedikit melewati kotak 200 × 200 (dulu terpotong di atas, bawah,
+          kiri & kanan) */}
+      <svg viewBox="0 0 200 200" className="absolute inset-0 h-full w-full overflow-visible drop-shadow-[0_16px_20px_rgb(35_60_112/0.3)]" aria-hidden="true">
         <DefsEmas id={`p${id}`} />
         <path d={`${d}Z`} fill="#fbfaf6" stroke="#27427a" strokeWidth="1.4" />
         <circle cx="100" cy="100" r="86" fill="none" stroke="#27427a" strokeWidth="1" />
@@ -269,7 +390,7 @@ export function Piring({ src, alt, sizes, className = "" }: { src: string; alt: 
           </g>
         ))}
       </svg>
-      <div className="absolute inset-[11.5%] overflow-hidden rounded-full">
+      <div className="absolute inset-[11.5%] overflow-clip rounded-full">
         <div className={`${s.zoomKeluar} absolute inset-0`}>
           <Image src={src} alt={alt} fill sizes={sizes} className="object-cover" />
         </div>

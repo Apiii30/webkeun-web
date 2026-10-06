@@ -17,7 +17,8 @@ import s from "./oriental.module.css";
 //   7.4  bingkai kayu merah masuk: tiang dari kiri-kanan, balok beratap dari atas, lentera merah turun bergantian
 //   8.7  nama mempelai tampil di papan kertas krem (supaya kontras dengan langit & pegunungan)
 //   9.1  foto mempelai berputar masuk di gerbang bulan, tersingkap melingkar; atap genteng giok & rumbai menyusul
-// Saat beranda digulir keluar, tiap lapisan pergi dengan kecepatan berbeda (kelas keluar* di CSS).
+// Saat digulir keluar, beranda bergerak utuh sebagai satu gambar. (Dulu tiap lapisan pergi dengan kecepatan berbeda,
+// tapi lapisannya jadi terlepas satu sama lain: kaki gerbang & tepi kolam menyembul, terlihat berkedip di HP.)
 
 const T_NAMA = 8.7;
 const T_FOTO = 9.1;
@@ -55,10 +56,10 @@ function Gerak({ j, buka, className = "", style, children }: { j: ReturnType<typ
   );
 }
 
-// Satu lapisan pemandangan berkedalaman k, pergi dengan kelas `keluar` saat beranda digulir keluar
-function Lapis({ k, buka, keluar, children }: { k: number; buka: boolean; keluar?: string; children: ReactNode }) {
+// Satu lapisan pemandangan berkedalaman k
+function Lapis({ k, buka, children }: { k: number; buka: boolean; children: ReactNode }) {
   return (
-    <div className={`pointer-events-none absolute inset-0 ${keluar ?? ""}`}>
+    <div className="pointer-events-none absolute inset-0">
       <Gerak j={kamera(k)} buka={buka} className="absolute inset-0" style={{ transformOrigin: PUSAT }}>
         {children}
       </Gerak>
@@ -74,9 +75,9 @@ const muncul = (buka: boolean, jeda: number, durasi = 1) => ({
 
 export function Beranda({ u, buka }: { u: Undangan; buka: boolean }) {
   return (
-    <section id="beranda" className={`${s.sek} ${s.langit} relative h-svh min-h-[42rem] overflow-hidden`}>
+    <section id="beranda" className={`${s.langit} relative h-svh min-h-[42rem] overflow-hidden`}>
       {/* matahari pagi & awan */}
-      <Lapis k={0.3} buka={buka} keluar={s.keluarJauh}>
+      <Lapis k={0.3} buka={buka}>
         <div className="absolute top-[30%] left-1/2 aspect-square w-[90%] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(closest-side,rgb(255_244_214/0.95),rgb(255_236_200/0.35)_55%,transparent)]" />
         <div className={`${s.awanGeser} absolute top-[13%] left-[6%] w-[30%] opacity-80`} style={{ "--d": "38s" } as CSSProperties}>
           <Awan />
@@ -87,19 +88,19 @@ export function Beranda({ u, buka }: { u: Undangan; buka: boolean }) {
       </Lapis>
 
       {/* pegunungan berlapis */}
-      <Lapis k={0.5} buka={buka} keluar={s.keluarJauh}>
+      <Lapis k={0.5} buka={buka}>
         <div className="absolute top-[24%] left-[-32%] w-[164%] opacity-75 [mask-image:linear-gradient(to_bottom,black_55%,transparent_92%)]">
           <Gambar a="gunungJauh" sizes="(min-width: 440px) 720px, 164vw" preload />
         </div>
       </Lapis>
-      <Lapis k={0.8} buka={buka} keluar={s.keluarTengah}>
+      <Lapis k={0.8} buka={buka}>
         <div className="absolute top-[31%] left-[-30%] w-[150%] [mask-image:linear-gradient(to_bottom,black_62%,transparent_95%)]">
           <Gambar a="gunungPuncak" sizes="(min-width: 440px) 660px, 150vw" preload />
         </div>
         {/* kabut di kaki gunung */}
         <div className="absolute top-[52%] left-[-10%] h-[16%] w-[120%] bg-[radial-gradient(50%_50%_at_50%_50%,rgb(250_247_238/0.9),transparent)]" />
       </Lapis>
-      <Lapis k={1.1} buka={buka} keluar={s.keluarTengah}>
+      <Lapis k={1.1} buka={buka}>
         {/* dua tebing di kiri & kanan; sisi potongnya di luar layar, sisi dalam & kakinya memudar */}
         <div className="absolute top-[25%] left-[-46%] w-[92%] [mask-image:linear-gradient(to_bottom,black_60%,transparent_92%)]">
           <div className="[mask-image:linear-gradient(to_left,transparent,black_30%)]">
@@ -141,7 +142,7 @@ export function Beranda({ u, buka }: { u: Undangan; buka: boolean }) {
       </motion.div>
 
       {/* gerbang paifang: naik, didekati kamera, lalu kamera mundur */}
-      <div className={`${s.keluarTengah} pointer-events-none absolute inset-0`}>
+      <div className="pointer-events-none absolute inset-0">
         <motion.div className="absolute inset-0" {...muncul(buka, 3.4, 0.8)}>
           <Gerak
             j={jalur([
@@ -161,7 +162,7 @@ export function Beranda({ u, buka }: { u: Undangan; buka: boolean }) {
       </div>
 
       {/* kolam teratai di depan gerbang */}
-      <div className={`${s.keluarDekat} pointer-events-none absolute inset-0`}>
+      <div className="pointer-events-none absolute inset-0">
         <Gerak
           j={jalur(
             [
@@ -183,7 +184,7 @@ export function Beranda({ u, buka }: { u: Undangan; buka: boolean }) {
       </div>
 
       {/* peoni di kedua sudut bawah */}
-      <div className={`${s.keluarDekat} pointer-events-none absolute inset-0`}>
+      <div className="pointer-events-none absolute inset-0">
         {[-1, 1].map((k) => (
           <Gerak
             key={k}
@@ -204,7 +205,7 @@ export function Beranda({ u, buka }: { u: Undangan; buka: boolean }) {
       </div>
 
       {/* bambu menjuntai dari kedua sudut atas */}
-      <div className={`${s.keluarDekat} pointer-events-none absolute inset-0`}>
+      <div className="pointer-events-none absolute inset-0">
         {[-1, 1].map((k) => (
           <Gerak
             key={k}
@@ -231,7 +232,7 @@ export function Beranda({ u, buka }: { u: Undangan; buka: boolean }) {
       <BingkaiMerah buka={buka} />
 
       {/* nama di papan kertas krem bertepi emas: tulisan merah di atas langit & pegunungan pucat sulit terbaca */}
-      <div className={`${s.keluarTeks} absolute inset-x-0 top-[max(7%,3.5rem)] z-20 flex justify-center px-10`}>
+      <div className="absolute inset-x-0 top-[max(7%,3.5rem)] z-20 flex justify-center px-10">
         <motion.div
           className="relative rounded-[1.6rem] bg-[#fffaf0]/92 px-7 pt-3.5 pb-4 text-center shadow-[0_14px_30px_-14px_rgb(60_15_10/0.55)] ring-1 ring-[#c99a3e]/80"
           initial={{ opacity: 0, transform: "translateY(-16px) scale(0.94)" }}
@@ -265,7 +266,7 @@ export function Beranda({ u, buka }: { u: Undangan; buka: boolean }) {
       </div>
 
       {/* foto mempelai di gerbang bulan, di depan gerbang paifang */}
-      <div className={`${s.keluarTengah} absolute inset-x-0 top-[max(33%,16.5rem)] z-20 flex justify-center`}>
+      <div className="absolute inset-x-0 top-[max(33%,16.5rem)] z-20 flex justify-center">
         <GerbangBulan u={u} mulai={buka ? T_FOTO : false} />
       </div>
 
@@ -289,7 +290,7 @@ export function Beranda({ u, buka }: { u: Undangan; buka: boolean }) {
 
 function BingkaiMerah({ buka }: { buka: boolean }) {
   return (
-    <div className={`${s.keluarDekat} pointer-events-none absolute inset-0 z-10`}>
+    <div className="pointer-events-none absolute inset-0 z-10">
       {/* tiang */}
       {[-1, 1].map((k) => (
         <Gerak

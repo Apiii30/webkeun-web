@@ -154,7 +154,7 @@ function SimpanTanggal({ u }: { u: Undangan }) {
       <div className="relative mx-auto mt-9 w-[92%]">
         <Muncul dari="translateY(70px)" durasi={1.4} amount={0.2}>
           <div className={`${s.kertas} rounded-[1.6rem] p-3 pb-6 shadow-[0_30px_50px_-28px_rgb(0_0_0/0.9)] ring-1 ring-[#c9a35c]/60`}>
-            <div className="relative aspect-[4/3.3] overflow-hidden rounded-t-[999px] rounded-b-[1.1rem]">
+            <div className="relative aspect-[4/3.3] overflow-clip rounded-t-[999px] rounded-b-[1.1rem]">
               <div className={`${s.geserLambat} absolute inset-x-0 inset-y-[-10%]`}>
                 <Image src={u.foto.galeri[1].src} alt={u.foto.galeri[1].alt} fill sizes="(min-width: 440px) 380px, 88vw" className="object-cover" />
               </div>

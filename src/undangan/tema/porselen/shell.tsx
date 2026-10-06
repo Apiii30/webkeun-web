@@ -69,16 +69,18 @@ function LatarSisi() {
 
 /* ───────── Sampul: foto penuh, terangkat saat dibuka ───────── */
 
-const ANGKAT = [0.76, 0, 0.24, 1] as const;
+const ANGKAT = [0.65, 0, 0.25, 1] as const;
 
 function Sampul({ u, tamu, onOpen }: { u: Undangan; tamu?: string; onOpen: () => void }) {
   return (
-    <motion.div className="fixed inset-0 z-50 flex justify-center" initial="ada" animate="ada" exit="pergi" variants={{ ada: { opacity: 1 }, pergi: { opacity: 1, transition: { duration: 1.3 } } }}>
+    <motion.div className="fixed inset-0 z-50 flex justify-center" initial="ada" animate="ada" exit="pergi" variants={{ ada: { opacity: 1 }, pergi: { opacity: 1, transition: { duration: 1.55 } } }}>
       <div className="relative h-full w-full max-w-[440px] overflow-hidden">
         {/* foto & gradasi */}
+        {/* overflow-hidden: foto di dalamnya sedang membesar-mengecil (zoom pelan), tanpa ini tepi bawahnya mencuat di
+            bawah panel saat panel terangkat */}
         <motion.div
-          className="absolute inset-0 bg-[#0f1c38] shadow-[0_30px_40px_rgb(15_28_56/0.45)]"
-          variants={{ ada: { transform: "translateY(0%)" }, pergi: { transform: "translateY(-100%)", transition: { duration: 1.25, ease: ANGKAT } } }}
+          className="absolute inset-0 overflow-hidden bg-[#0f1c38] shadow-[0_30px_40px_rgb(15_28_56/0.45)] will-change-transform"
+          variants={{ ada: { transform: "translateY(0%)" }, pergi: { transform: "translateY(-102%)", transition: { duration: 1.5, ease: ANGKAT } } }}
         >
           <motion.div className="absolute inset-0" initial={{ transform: "scale(1.12)" }} animate={{ transform: "scale(1)" }} transition={{ duration: 9, ease: "easeOut" }}>
             <Image src={u.foto.sampul} alt={`${u.wanita.panggilan} & ${u.pria.panggilan}`} fill preload sizes="(min-width: 440px) 440px, 100vw" className="object-cover object-[50%_30%]" />

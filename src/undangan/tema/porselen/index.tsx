@@ -3,8 +3,9 @@ import type { Undangan } from "../../types";
 import { Porselen } from "./shell";
 
 // Tema "Biru Porselen": biru kobalt & putih gading seperti lukisan porselen, dengan sentuhan batik kawung &
-// gunungan. Dibuka dengan animasi jendela gunungan: pintu batik membuka, rimbun emas tersibak, lalu kamera menembus
-// jendela ke danau & air terjun. Galeri carousel cincin 3D, kisah cinta berupa perjalanan horizontal, parallax penuh.
+// gunungan. Dibuka dengan dinding ubin porselen 3D yang runtuh membuka pemandangan danau & air terjun, lalu foto
+// mempelai dalam medali haitang. Galeri carousel cincin 3D, kisah cinta "Pelayaran" (kartu bab yang bangkit dari danau
+// dalam 3D, perahu menyeberang mengikuti scroll), parallax penuh.
 // Khusus tampilan HP. Isi undangan sepenuhnya dari data.
 
 const naskah = Imperial_Script({ subsets: ["latin"], weight: "400", variable: "--font-naskah" });

@@ -398,9 +398,7 @@ export function JendelaBulan({
           animate={animasi && singkap !== false ? { clipPath: "circle(71% at 50% 50%)" } : undefined}
           transition={{ duration: 1.4, ease: [0.5, 0, 0.3, 1], delay: singkap || 0 }}
         >
-          <div className={`${s.geserLambat} absolute inset-x-0 inset-y-[-10%]`}>
-            <Image src={src} alt={alt} fill sizes={sizes} preload={preload} loading={preload ? "eager" : undefined} className="object-cover" style={{ objectPosition: posisi }} />
-          </div>
+          <Image src={src} alt={alt} fill sizes={sizes} preload={preload} loading={preload ? "eager" : undefined} className="object-cover" style={{ objectPosition: posisi }} />
         </motion.div>
       </div>
       <svg viewBox="-110 -110 220 220" className="pointer-events-none absolute inset-0 h-full w-full overflow-visible drop-shadow-[0_14px_18px_rgb(60_15_10/0.3)]" aria-hidden="true">
