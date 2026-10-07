@@ -4,13 +4,14 @@ const situs = process.env.SITUS_URL ? new URL(process.env.SITUS_URL) : null;
 
 // Situs bisa dibuka lewat beberapa alamat (www.webkeun.id, webkeun.<akun>.workers.dev). Semuanya diarahkan permanen ke
 // alamat resmi, supaya Google hanya mengenal satu alamat dan link lama (termasuk ?to= & ?kunci=) tetap jalan.
+// Halaman depan punya aturan sendiri: di Cloudflare (OpenNext), "/:path*" yang kosong tidak terisi, jadi www.webkeun.id/
+// sempat diarahkan ke webkeun.id/:path* (404).
+const hostLain = situs ? [`www.${situs.host}`, ...(situs.host.endsWith(".workers.dev") ? [] : [".*\\.workers\\.dev"])] : [];
 const keAlamatResmi = situs
-  ? [
-      { source: "/:path*", has: [{ type: "host" as const, value: `www.${situs.host}` }], destination: `${situs.origin}/:path*`, permanent: true },
-      ...(situs.host.endsWith(".workers.dev")
-        ? []
-        : [{ source: "/:path*", has: [{ type: "host" as const, value: ".*\\.workers\\.dev" }], destination: `${situs.origin}/:path*`, permanent: true }]),
-    ]
+  ? hostLain.flatMap((host) => [
+      { source: "/", has: [{ type: "host" as const, value: host }], destination: `${situs.origin}/`, permanent: true },
+      { source: "/:path+", has: [{ type: "host" as const, value: host }], destination: `${situs.origin}/:path+`, permanent: true },
+    ])
   : [];
 
 if (process.env.NODE_ENV === "production" && !process.env.SITUS_URL) {
