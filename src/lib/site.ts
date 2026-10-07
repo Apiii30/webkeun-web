@@ -5,8 +5,7 @@ export const site = {
   name: "Webkeun",
   tagline: "Yuk webkeun",
   // produk utama Webkeun: undangan digital pernikahan, lalu jasa pembuatan website
-  description:
-    "Undangan digital pernikahan mulai Rp99rb (nama tamu, RSVP, musik) dan jasa pembuatan website mulai Rp450rb untuk UMKM, company profile, dan portofolio.",
+  description: "Undangan digital pernikahan mulai Rp99rb (nama tamu, RSVP, musik) dan jasa pembuatan website mulai Rp450rb untuk UMKM, company profile, dan portofolio.",
   whatsapp: "6283125043525", // format internasional, tanpa + dan tanpa 0 di depan
   whatsappDisplay: "0831-2504-3525",
   email: "yukwebkeun@gmail.com",
@@ -43,7 +42,7 @@ export const aboutLinks = [
   { href: "/#kenapa", label: "Kenapa Webkeun", desc: "Yang bikin kami beda", icon: "zap" },
   { href: "/#fitur", label: "Fitur yang termasuk", desc: "Domain, hosting, SEO dasar, dll.", icon: "check" },
   { href: "/#harga", label: "Harga paket", desc: "Undangan 99rb · website 450rb", icon: "tag" },
-  { href: "/#cara-kerja", label: "Cara kerja", desc: "Dari ngobrol sampai online", icon: "steps" },
+  { href: "/#cara-kerja", label: "Alur pemesanan", desc: "Dari chat WA sampai link aktif", icon: "steps" },
   { href: "/#faq", label: "Pertanyaan umum", desc: "Yang sering ditanyain", icon: "help" },
 ] as const;
 
@@ -310,24 +309,74 @@ export const hargaPaket = {
 } as const;
 export type JenisHarga = keyof typeof hargaPaket;
 
+// Alur pemesanan (SOP Webkeun), dari chat pertama sampai link aktif. ringkas: teks pendek di daftar langkah,
+// desc: penjelasan di panggungnya. bayar: persen yang sudah dibayar setelah langkah ini. tahap: kelompok langkahnya.
 export const steps = [
   {
-    title: "Ngobrol dulu",
-    desc: "Ceritain acara atau usaha kamu lewat WhatsApp. Gratis, nggak ada kewajiban apa-apa.",
+    title: "Konsultasi",
+    ringkas: "Chat WA, kirim pilihan paket & harga",
+    desc: "Chat kami lewat WhatsApp. Kami kirim pilihan paket dan harganya, kamu tanya-tanya dulu sepuasnya.",
+    icon: "chat",
+    tahap: "Kenalan",
+    bayar: 0,
   },
   {
-    title: "Kami rancang",
-    desc: "Kamu dapat desain awal buat dicek. Mau warna, foto, atau teksnya diganti? Bilang aja.",
+    title: "Meeting konsep",
+    ringkas: "1× GMeet/Zoom, bahas konsep bareng",
+    desc: "Sekali meeting lewat GMeet atau Zoom untuk membahas konsep, supaya kita sepaham sebelum mulai.",
+    icon: "video",
+    tahap: "Kenalan",
+    bayar: 0,
   },
   {
-    title: "Revisi bareng",
-    desc: "Kita rapikan sampai kamu sreg. Kamu bisa lihat progresnya langsung dari link.",
+    title: "DP 50%",
+    ringkas: "Transfer bank / QRIS, jadwal dikunci",
+    desc: "Bayar DP 50% lewat transfer bank atau QRIS. Setelah itu jadwal pengerjaan kamu kami kunci.",
+    icon: "wallet",
+    tahap: "Persiapan",
+    bayar: 50,
   },
   {
-    title: "Online!",
-    desc: "Undangan atau website kamu tayang. Tinggal sebar link-nya ke tamu atau pelanggan.",
+    title: "Isi brief",
+    ringkas: "Isi Google Form & kirim aset",
+    desc: "Isi Google Form dari kami, lalu kirim aset seperti foto, logo, dan teks yang mau dipakai.",
+    icon: "edit",
+    tahap: "Persiapan",
+    bayar: 50,
   },
-];
+  {
+    title: "Pengerjaan",
+    ringkas: "Undangan 3–5 hari · website 5–10 hari",
+    desc: "Kami mulai mengerjakan. Undangan sekitar 3–5 hari, website sekitar 5–10 hari.",
+    icon: "hammer",
+    tahap: "Pengerjaan",
+    bayar: 50,
+  },
+  {
+    title: "Preview & revisi",
+    ringkas: "Lewat chat, sesuai jatah paket",
+    desc: "Kamu cek hasilnya. Mau ada yang diganti? Revisi cukup lewat chat, sesuai jatah revisi paket kamu.",
+    icon: "eye",
+    tahap: "Pengerjaan",
+    bayar: 50,
+  },
+  {
+    title: "Pelunasan",
+    ringkas: "Sisa 50% sebelum rilis",
+    desc: "Sudah sreg dengan hasilnya? Lunasi sisa 50% sebelum undangan atau website kamu dirilis.",
+    icon: "receipt",
+    tahap: "Rilis",
+    bayar: 100,
+  },
+  {
+    title: "Serah terima",
+    ringkas: "Link + panduan penggunaan",
+    desc: "Kamu terima link yang sudah aktif dan siap disebar, lengkap dengan panduan penggunaannya.",
+    icon: "link",
+    tahap: "Rilis",
+    bayar: 100,
+  },
+] as const;
 
 export const faqs = [
   {
@@ -339,8 +388,8 @@ export const faqs = [
     a: "Bisa banget. Kamu cukup kirim info usaha, foto, dan logo (kalau ada). Urusan teknis, domain, dan hosting biar kami yang beresin.",
   },
   {
-    q: "Berapa lama websitenya jadi?",
-    a: "Website paket Basic sekitar 3 hari kerja, paket Bisnis sekitar 7 hari kerja. Waktunya dihitung setelah semua materi (teks, foto, logo) lengkap.",
+    q: "Berapa lama pengerjaannya?",
+    a: "Undangan digital sekitar 3–5 hari, website sekitar 5–10 hari tergantung paketnya. Waktunya dihitung setelah DP masuk dan brief (Google Form & aset) lengkap.",
   },
   {
     q: "Domain dan hosting gimana?",
@@ -352,7 +401,7 @@ export const faqs = [
   },
   {
     q: "Bayarnya gimana?",
-    a: "DP 50% di awal untuk mulai pengerjaan, sisanya dilunasi setelah undangan atau website siap online. Bisa transfer bank atau QRIS.",
+    a: "DP 50% di awal untuk mengunci jadwal pengerjaan, sisanya dilunasi setelah kamu sreg dengan hasilnya, sebelum undangan atau website dirilis. Bisa transfer bank atau QRIS.",
   },
   {
     q: "Bisa bikin toko online atau fitur khusus?",
@@ -430,7 +479,17 @@ export const templateIntro = {
   },
 } as const;
 
+// Gaya tema undangan: tiap gaya jadi satu bagian (dan satu filter) di galeri /template/undangan
+export const gayaUndangan = [
+  { slug: "adat", label: "Adat & Budaya", desc: "Ornamen Sunda, Jawa, dan Tionghoa" },
+  { slug: "islami", label: "Islami", desc: "Lengkung mihrab, geometri, dan ayat dalam teks Arab" },
+  { slug: "elegan", label: "Elegan & Klasik", desc: "Mewah ala majalah dan cetakan vintage" },
+  { slug: "floral", label: "Floral & Alam", desc: "Taman, bunga botani, dan hutan berkabut" },
+] as const;
+export type GayaUndangan = (typeof gayaUndangan)[number]["slug"];
+
 // Template website & undangan. Halaman demonya ada di /template/<slug>.
+// Undangan: nuansa = label gaya singkat di kartunya, gaya = bagian/filternya di galeri, desc = satu kalimat pendek (muat 2 baris di kartu).
 // Gambar di /public/preview/<kategori> adalah screenshot dari halaman demo itu; kalau tampilannya diubah, ambil ulang.
 // Undangan khusus tampilan HP, jadi tidak punya screenshot laptop: kartunya memakai 3 layar HP (phone = sampul,
 // screens = mempelai & acara) di atas warna temanya (tone).
@@ -474,7 +533,9 @@ export const templates = [
     kind: "Undangan Digital",
     category: "undangan",
     url: "faraaditya.my.id",
-    desc: "Tema Oriental Peony: pernikahan bernuansa Tionghoa merah pernis, emas, dan giok, dengan lanskap lukisan biru-hijau, gerbang paifang, peoni, teratai, bambu, bangau, lentera merah, dan 囍. Dibuka dengan animasi kamera ±10 detik: menembus jendela bulan, melewati pegunungan berlapis, mendekati gerbang, lalu mundur ke kolam teratai berbingkai kayu merah. Galeri roda jendela bulan dan love story berupa gulungan lukisan yang terbuka saat digulir. Khusus tampilan HP.",
+    nuansa: "Adat Tionghoa",
+    gaya: "adat" as GayaUndangan,
+    desc: "Merah pernis, emas, dan giok bernuansa Tionghoa, dengan gerbang paifang.",
     phone: "/preview/undangan/hp-undangan-oriental-1.webp",
     screens: ["/preview/undangan/hp-undangan-oriental-2.webp", "/preview/undangan/hp-undangan-oriental-3.webp"],
     tone: { bg: "#f6e3d6", accent: "#9e1c22" },
@@ -486,7 +547,9 @@ export const templates = [
     kind: "Undangan Digital",
     category: "undangan",
     url: "faraaditya.my.id",
-    desc: "Tema Putih Sakinah: nuansa Islami putih mutiara, emas, dan hijau zamrud, dengan lentera kuningan, untaian melati, magnolia, dan anggrek bulan. Dibuka dengan pintu mihrab berkisi bintang delapan yang berayun 3D, lalu kamera menembus lengkung ke Taj Mahal saat fajar. Bismillah, ayat, dan doa dalam teks Arab, galeri jendela mihrab, dan perjalanan cinta berupa jendela berpintu yang terbuka saat digulir. Khusus tampilan HP.",
+    nuansa: "Islami",
+    gaya: "islami" as GayaUndangan,
+    desc: "Putih mutiara & hijau zamrud, pintu mihrab 3D, dan ayat dalam teks Arab.",
     phone: "/preview/undangan/hp-undangan-sakinah-1.webp",
     screens: ["/preview/undangan/hp-undangan-sakinah-2.webp", "/preview/undangan/hp-undangan-sakinah-3.webp"],
     tone: { bg: "#eef0ea", accent: "#0f3a31" },
@@ -498,7 +561,9 @@ export const templates = [
     kind: "Undangan Digital",
     category: "undangan",
     url: "faraaditya.my.id",
-    desc: "Tema Merah Delima: marun & blush bergaya cetakan tembaga, dengan mawar Redouté, dahan delima, dan merak putih. Dibuka dengan gerbang besi tempa yang berayun di dalam bingkai cermin, lalu kamera menembus ke lembah air terjun. Galeri tumpukan foto yang bisa digeser dan kisah cinta berupa surat bersegel lilin. Khusus tampilan HP.",
+    nuansa: "Vintage",
+    gaya: "elegan" as GayaUndangan,
+    desc: "Marun & blush bergaya cetakan tembaga, dengan mawar, merak, dan gerbang besi.",
     phone: "/preview/undangan/hp-undangan-delima-1.webp",
     screens: ["/preview/undangan/hp-undangan-delima-2.webp", "/preview/undangan/hp-undangan-delima-3.webp"],
     tone: { bg: "#f3dfdb", accent: "#7b2431" },
@@ -510,7 +575,9 @@ export const templates = [
     kind: "Undangan Digital",
     category: "undangan",
     url: "faraaditya.my.id",
-    desc: "Tema Biru Porselen: biru kobalt & putih gading seperti lukisan porselen, dengan batik kawung dan jendela gunungan. Dibuka dengan pintu batik yang terbelah, rimbun emas yang tersibak, lalu kamera menembus jendela ke danau & air terjun. Galeri carousel cincin 3D dan kisah cinta berupa perjalanan horizontal. Khusus tampilan HP.",
+    nuansa: "Adat Jawa",
+    gaya: "adat" as GayaUndangan,
+    desc: "Biru kobalt & gading seperti porselen, bermotif batik kawung dan gunungan.",
     phone: "/preview/undangan/hp-undangan-porselen-1.webp",
     screens: ["/preview/undangan/hp-undangan-porselen-2.webp", "/preview/undangan/hp-undangan-porselen-3.webp"],
     tone: { bg: "#dfe6f1", accent: "#27427a" },
@@ -522,7 +589,9 @@ export const templates = [
     kind: "Undangan Digital",
     category: "undangan",
     url: "faraaditya.my.id",
-    desc: "Tema Garden Premium: taman bergaya cetakan toile teal dengan gapura bertiang, air mancur, merak, peony, dan wisteria. Dibuka dengan animasi kamera mundur berlapis dari balik bunga sampai seluruh gapura terlihat. Khusus tampilan HP.",
+    nuansa: "Taman",
+    gaya: "floral" as GayaUndangan,
+    desc: "Taman toile teal dengan gapura, air mancur, merak, dan wisteria.",
     phone: "/preview/undangan/hp-undangan-garden-1.webp",
     screens: ["/preview/undangan/hp-undangan-garden-2.webp", "/preview/undangan/hp-undangan-garden-3.webp"],
     tone: { bg: "#e2ebe7", accent: "#2f5d62" },
@@ -534,7 +603,9 @@ export const templates = [
     kind: "Undangan Digital",
     category: "undangan",
     url: "friscaarif.my.id",
-    desc: "Undangan nuansa rose & plum dengan motif geometri Islami dan sentuhan Sunda: foto berbingkai lengkung, love story bergaris waktu, kartu acara bertumpuk, galeri coverflow, musik latar, RSVP, dan amplop digital bergaya kartu ATM. Khusus tampilan HP.",
+    nuansa: "Islami · Sunda",
+    gaya: "islami" as GayaUndangan,
+    desc: "Rose & plum dengan geometri Islami, sentuhan Sunda, dan amplop kartu ATM.",
     phone: "/preview/undangan/hp-undangan-frisca-1.webp",
     screens: ["/preview/undangan/hp-undangan-frisca-2.webp", "/preview/undangan/hp-undangan-frisca-3.webp"],
     tone: { bg: "#f4e6e2", accent: "#9c7880" },
@@ -546,7 +617,9 @@ export const templates = [
     kind: "Undangan Digital",
     category: "undangan",
     url: "faraaditya.my.id",
-    desc: "Tema Luxury: gaya majalah mewah ivory, taupe & emas. Foto besar bersudut lengkung, galeri carousel 3D, dan kisah cinta berbentuk bab-bab editorial. Khusus tampilan HP.",
+    nuansa: "Editorial",
+    gaya: "elegan" as GayaUndangan,
+    desc: "Gaya majalah mewah ivory & emas, dengan galeri carousel 3D.",
     phone: "/preview/undangan/hp-undangan-luxury-1.webp",
     screens: ["/preview/undangan/hp-undangan-luxury-2.webp", "/preview/undangan/hp-undangan-luxury-3.webp"],
     tone: { bg: "#efe7dc", accent: "#8b6f4e" },
@@ -558,7 +631,9 @@ export const templates = [
     kind: "Undangan Digital",
     category: "undangan",
     url: "faraaditya.my.id",
-    desc: "Tema Art Sunda: pintu bermotif mega mendung yang terbuka, Gedung Sate, kujang, siger, dan bunga melati-kenanga di atas kertas krem. Khusus tampilan HP.",
+    nuansa: "Adat Sunda",
+    gaya: "adat" as GayaUndangan,
+    desc: "Pintu mega mendung, Gedung Sate, kujang, dan siger di atas kertas krem.",
     phone: "/preview/undangan/hp-undangan-sunda-1.webp",
     screens: ["/preview/undangan/hp-undangan-sunda-2.webp", "/preview/undangan/hp-undangan-sunda-3.webp"],
     tone: { bg: "#f3ead9", accent: "#8a3f2b" },
@@ -570,7 +645,9 @@ export const templates = [
     kind: "Undangan Digital",
     category: "undangan",
     url: "faraaditya.my.id",
-    desc: "Tema Rimba: hutan berkabut dari lukisan klasik, bunga ilustrasi botani, dan bingkai emas. Khusus tampilan HP, dengan animasi masuk yang beragam dan galeri yang membesar saat diketuk.",
+    nuansa: "Hutan",
+    gaya: "floral" as GayaUndangan,
+    desc: "Hutan berkabut dari lukisan klasik, bunga botani, dan bingkai emas.",
     phone: "/preview/undangan/hp-undangan-rimba-1.webp",
     screens: ["/preview/undangan/hp-undangan-rimba-2.webp", "/preview/undangan/hp-undangan-rimba-3.webp"],
     tone: { bg: "#1d2b22", accent: "#d8b56e" },

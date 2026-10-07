@@ -49,11 +49,7 @@ function Kartu({ p, jenis, i }: { p: Paket; jenis: JenisHarga; i: number }) {
           sorot ? "bg-brand text-white shadow-[0_30px_80px_-24px_rgb(91_61_245/0.9)] ring-2 ring-mint lg:py-12" : "bg-white text-ink"
         }`}
       >
-        {sorot && (
-          <span className="absolute -top-3.5 left-7 rounded-full bg-mint px-3.5 py-1 text-xs font-extrabold tracking-[0.14em] text-ink uppercase sm:left-8">
-            {p.sorot}
-          </span>
-        )}
+        {sorot && <span className="absolute -top-3.5 left-7 rounded-full bg-mint px-3.5 py-1 text-xs font-extrabold tracking-[0.14em] text-ink uppercase sm:left-8">{p.sorot}</span>}
 
         <div className="flex items-start justify-between gap-3">
           <div>
@@ -61,11 +57,7 @@ function Kartu({ p, jenis, i }: { p: Paket; jenis: JenisHarga; i: number }) {
             <p className={`mt-1 text-sm ${sorot ? "text-white/75" : "text-ink/60"}`}>{p.untuk}</p>
           </div>
           {p.aktif && (
-            <span
-              className={`inline-flex shrink-0 items-center gap-1.5 rounded-full px-3 py-1 text-xs font-bold ${
-                sorot ? "bg-white/15 text-white" : "bg-lilac-soft text-brand"
-              }`}
-            >
+            <span className={`inline-flex shrink-0 items-center gap-1.5 rounded-full px-3 py-1 text-xs font-bold ${sorot ? "bg-white/15 text-white" : "bg-lilac-soft text-brand"}`}>
               <Icon name="clock" className="size-3.5" strokeWidth={2.5} />
               Aktif {p.aktif}
             </span>
@@ -114,7 +106,11 @@ export function Pricing({ hanya }: { hanya?: JenisHarga }) {
     <MotionConfig reducedMotion="user">
       <section id="harga" className="relative overflow-hidden bg-ink text-white">
         {/* cahaya ungu & bintang mint, sama seperti daftar harga cetaknya */}
-        <div className="pointer-events-none absolute -top-40 left-1/2 h-[30rem] w-[52rem] -translate-x-1/2 rounded-full bg-brand/35 blur-[120px]" aria-hidden="true" />
+        {/* gradasi, bukan filter blur: blur sebesar ini berkedip di Safari saat kartu di atasnya beranimasi */}
+        <div
+          className="pointer-events-none absolute -top-64 left-1/2 h-[46rem] w-[80rem] -translate-x-1/2 bg-[radial-gradient(closest-side,rgb(91_61_245/0.42),rgb(91_61_245/0.14)_55%,transparent)]"
+          aria-hidden="true"
+        />
         <svg viewBox="0 0 100 100" className="pointer-events-none absolute top-16 right-[6%] hidden w-20 text-mint md:block" aria-hidden="true">
           <path d="M50 0 C53 36 64 47 100 50 C64 53 53 64 50 100 C47 64 36 53 0 50 C36 47 47 36 50 0Z" fill="currentColor" />
         </svg>
@@ -132,9 +128,7 @@ export function Pricing({ hanya }: { hanya?: JenisHarga }) {
               <span className="block">{hanya === "undangan" ? "Harga undangan digital," : "Harganya jelas,"}</span>
               <span className="block text-mint">{hanya === "undangan" ? "pilih yang pas buat kalian" : "nggak pakai drama"}</span>
             </h2>
-            <p className="mt-4 max-w-xl text-lg text-white/70">
-              {hanya ? `${data.ket}.` : "Undangan digital mulai 99rb, website mulai 450rb."} Bayar lewat transfer bank atau QRIS.
-            </p>
+            <p className="mt-4 max-w-xl text-lg text-white/70">{hanya ? `${data.ket}.` : "Undangan digital mulai 99rb, website mulai 450rb."} Bayar lewat transfer bank atau QRIS.</p>
 
             {!hanya && (
               <>
@@ -190,13 +184,9 @@ export function Pricing({ hanya }: { hanya?: JenisHarga }) {
 
           <div className="mt-12 flex flex-col items-center justify-between gap-4 rounded-3xl bg-white/[0.06] px-6 py-5 text-center ring-1 ring-white/10 sm:flex-row sm:text-left">
             <p className="text-white/75">
-              {jenis === "undangan" ? "Bingung pilih paket yang mana?" : "Belum yakin butuh berapa halaman?"}{" "}
-              <span className="text-white">Konsultasi dulu gratis, kok.</span>
+              {jenis === "undangan" ? "Bingung pilih paket yang mana?" : "Belum yakin butuh berapa halaman?"} <span className="text-white">Konsultasi dulu gratis, kok.</span>
             </p>
-            <Link
-              href={hanya ? "#tema" : jenis === "undangan" ? "/template/undangan" : "/template"}
-              className="group inline-flex shrink-0 items-center gap-2 font-semibold text-mint"
-            >
+            <Link href={hanya ? "#tema" : jenis === "undangan" ? "/template/undangan" : "/template"} className="group inline-flex shrink-0 items-center gap-2 font-semibold text-mint">
               {hanya ? "Lihat temanya lagi" : jenis === "undangan" ? "Lihat semua tema undangan" : "Lihat template website"}
               <Icon name="arrow" className="size-4 transition-transform group-hover:translate-x-1" strokeWidth={2.5} />
             </Link>

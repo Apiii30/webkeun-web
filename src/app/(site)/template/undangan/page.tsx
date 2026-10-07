@@ -4,15 +4,15 @@ import { Badge, PillLink, SectionHeading } from "@/components/brand";
 import { CoverFan } from "@/components/cover-fan";
 import { Icon, type IconName } from "@/components/icons";
 import { Mascot } from "@/components/mascot";
-import { TemplateCard } from "@/components/template-card";
 import { templates, waLink } from "@/lib/site";
 import { Pricing } from "@/components/sections/pricing";
+import { Process } from "@/components/sections/process";
+import { UndanganGallery } from "@/components/sections/undangan-gallery";
 import { Testimonials } from "@/components/sections/testimonials";
 
 export const metadata: Metadata = halaman({
   judul: "Template Undangan Digital Pernikahan",
-  deskripsi:
-    "Undangan pernikahan digital mulai Rp99rb: nama tamu di tiap link, galeri foto, peta lokasi, RSVP, amplop digital, dan musik. Tinggal sebar lewat WhatsApp.",
+  deskripsi: "Undangan pernikahan digital mulai Rp99rb: nama tamu di tiap link, galeri foto, peta lokasi, RSVP, amplop digital, dan musik. Tinggal sebar lewat WhatsApp.",
   path: "/template/undangan",
 });
 
@@ -42,12 +42,6 @@ const fitur: [IconName, string][] = [
   ["pin", "Peta lokasi acara"],
   ["heart", "RSVP & ucapan"],
   ["wallet", "Amplop digital & musik"],
-];
-
-const langkah = [
-  { title: "Pilih tema", desc: "Buka demonya dari HP, pilih yang paling cocok sama acara kalian." },
-  { title: "Kirim data acara", desc: "Nama mempelai & orang tua, tanggal, lokasi, dan foto. Kirim lewat WhatsApp aja." },
-  { title: "Kami siapkan", desc: "Isi undangan kami ganti, lalu kamu dapat link yang siap disebar ke tamu." },
 ];
 
 const tanya = [
@@ -82,19 +76,13 @@ export default function UndanganPage() {
               <span className="block text-brand">tinggal sebar ke tamu</span>
             </h1>
             <p className="mt-5 max-w-xl text-lg text-ink/70">
-              Satu link untuk semua tamu, dengan nama mereka tertulis di undangannya. Pilih temanya, kirim data acara kalian,
-              sisanya kami yang siapkan.
+              Satu link untuk semua tamu, dengan nama mereka tertulis di undangannya. Pilih temanya, kirim data acara kalian, sisanya kami yang siapkan.
             </p>
             <div className="mt-8 flex flex-wrap items-center gap-x-5 gap-y-3">
               <PillLink href="#tema" icon="chevron">
                 Lihat semua tema
               </PillLink>
-              <a
-                href={waLink(pesan)}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 font-semibold text-ink/75 hover:text-brand"
-              >
+              <a href={waLink(pesan)} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 font-semibold text-ink/75 hover:text-brand">
                 <Icon name="whatsapp" className="size-4 text-wa" />
                 Tanya dulu
               </a>
@@ -125,33 +113,12 @@ export default function UndanganPage() {
             Semua tema dibuat untuk HP, jadi paling terasa kalau demonya dibuka dari HP.
           </p>
         </div>
-        <ul className="mt-10 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {undangan.map((t) => (
-            <li key={t.slug} className="flex flex-col overflow-hidden rounded-3xl bg-white ring-1 ring-ink/8">
-              <TemplateCard t={t} />
-            </li>
-          ))}
-        </ul>
+        <UndanganGallery />
       </section>
 
       <Pricing hanya="undangan" />
 
-      <section className="mx-auto max-w-6xl px-4 py-16 sm:px-6 md:py-20">
-        <SectionHeading top="Cara pesan undangan" bottom="cuma 3 langkah" />
-        <ol className="mt-10 grid gap-4 md:grid-cols-3">
-          {langkah.map((s, i) => (
-            <li key={s.title} className="flex gap-4 rounded-3xl bg-lilac-soft p-6">
-              <span className="grid size-11 shrink-0 place-items-center rounded-full bg-white font-bold text-brand ring-4 ring-lilac">
-                {i + 1}
-              </span>
-              <div>
-                <h3 className="text-lg font-bold">{s.title}</h3>
-                <p className="mt-1 text-ink/70">{s.desc}</p>
-              </div>
-            </li>
-          ))}
-        </ol>
-      </section>
+      <Process hanya="undangan" />
 
       <Testimonials />
 
@@ -176,9 +143,7 @@ export default function UndanganPage() {
               Udah naksir satu tema?
               <span className="block text-mint">Yuk, siapin undangannya.</span>
             </h2>
-            <p className="mt-5 max-w-lg text-lg text-white/80">
-              Kirim tema pilihan dan tanggal acara kalian. Kami bantu dari isi sampai link-nya siap disebar.
-            </p>
+            <p className="mt-5 max-w-lg text-lg text-white/80">Kirim tema pilihan dan tanggal acara kalian. Kami bantu dari isi sampai link-nya siap disebar.</p>
             <PillLink href={waLink(pesan)} external tone="white" size="lg" icon="whatsapp" className="mt-8">
               Pesan lewat WhatsApp
             </PillLink>
