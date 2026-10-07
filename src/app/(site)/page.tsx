@@ -9,7 +9,7 @@ import { Process } from "@/components/sections/process";
 import { Services } from "@/components/sections/services";
 import { Testimonials } from "@/components/sections/testimonials";
 import { Why } from "@/components/sections/why";
-import { halaman, SITUS } from "@/lib/seo";
+import { halaman, katalogHarga, SITUS } from "@/lib/seo";
 import { site } from "@/lib/site";
 
 export const metadata: Metadata = halaman({ deskripsi: site.description, path: "/" });
@@ -34,28 +34,7 @@ const dataTerstruktur = {
       hasOfferCatalog: {
         "@type": "OfferCatalog",
         name: "Layanan Webkeun",
-        itemListElement: [
-          {
-            "@type": "Offer",
-            itemOffered: {
-              "@type": "Service",
-              name: "Undangan Digital Pernikahan",
-              serviceType: "Undangan digital",
-              url: `${asal}/template/undangan`,
-              description: "Undangan pernikahan online yang disebar lewat WhatsApp: nama tamu di tiap link, RSVP & ucapan, galeri foto, peta lokasi, musik, dan amplop digital.",
-            },
-          },
-          {
-            "@type": "Offer",
-            itemOffered: {
-              "@type": "Service",
-              name: "Jasa Pembuatan Website",
-              serviceType: "Pembuatan website",
-              url: `${asal}/template`,
-              description: "Website UMKM, company profile, dan portofolio yang rapi di HP, cepat, dan gampang dicari di Google.",
-            },
-          },
-        ],
+        itemListElement: [katalogHarga("undangan", `${asal}/template/undangan`), katalogHarga("website", `${asal}/template`)],
       },
       contactPoint: {
         "@type": "ContactPoint",

@@ -247,6 +247,7 @@ export function Navbar() {
       <Link
         href={href}
         onClick={close}
+        aria-current={active ? "page" : undefined}
         className="flex items-center gap-1.5 py-2 pl-3 text-[15px] font-medium transition-colors hover:text-brand"
       >
         <Icon name={icon} className="size-4" />
@@ -316,7 +317,7 @@ export function Navbar() {
             </Link>
           </li>
           {/* Dari halaman lain, "Layanan" membuka landing page dari atas; di landing page, menggulir ke section-nya */}
-          {menuTrigger("layanan", "Layanan", "layers", pathname === "/" ? "/#layanan" : "/", false)}
+          {menuTrigger("layanan", "Layanan", "layers", pathname === "/" ? "/#layanan" : "/", pathname === "/")}
           {menuTrigger(
             "template",
             "Template",
@@ -417,7 +418,7 @@ export function BottomNav() {
   );
   const link = (href: string, label: string, icon: IconName, active: boolean) => (
     <li className="flex-1">
-      <Link href={href} className={`${item} ${tone(active)}`}>
+      <Link href={href} aria-current={active ? "page" : undefined} className={`${item} ${tone(active)}`}>
         <Icon name={icon} className="size-5" />
         {label}
       </Link>
@@ -465,7 +466,7 @@ export function BottomNav() {
         className="fixed inset-x-0 bottom-0 z-40 border-t border-ink/10 bg-white/85 pb-[env(safe-area-inset-bottom)] backdrop-blur-md md:hidden"
       >
         <ul className="mx-auto flex max-w-md justify-between px-2">
-          {link("/#beranda", "Beranda", "home", false)}
+          {link("/#beranda", "Beranda", "home", pathname === "/")}
           {link("/template/undangan", "Undangan", "heart", pathname === "/template/undangan")}
           {sheetButton("layanan", "layers", false)}
           {sheetButton("template", "browser", pathname.startsWith("/template") && pathname !== "/template/undangan")}

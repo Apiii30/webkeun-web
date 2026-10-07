@@ -6,7 +6,7 @@ export const site = {
   tagline: "Yuk webkeun",
   // produk utama Webkeun: undangan digital pernikahan, lalu jasa pembuatan website
   description:
-    "Undangan digital pernikahan (nama tamu, RSVP, musik) dan jasa pembuatan website UMKM, company profile, serta portofolio. Rapi di HP, harga masuk akal.",
+    "Undangan digital pernikahan mulai Rp99rb (nama tamu, RSVP, musik) dan jasa pembuatan website mulai Rp450rb untuk UMKM, company profile, dan portofolio.",
   whatsapp: "6283125043525", // format internasional, tanpa + dan tanpa 0 di depan
   whatsappDisplay: "0831-2504-3525",
   email: "yukwebkeun@gmail.com",
@@ -42,15 +42,15 @@ export const footerLinks = [
 export const aboutLinks = [
   { href: "/#kenapa", label: "Kenapa Webkeun", desc: "Yang bikin kami beda", icon: "zap" },
   { href: "/#fitur", label: "Fitur yang termasuk", desc: "Domain, hosting, SEO dasar, dll.", icon: "check" },
-  { href: "/#harga", label: "Harga paket", desc: "Mulai 499rb, sekali bayar", icon: "tag" },
+  { href: "/#harga", label: "Harga paket", desc: "Undangan 99rb · website 450rb", icon: "tag" },
   { href: "/#cara-kerja", label: "Cara kerja", desc: "Dari ngobrol sampai online", icon: "steps" },
   { href: "/#faq", label: "Pertanyaan umum", desc: "Yang sering ditanyain", icon: "help" },
 ] as const;
 
 // Ringkasan singkat di bawah hero
 export const facts = [
-  { icon: "heart", title: "Nama tamu di tiap link", desc: "Undangan digital tinggal disebar lewat WhatsApp, tiap tamu disapa namanya." },
-  { icon: "wallet", title: "Website mulai 499rb", desc: "Sekali bayar, domain & hosting tahun pertama sudah termasuk." },
+  { icon: "heart", title: "Undangan mulai 99rb", desc: "Nama tiap tamu tertulis di link-nya, tinggal sebar lewat WhatsApp." },
+  { icon: "wallet", title: "Website mulai 450rb", desc: "Rapi di HP, ada tombol WhatsApp, dan bisa revisi." },
   { icon: "chat", title: "Konsultasi gratis", desc: "Ngobrol dulu lewat WhatsApp, tanpa kewajiban apa-apa." },
 ] as const;
 
@@ -73,8 +73,8 @@ export const features = [
   },
   {
     icon: "globe",
-    title: "Domain & hosting termasuk",
-    desc: "Alamat website pakai nama usaha kamu sendiri. Tahun pertama sudah kami urus, kamu tinggal pakai.",
+    title: "Domain & hosting diurus",
+    desc: "Urusan domain dan hosting kami yang atur. Paket Bisnis ke atas sudah termasuk domain atas nama usaha kamu.",
   },
   {
     icon: "pin",
@@ -106,7 +106,7 @@ export const services = [
     short: "Undangan pernikahan online",
     desc: "Undangan pernikahan yang tinggal disebar lewat WhatsApp. Ada nama tamu, RSVP, galeri foto, dan peta lokasi acara.",
     fit: "Akad, resepsi, lamaran, tasyakuran",
-    price: "harga menyusul", // TODO: isi setelah harga paket undangan disepakati tim
+    price: "mulai 99rb",
   },
   {
     icon: "store",
@@ -115,7 +115,7 @@ export const services = [
     short: "Buat warung, toko, dan usaha jasa",
     desc: "Biar warung, toko, atau usaha jasa kamu gampang dicari di Google dan kelihatan lebih meyakinkan.",
     fit: "Kafe, laundry, katering, bengkel, toko online kecil",
-    price: "mulai 499rb",
+    price: "mulai 450rb",
   },
   {
     icon: "building",
@@ -124,7 +124,7 @@ export const services = [
     short: "Wajah resmi perusahaan kamu",
     desc: "Wajah resmi perusahaan kamu di internet. Profil, layanan, klien, dan kontak dalam satu tempat.",
     fit: "CV, PT, kontraktor, sekolah, klinik",
-    price: "mulai 1,49jt",
+    price: "mulai 850rb",
   },
   {
     icon: "user",
@@ -133,7 +133,7 @@ export const services = [
     short: "Pamerkan karya & pengalaman",
     desc: "Tunjukin karya dan pengalaman kamu dengan cara yang lebih keren daripada PDF.",
     fit: "Desainer, fotografer, freelancer, pencari kerja",
-    price: "mulai 499rb",
+    price: "mulai 450rb",
   },
   {
     icon: "sliders",
@@ -142,7 +142,7 @@ export const services = [
     short: "Toko online, booking, dashboard",
     desc: "Punya ide yang lebih spesifik? Toko online, sistem booking, atau dashboard. Kita obrolin bareng.",
     fit: "Kebutuhan khusus sesuai request",
-    price: "ngobrol dulu",
+    price: "mulai 1,5jt",
   },
 ] as const;
 
@@ -228,53 +228,87 @@ export const serviceShowcase = {
   },
 } as const;
 
-export const packages = [
-  {
-    name: "Starter",
-    for: "Buat yang baru mulai",
-    price: "499rb",
-    priceNote: "sekali bayar",
-    features: [
-      "1 halaman (landing page)",
-      "Rapi di HP & laptop",
-      "Tombol WhatsApp & Google Maps",
-      "Domain .my.id + hosting 1 tahun",
-      "2x revisi",
-      "Jadi ±3 hari kerja",
-    ],
-    highlight: false,
+// Daftar harga (disepakati tim, Oktober 2026). Add-on (express, perpanjangan undangan, kelola website) belum final,
+// jadi belum ditampilkan. nilai: angka rupiah untuk data terstruktur Google. dasar: paket yang fiturnya ikut semua.
+export type Paket = {
+  nama: string;
+  harga: string;
+  nilai: number;
+  mulai?: boolean;
+  sorot?: string;
+  untuk: string;
+  aktif?: string;
+  dasar?: string;
+  fitur: string[];
+};
+
+export const hargaPaket = {
+  undangan: {
+    label: "Undangan Digital",
+    ikon: "heart",
+    ket: "Link undangan untuk dibagikan ke tamu",
+    paket: [
+      {
+        nama: "Basic",
+        harga: "99rb",
+        nilai: 99_000,
+        untuk: "Undangan simpel yang tetap cantik",
+        aktif: "3 bulan",
+        fitur: ["Template siap pakai", "Nama tamu di link", "Hitung mundur acara", "Peta lokasi"],
+      },
+      {
+        nama: "Premium",
+        harga: "229rb",
+        nilai: 229_000,
+        sorot: "Terlaris",
+        untuk: "Paling lengkap buat hari bahagia",
+        aktif: "6 bulan",
+        dasar: "Basic",
+        fitur: ["Galeri foto & musik", "RSVP & ucapan tamu", "Amplop digital", "Link live streaming"],
+      },
+      {
+        nama: "Exclusive",
+        harga: "499rb",
+        nilai: 499_000,
+        untuk: "Desain khusus, cuma punya kalian",
+        aktif: "12 bulan",
+        dasar: "Premium",
+        fitur: ["Desain custom penuh", "Domain sendiri"],
+      },
+    ] as Paket[],
   },
-  {
-    name: "Bisnis",
-    for: "Paling pas buat usaha yang serius",
-    price: "1,49jt",
-    priceNote: "sekali bayar",
-    features: [
-      "Sampai 5 halaman",
-      "Domain .com + hosting 1 tahun",
-      "SEO dasar biar muncul di Google",
-      "Katalog produk / galeri",
-      "Form kontak",
-      "3x revisi",
-      "Jadi ±7 hari kerja",
-    ],
-    highlight: true,
+  website: {
+    label: "Pembuatan Website",
+    ikon: "browser",
+    ket: "UMKM · company profile · portofolio",
+    paket: [
+      {
+        nama: "Basic",
+        harga: "450rb",
+        nilai: 450_000,
+        untuk: "Buat yang baru mulai online",
+        fitur: ["1 halaman landing page", "Tombol WhatsApp", "Tampilan rapi di HP", "2× revisi"],
+      },
+      {
+        nama: "Bisnis",
+        harga: "850rb",
+        nilai: 850_000,
+        sorot: "Paling pas",
+        untuk: "Buat usaha yang mau tampil serius",
+        fitur: ["Hingga 5 halaman", "Domain 1 tahun", "Tombol WhatsApp & peta", "3× revisi"],
+      },
+      {
+        nama: "Premium",
+        harga: "1,5jt",
+        nilai: 1_500_000,
+        mulai: true,
+        untuk: "Fitur sesuai kebutuhan kamu",
+        fitur: ["Halaman & fitur custom", "Katalog produk / blog", "Maintenance 3 bulan"],
+      },
+    ] as Paket[],
   },
-  {
-    name: "Custom",
-    for: "Fitur sesuai kebutuhan",
-    price: "Ngobrol dulu",
-    priceNote: "harga sesuai skop",
-    features: [
-      "Toko online & pembayaran",
-      "Sistem booking / reservasi",
-      "Dashboard admin",
-      "Integrasi sesuai request",
-      "Konsultasi gratis",
-    ],
-    highlight: false,
-  },
-];
+} as const;
+export type JenisHarga = keyof typeof hargaPaket;
 
 export const steps = [
   {
@@ -306,11 +340,11 @@ export const faqs = [
   },
   {
     q: "Berapa lama websitenya jadi?",
-    a: "Paket Starter sekitar 3 hari kerja, paket Bisnis sekitar 7 hari kerja. Waktunya dihitung setelah semua materi (teks, foto, logo) lengkap.",
+    a: "Website paket Basic sekitar 3 hari kerja, paket Bisnis sekitar 7 hari kerja. Waktunya dihitung setelah semua materi (teks, foto, logo) lengkap.",
   },
   {
     q: "Domain dan hosting gimana?",
-    a: "Sudah termasuk untuk tahun pertama. Tahun berikutnya kamu cukup bayar perpanjangannya aja, nanti kami ingatkan sebelum jatuh tempo.",
+    a: "Paket website Bisnis sudah termasuk domain untuk tahun pertama. Tahun berikutnya cukup bayar perpanjangannya, nanti kami ingatkan sebelum jatuh tempo. Untuk undangan, paket Exclusive sudah pakai domain sendiri.",
   },
   {
     q: "Kalau mau ganti isi website setelah jadi?",
@@ -318,11 +352,11 @@ export const faqs = [
   },
   {
     q: "Bayarnya gimana?",
-    a: "DP 50% di awal untuk mulai pengerjaan, sisanya dilunasi setelah website siap online. Bisa transfer bank atau e-wallet.",
+    a: "DP 50% di awal untuk mulai pengerjaan, sisanya dilunasi setelah undangan atau website siap online. Bisa transfer bank atau QRIS.",
   },
   {
     q: "Bisa bikin toko online atau fitur khusus?",
-    a: "Bisa, lewat paket Custom. Ceritain dulu kebutuhannya, nanti kami kasih rincian fitur dan harganya.",
+    a: "Bisa, lewat paket website Premium (mulai 1,5jt). Ceritain dulu kebutuhannya, nanti kami kasih rincian fitur dan harganya.",
   },
 ];
 
@@ -549,18 +583,17 @@ const kawalu = "kawalucoffee.id";
 const bahtera = "bahteralogistik.co.id";
 const laras = "laraskinanti.com";
 const faraAditya = "faraaditya.my.id";
-// Undangan digital (produk utama) & website tampil selang-seling, undangan lebih dulu
+// Kolom desktop: hanya website (UMKM, company profile, portofolio). Undangan dibuat untuk HP, jadi tampil di kolom HP,
+// selang-seling dengan website dan lebih dulu.
 export const heroShots = {
   desktop: [
-    { src: "/preview/undangan/laptop-undangan-garden.webp", url: faraAditya },
     { src: "/preview/umkm/laptop-kawalu-coffee.webp", url: kawalu },
-    { src: "/preview/undangan/laptop-undangan-frisca.webp", url: "friscaarif.my.id" },
     { src: "/preview/company-profile/web-bahtera-2.webp", url: bahtera },
-    { src: "/preview/undangan/laptop-undangan-porselen.webp", url: faraAditya },
     { src: "/preview/portofolio/laptop-laras-kinanti.webp", url: laras },
-    { src: "/preview/undangan/laptop-undangan-sunda.webp", url: faraAditya },
     { src: "/preview/umkm/web-kawalu-2.webp", url: kawalu },
     { src: "/preview/company-profile/laptop-bahtera-logistik.webp", url: bahtera },
+    { src: "/preview/portofolio/web-laras-2.webp", url: laras },
+    { src: "/preview/company-profile/web-bahtera-3.webp", url: bahtera },
   ],
   phone: [
     { src: "/preview/undangan/hp-undangan-sunda-1.webp", url: faraAditya },

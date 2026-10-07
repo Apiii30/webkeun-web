@@ -1,22 +1,35 @@
 import type { Metadata } from "next";
-import { halaman } from "@/lib/seo";
+import { halaman, katalogHarga, SITUS } from "@/lib/seo";
 import { Badge, PillLink, SectionHeading } from "@/components/brand";
 import { CoverFan } from "@/components/cover-fan";
 import { Icon, type IconName } from "@/components/icons";
 import { Mascot } from "@/components/mascot";
 import { TemplateCard } from "@/components/template-card";
 import { templates, waLink } from "@/lib/site";
+import { Pricing } from "@/components/sections/pricing";
 import { Testimonials } from "@/components/sections/testimonials";
 
 export const metadata: Metadata = halaman({
   judul: "Template Undangan Digital Pernikahan",
   deskripsi:
-    "Pilih tema undangan pernikahan digital: nama tamu di tiap link, galeri foto, peta lokasi, RSVP, amplop digital, dan musik. Tinggal sebar lewat WhatsApp.",
+    "Undangan pernikahan digital mulai Rp99rb: nama tamu di tiap link, galeri foto, peta lokasi, RSVP, amplop digital, dan musik. Tinggal sebar lewat WhatsApp.",
   path: "/template/undangan",
 });
 
 // Galeri undangan dipisah dari template website karena pengunjungnya (calon pengantin), isi, dan cara pesannya beda.
-// Harga paket undangan belum ditentukan, jadi halaman ini belum menampilkan harga.
+// Harga paket undangan ada di src/lib/site.ts (hargaPaket.undangan), sama dengan yang tampil di beranda.
+
+// Data terstruktur untuk Google: layanan undangan digital Webkeun beserta paket & harganya
+const dataLayanan = {
+  "@context": "https://schema.org",
+  "@type": "Service",
+  name: "Undangan Digital Pernikahan",
+  serviceType: "Undangan digital",
+  url: `${SITUS.origin}/template/undangan`,
+  areaServed: { "@type": "Country", name: "Indonesia" },
+  provider: { "@id": `${SITUS.origin}/#organisasi` },
+  hasOfferCatalog: katalogHarga("undangan", `${SITUS.origin}/template/undangan#harga`),
+};
 
 const undangan = templates.filter((t) => t.category === "undangan");
 const pesan = "Halo Webkeun! Aku mau pesan undangan digital.";
@@ -52,13 +65,14 @@ const tanya = [
   },
   {
     q: "Harganya berapa?",
-    a: "Paket dan harga undangan sedang kami siapkan. Chat aja dulu, nanti kami kabari begitu sudah siap.",
+    a: "Mulai Rp99rb untuk paket Basic, Rp229rb untuk Premium, dan Rp499rb untuk Exclusive dengan desain custom. Rinciannya ada di bagian Harga di atas.",
   },
 ];
 
 export default function UndanganPage() {
   return (
     <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(dataLayanan).replace(/</g, "\\u003c") }} />
       <section className="overflow-hidden bg-[#fadde4]">
         <div className="mx-auto grid max-w-6xl items-center gap-6 px-4 pt-32 sm:px-6 md:grid-cols-[1.1fr_1fr] md:gap-10 md:pt-36">
           <div className="md:pb-16">
@@ -120,7 +134,9 @@ export default function UndanganPage() {
         </ul>
       </section>
 
-      <section className="mx-auto max-w-6xl px-4 pb-16 sm:px-6 md:pb-20">
+      <Pricing hanya="undangan" />
+
+      <section className="mx-auto max-w-6xl px-4 py-16 sm:px-6 md:py-20">
         <SectionHeading top="Cara pesan undangan" bottom="cuma 3 langkah" />
         <ol className="mt-10 grid gap-4 md:grid-cols-3">
           {langkah.map((s, i) => (

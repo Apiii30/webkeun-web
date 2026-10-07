@@ -1,6 +1,6 @@
 import "server-only";
 import type { Metadata } from "next";
-import { site } from "./site";
+import { hargaPaket, type JenisHarga, site } from "./site";
 
 // Alamat resmi situs yang sudah online (SITUS_URL saat build, mis. https://webkeun.id). Di komputer sendiri jatuh ke
 // localhost. Dipakai untuk link gambar pratinjau, alamat kanonik, sitemap, robots, dan data terstruktur.
@@ -26,5 +26,23 @@ export function halaman({ judul, deskripsi, path }: { judul?: string; deskripsi:
     description: deskripsi,
     alternates: { canonical: path },
     openGraph: { ...ogDasar, title: judul ? `${judul} · ${site.name}` : judulUtama, description: deskripsi, url: path },
+  };
+}
+
+// Daftar paket & harga sebagai data terstruktur (schema.org OfferCatalog), dari data yang sama dengan tampilan harganya.
+// Paket "mulai ..." ditulis sebagai harga minimum.
+export function katalogHarga(jenis: JenisHarga, url: string) {
+  const { label, paket } = hargaPaket[jenis];
+  return {
+    "@type": "OfferCatalog",
+    name: `Paket ${label}`,
+    itemListElement: paket.map((p) => ({
+      "@type": "Offer",
+      name: `${label} ${p.nama}`,
+      url,
+      priceCurrency: "IDR",
+      ...(p.mulai ? { priceSpecification: { "@type": "PriceSpecification", minPrice: p.nilai, priceCurrency: "IDR" } } : { price: p.nilai }),
+      itemOffered: { "@type": "Service", name: `${label} ${p.nama}`, description: [p.dasar && `Semua fitur ${p.dasar}`, ...p.fitur, p.aktif && `Aktif ${p.aktif}`].filter(Boolean).join(", ") },
+    })),
   };
 }
