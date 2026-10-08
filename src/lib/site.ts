@@ -501,9 +501,9 @@ export const templateIntro = {
 
 // Gaya tema undangan: tiap gaya jadi satu bagian (dan satu filter) di galeri /template/undangan
 export const gayaUndangan = [
-  { slug: "adat", label: "Adat & Budaya", desc: "Ornamen Sunda, Jawa, dan Tionghoa" },
+  { slug: "adat", label: "Adat & Budaya", desc: "Ornamen Sunda dan Tionghoa" },
   { slug: "islami", label: "Islami", desc: "Lengkung mihrab, geometri, dan ayat dalam teks Arab" },
-  { slug: "elegan", label: "Elegan & Klasik", desc: "Mewah ala majalah dan cetakan vintage" },
+  { slug: "elegan", label: "Elegan & Klasik", desc: "Mewah ala majalah, cetakan vintage, dan porselen klasik" },
   { slug: "floral", label: "Floral & Alam", desc: "Taman, bunga botani, dan hutan berkabut" },
 ] as const;
 export type GayaUndangan = (typeof gayaUndangan)[number]["slug"];
@@ -549,15 +549,15 @@ export const templates = [
   },
   {
     slug: "undangan-fara-aditya-oriental-peony",
-    name: "Fara & Aditya · Oriental Peony",
+    name: "Mei Lin & Kevin · Oriental Peony",
     kind: "Undangan Digital",
     category: "undangan",
-    url: "faraaditya.my.id",
+    url: "meilinkevin.my.id",
     nuansa: "Adat Tionghoa",
     gaya: "adat" as GayaUndangan,
     desc: "Merah pernis, emas, dan giok bernuansa Tionghoa, dengan gerbang paifang.",
-    phone: "/preview/undangan/hp-undangan-oriental-1.webp",
-    screens: ["/preview/undangan/hp-undangan-oriental-2.webp", "/preview/undangan/hp-undangan-oriental-3.webp"],
+    phone: "/preview/undangan/hp-undangan-oriental-meilin-1.webp",
+    screens: ["/preview/undangan/hp-undangan-oriental-meilin-2.webp", "/preview/undangan/hp-undangan-oriental-meilin-3.webp"],
     tone: { bg: "#f6e3d6", accent: "#9e1c22" },
     includes: ["Pembuka kamera 10 detik", "Galeri roda jendela bulan", "Love story gulungan lukisan", "Musik & angpao digital"],
   },
@@ -595,8 +595,8 @@ export const templates = [
     kind: "Undangan Digital",
     category: "undangan",
     url: "faraaditya.my.id",
-    nuansa: "Adat Jawa",
-    gaya: "adat" as GayaUndangan,
+    nuansa: "Klasik",
+    gaya: "elegan" as GayaUndangan,
     desc: "Biru kobalt & gading seperti porselen, bermotif batik kawung dan gunungan.",
     phone: "/preview/undangan/hp-undangan-porselen-1.webp",
     screens: ["/preview/undangan/hp-undangan-porselen-2.webp", "/preview/undangan/hp-undangan-porselen-3.webp"],

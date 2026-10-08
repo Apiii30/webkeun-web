@@ -358,7 +358,10 @@ function Penutup({ u }: { u: Undangan }) {
         </Muncul>
         <Muncul jeda={0.35} dari="scale(0.85)">
           <p className={`${naskah} mt-1 text-[3.8rem] leading-tight text-[#9e1c22]`}>
-            {u.wanita.panggilan} <span className="text-[#c99a3e]">&amp;</span> {u.pria.panggilan}
+            <span className="whitespace-nowrap">{u.wanita.panggilan}</span>{" "}
+            <span className="whitespace-nowrap">
+              <span className="text-[#c99a3e]">&amp;</span> {u.pria.panggilan}
+            </span>
           </p>
         </Muncul>
         <KreditWebkeun className="relative mt-12 text-[#9e1c22]" />

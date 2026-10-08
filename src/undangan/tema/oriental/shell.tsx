@@ -110,7 +110,10 @@ function Sampul({ u, tamu, onOpen }: { u: Undangan; tamu?: string; onOpen: () =>
               The Wedding of
             </p>,
             <h1 key="b" className={`${naskah} mt-1 text-[3.6rem] leading-[1.05] text-[#8a1a1f]`}>
-              {u.wanita.panggilan} <span className="text-[#b0842e]">&amp;</span> {u.pria.panggilan}
+              <span className="whitespace-nowrap">{u.wanita.panggilan}</span>{" "}
+              <span className="whitespace-nowrap">
+                <span className="text-[#b0842e]">&amp;</span> {u.pria.panggilan}
+              </span>
             </h1>,
             <p key="c" className={`${yuji} mt-1 text-[12.5px] tracking-[0.26em] text-[#2c140f] uppercase`}>
               {u.tanggal}

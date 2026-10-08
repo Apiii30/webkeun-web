@@ -245,7 +245,10 @@ export function Beranda({ u, buka }: { u: Undangan; buka: boolean }) {
               The Wedding of
             </p>,
             <h1 key="b" className={`${naskah} mt-0.5 text-[3.1rem] leading-[1.05] text-[#8a1a1f]`}>
-              {u.wanita.panggilan} <span className="text-[#b0842e]">&amp;</span> {u.pria.panggilan}
+              <span className="whitespace-nowrap">{u.wanita.panggilan}</span>{" "}
+              <span className="whitespace-nowrap">
+                <span className="text-[#b0842e]">&amp;</span> {u.pria.panggilan}
+              </span>
             </h1>,
             <p key="c" className={`${yuji} mt-1 text-[11.5px] tracking-[0.26em] text-[#3b1d16] uppercase`}>
               {u.tanggal}
