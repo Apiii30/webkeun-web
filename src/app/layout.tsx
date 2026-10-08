@@ -45,6 +45,18 @@ const scrollTopOnReload = `(function () {
   } catch (e) {}
 })();`;
 
+// Paket gerak (lihat globals.css & components/gerak.tsx): <html> diberi .gerak sebelum halaman tampil supaya elemen
+// bertanda data-gerak bisa disembunyikan dulu lalu dimunculkan saat digulir. Tidak dipasang untuk "kurangi gerakan".
+// Pengaman: kalau dalam 3 detik pengamatnya belum jalan (JavaScript lambat/gagal), .gerak dilepas & semua terlihat.
+const gerak = `(function () {
+  try {
+    if (matchMedia("(prefers-reduced-motion: reduce)").matches || !("IntersectionObserver" in window)) return;
+    var akar = document.documentElement;
+    akar.classList.add("gerak");
+    setTimeout(function () { if (!window.__gerak) akar.classList.remove("gerak"); }, 3000);
+  } catch (e) {}
+})();`;
+
 // Penghalang ringan supaya desain tidak gampang dicontek: klik kanan, seret gambar, dan pintasan DevTools / lihat
 // sumber / simpan halaman dimatikan. Ini hanya penghalang, bukan pengaman: kode yang sampai ke browser tetap bisa
 // dilihat lewat menu browser. Klik kanan di kolom isian tetap boleh (untuk tempel), dan halaman /rekap tidak ikut
@@ -72,9 +84,11 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     // data-scroll-behavior: scroll halus hanya untuk anchor di halaman yang sama;
     // saat pindah halaman Next langsung mulai dari atas (Next 16 tidak melakukannya otomatis lagi)
-    <html lang="id" data-scroll-behavior="smooth" className={`${jakarta.variable} h-full antialiased`}>
+    // suppressHydrationWarning: kelas .gerak dipasang skrip sebelum React berjalan
+    <html lang="id" data-scroll-behavior="smooth" className={`${jakarta.variable} h-full antialiased`} suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: scrollTopOnReload }} />
+        <script dangerouslySetInnerHTML={{ __html: gerak }} />
         {process.env.NODE_ENV === "production" && <script dangerouslySetInnerHTML={{ __html: penghalang }} />}
       </head>
       <body className="min-h-full flex flex-col font-sans">{children}</body>

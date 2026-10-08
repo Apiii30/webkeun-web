@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useRef, useState } from "react";
 import { useDiam } from "@/lib/diam";
 import { serviceShowcase, services, waLink } from "@/lib/site";
-import { PillLink, SectionHeading } from "../brand";
+import { PillLink, SectionHeading, Stabilo } from "../brand";
 import { Icon } from "../icons";
 import { Panggung } from "./services-stage";
 
@@ -35,27 +35,25 @@ export function Services() {
   return (
     <section id="layanan" className="relative">
       <div className="mx-auto grid max-w-6xl gap-6 px-4 pt-20 sm:px-6 md:grid-cols-2 md:items-end md:pt-28">
-        <SectionHeading top="Undangan atau website," bottom="kamu butuh yang mana?" />
-        <p className="max-w-md text-lg text-ink/70 md:justify-self-end">
-          Bingung pilih? Chat aja dan ceritain acara atau usaha kamu. Nanti kami bantu tentuin yang paling pas.
-        </p>
+        <SectionHeading
+          top="Undangan atau website,"
+          bottom={
+            <>
+              kamu butuh <Stabilo>yang mana?</Stabilo>
+            </>
+          }
+        />
+        <p className="max-w-md text-lg text-ink/70 md:justify-self-end">Bingung pilih? Chat aja dan ceritain acara atau usaha kamu. Nanti kami bantu tentuin yang paling pas.</p>
       </div>
 
       <div ref={track} className={`relative ${diam ? "pt-10 pb-20 md:pb-28" : "h-[475svh]"}`}>
         {/* tujuan link /#website-umkm dst. dari menu Layanan: tepat di jatah guliran tiap layanan
             (+6rem mengimbangi scroll-padding-top) */}
         {services.map((s, i) => (
-          <span
-            key={s.slug}
-            id={s.slug}
-            className="absolute left-0"
-            style={{ top: diam ? 0 : `calc((100% - 100svh) * ${i / N + 0.07} + 6rem)` }}
-          />
+          <span key={s.slug} id={s.slug} className="absolute left-0" style={{ top: diam ? 0 : `calc((100% - 100svh) * ${i / N + 0.07} + 6rem)` }} />
         ))}
 
-        <div
-          className={`${diam ? "" : "sticky top-0 h-svh"} flex flex-col justify-center pt-[4.75rem] pb-[calc(4.75rem+env(safe-area-inset-bottom))] md:py-0`}
-        >
+        <div className={`${diam ? "" : "sticky top-0 h-svh"} flex flex-col justify-center pt-[4.75rem] pb-[calc(4.75rem+env(safe-area-inset-bottom))] md:py-0`}>
           <div className="mx-auto grid w-full max-w-6xl items-center gap-5 px-4 sm:px-6 md:grid-cols-[0.82fr_1.18fr] md:gap-10 lg:gap-14">
             <Daftar p={p} aktif={aktif} diam={diam} pilih={pilih} />
             <Tab aktif={aktif} pilih={pilih} />
@@ -69,17 +67,7 @@ export function Services() {
 }
 
 // Desktop: daftar layanan + rel progres. Layanan aktif membuka rinciannya.
-function Daftar({
-  p,
-  aktif,
-  diam,
-  pilih,
-}: {
-  p: MotionValue<number>;
-  aktif: number;
-  diam: boolean;
-  pilih: (i: number) => void;
-}) {
+function Daftar({ p, aktif, diam, pilih }: { p: MotionValue<number>; aktif: number; diam: boolean; pilih: (i: number) => void }) {
   const ujung = useTransform(p, [0, 1], ["0%", "100%"]);
   const isi = diam ? (aktif + 1) / N : p;
 
@@ -88,10 +76,7 @@ function Daftar({
       {/* rel progres: garis tebal ujung bulat + titik mint, seperti goresan logo */}
       <div className="absolute top-3 bottom-3 left-0 w-1.5 rounded-full bg-lilac" aria-hidden="true">
         <motion.div style={{ scaleY: isi }} className="absolute inset-0 origin-top rounded-full bg-brand" />
-        <motion.span
-          style={{ top: diam ? `${((aktif + 1) / N) * 100}%` : ujung }}
-          className="absolute left-1/2 size-4 -translate-x-1/2 -translate-y-1/2 rounded-full bg-mint ring-4 ring-white"
-        />
+        <motion.span style={{ top: diam ? `${((aktif + 1) / N) * 100}%` : ujung }} className="absolute left-1/2 size-4 -translate-x-1/2 -translate-y-1/2 rounded-full bg-mint ring-4 ring-white" />
       </div>
 
       <ol>
@@ -99,15 +84,8 @@ function Daftar({
           const on = i === aktif;
           return (
             <li key={s.slug}>
-              <button
-                type="button"
-                onClick={() => pilih(i)}
-                aria-current={on ? "step" : undefined}
-                className="group flex w-full items-baseline gap-4 py-2 text-left"
-              >
-                <span className={`w-6 shrink-0 text-sm font-bold tabular-nums transition-colors ${on ? "text-brand" : "text-ink/30"}`}>
-                  {String(i + 1).padStart(2, "0")}
-                </span>
+              <button type="button" onClick={() => pilih(i)} aria-current={on ? "step" : undefined} className="group flex w-full items-baseline gap-4 py-2 text-left">
+                <span className={`w-6 shrink-0 text-sm font-bold tabular-nums transition-colors ${on ? "text-brand" : "text-ink/30"}`}>{String(i + 1).padStart(2, "0")}</span>
                 <span
                   className={`relative text-[1.75rem] leading-tight font-bold tracking-[-0.02em] transition-colors duration-300 lg:text-[2.1rem] ${
                     on ? "text-ink" : "text-ink/25 group-hover:text-ink/55"
@@ -117,11 +95,7 @@ function Daftar({
                   {on && <Coret />}
                 </span>
               </button>
-              <div
-                className={`grid transition-[grid-template-rows] duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${
-                  on ? "grid-rows-[1fr]" : "grid-rows-[0fr]"
-                }`}
-              >
+              <div className={`grid transition-[grid-template-rows] duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${on ? "grid-rows-[1fr]" : "grid-rows-[0fr]"}`}>
                 <div className="overflow-hidden" inert={!on}>
                   <div className={`pt-2 pb-5 pl-10 transition-opacity duration-300 ${on ? "opacity-100 delay-150" : "opacity-0"}`}>
                     <Rincian s={s} />
@@ -209,9 +183,7 @@ function Tab({ aktif, pilih }: { aktif: number; pilih: (i: number) => void }) {
             onClick={() => pilih(i)}
             aria-current={on ? "step" : undefined}
             aria-label={s.title}
-            className={`relative flex flex-col items-center gap-0.5 rounded-xl px-1 py-1.5 text-[11px] font-bold transition-colors ${
-              on ? "text-brand" : "text-ink/50"
-            }`}
+            className={`relative flex flex-col items-center gap-0.5 rounded-xl px-1 py-1.5 text-[11px] font-bold transition-colors ${on ? "text-brand" : "text-ink/50"}`}
           >
             {on && (
               <motion.span
@@ -235,13 +207,7 @@ function RincianHP({ s }: { s: Layanan }) {
   return (
     <div className="min-h-[11.5rem] md:hidden">
       <AnimatePresence mode="wait" initial={false}>
-        <motion.div
-          key={s.slug}
-          initial={{ opacity: 0, y: 14 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -10 }}
-          transition={{ duration: 0.22 }}
-        >
+        <motion.div key={s.slug} initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} transition={{ duration: 0.22 }}>
           <div className="flex items-baseline justify-between gap-3">
             <h3 className="text-2xl font-bold tracking-tight">{s.title}</h3>
             <span className="shrink-0 text-sm font-semibold text-brand">{s.price}</span>

@@ -31,7 +31,7 @@ export function Sosial() {
           <p className="max-w-sm text-lg text-ink/70 md:justify-self-end">Ikuti kami buat lihat karya dan kabar terbaru dari Webkeun.</p>
         </div>
 
-        <div className="relative mt-10 grid gap-5 md:grid-cols-2">
+        <div data-gerak="buka" className="relative mt-10 grid gap-5 md:grid-cols-2">
           {/* maskot mengintip dari atas kartu TikTok */}
           <Mascot mood="kedip" className="absolute -top-11 right-8 z-10 w-16 rotate-6 drop-shadow-lg max-md:hidden" />
 

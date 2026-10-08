@@ -9,23 +9,14 @@ import { IkonSosial } from "./sosial";
 export function ClosingCta() {
   return (
     <section className="px-4 pb-20 sm:px-6 md:pb-28">
-      <div className="relative mx-auto grid max-w-6xl items-center gap-8 overflow-hidden rounded-4xl bg-brand px-7 py-12 text-white sm:px-12 md:grid-cols-[1.6fr_1fr] md:py-16">
+      <div data-gerak="buka" className="relative mx-auto grid max-w-6xl items-center gap-8 overflow-hidden rounded-4xl bg-brand px-7 py-12 text-white sm:px-12 md:grid-cols-[1.6fr_1fr] md:py-16">
         <div className="relative">
           <h2 className="text-4xl leading-[1.05] font-bold tracking-[-0.03em] sm:text-5xl lg:text-6xl">
             Udah kebayang?
             <span className="block text-mint">Yuk webkeun.</span>
           </h2>
-          <p className="mt-5 max-w-lg text-lg text-white/80">
-            Konsultasi gratis. Ceritain acara atau usaha kamu, nanti kami kasih saran yang paling pas, tanpa paksaan.
-          </p>
-          <PillLink
-            href={waLink("Halo Webkeun! Aku udah kebayang undangan/website-nya, yuk ngobrol.")}
-            external
-            tone="white"
-            size="lg"
-            icon="whatsapp"
-            className="mt-8"
-          >
+          <p className="mt-5 max-w-lg text-lg text-white/80">Konsultasi gratis. Ceritain acara atau usaha kamu, nanti kami kasih saran yang paling pas, tanpa paksaan.</p>
+          <PillLink href={waLink("Halo Webkeun! Aku udah kebayang undangan/website-nya, yuk ngobrol.")} external tone="white" size="lg" icon="whatsapp" className="mt-8">
             Chat {site.whatsappDisplay}
           </PillLink>
         </div>

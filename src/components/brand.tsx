@@ -7,12 +7,7 @@ export function StrokeUnderline({ children, color = "#5B3DF5" }: { children: Rea
   return (
     <span className="relative inline-block whitespace-nowrap">
       <span className="relative z-10">{children}</span>
-      <svg
-        viewBox="0 0 300 24"
-        preserveAspectRatio="none"
-        className="absolute bottom-[-0.14em] left-0 h-[0.28em] w-full overflow-visible"
-        aria-hidden="true"
-      >
+      <svg viewBox="0 0 300 24" preserveAspectRatio="none" className="absolute bottom-[-0.14em] left-0 h-[0.28em] w-full overflow-visible" aria-hidden="true">
         <path
           d="M4 14 C 80 6, 220 6, 296 13"
           fill="none"
@@ -25,10 +20,7 @@ export function StrokeUnderline({ children, color = "#5B3DF5" }: { children: Rea
           className="animate-draw"
         />
       </svg>
-      <span
-        className="absolute right-[-0.22em] bottom-[-0.08em] size-[0.16em] animate-pop rounded-full bg-mint"
-        aria-hidden="true"
-      />
+      <span className="absolute right-[-0.22em] bottom-[-0.08em] size-[0.16em] animate-pop rounded-full bg-mint" aria-hidden="true" />
     </span>
   );
 }
@@ -36,35 +28,28 @@ export function StrokeUnderline({ children, color = "#5B3DF5" }: { children: Rea
 // Label kecil di atas judul section
 export function Badge({ children, className = "" }: { children: ReactNode; className?: string }) {
   return (
-    <p
-      className={`inline-flex items-center gap-2 rounded-full bg-white px-4 py-1.5 text-xs font-bold tracking-[0.14em] text-brand uppercase ring-1 ring-brand/15 ${className}`}
-    >
+    <p data-gerak="stiker" className={`inline-flex items-center gap-2 rounded-full bg-white px-4 py-1.5 text-xs font-bold tracking-[0.14em] text-brand uppercase ring-1 ring-brand/15 ${className}`}>
       <span className="size-2 rounded-full bg-mint" />
       {children}
     </p>
   );
 }
 
-// Judul dua baris: baris pertama tinta, baris kedua ungu brand
-export function SectionHeading({
-  top,
-  bottom,
-  center,
-  className = "",
-}: {
-  top: ReactNode;
-  bottom: ReactNode;
-  center?: boolean;
-  className?: string;
-}) {
+// Kata penting yang diberi sapuan stabilo mint (muncul setelah judulnya, lihat "Paket gerak" di globals.css)
+export function Stabilo({ children }: { children: ReactNode }) {
+  return <span className="stabilo">{children}</span>;
+}
+
+// Judul dua baris: baris pertama tinta, baris kedua ungu brand. Tiap baris naik dari balik garis saat terlihat.
+export function SectionHeading({ top, bottom, center, className = "" }: { top: ReactNode; bottom: ReactNode; center?: boolean; className?: string }) {
   return (
-    <h2
-      className={`text-3xl leading-[1.12] font-bold tracking-[-0.02em] text-balance sm:text-4xl lg:text-[2.75rem] ${
-        center ? "text-center" : ""
-      } ${className}`}
-    >
-      <span className="block">{top}</span>
-      <span className="block text-brand">{bottom}</span>
+    <h2 data-gerak="judul" className={`text-3xl leading-[1.12] font-bold tracking-[-0.02em] text-balance sm:text-4xl lg:text-[2.75rem] ${center ? "text-center" : ""} ${className}`}>
+      <span className="baris">
+        <span>{top}</span>
+      </span>
+      <span className="baris text-brand">
+        <span>{bottom}</span>
+      </span>
     </h2>
   );
 }
@@ -107,11 +92,7 @@ export function PillLink({
   const content = (
     <>
       {children}
-      <span
-        className={`grid shrink-0 place-items-center rounded-full transition-transform group-hover:translate-x-0.5 ${
-          size === "lg" ? "size-10" : "size-8"
-        } ${pillIconTone[tone]}`}
-      >
+      <span className={`grid shrink-0 place-items-center rounded-full transition-transform group-hover:translate-x-0.5 ${size === "lg" ? "size-10" : "size-8"} ${pillIconTone[tone]}`}>
         <Icon name={icon} className={size === "lg" ? "size-5" : "size-4"} strokeWidth={2.5} />
       </span>
     </>

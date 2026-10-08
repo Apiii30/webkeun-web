@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 import { templateCategories, templates } from "@/lib/site";
-import { SectionHeading } from "../brand";
+import { SectionHeading, Stabilo } from "../brand";
 import { Icon } from "../icons";
 import { PhoneTrio } from "../phone-trio";
 
@@ -20,16 +20,17 @@ export function Portfolio() {
       <div className="mx-auto max-w-6xl px-4 py-20 sm:px-6 md:py-28">
         <div className="grid gap-6 md:grid-cols-[1fr_auto] md:items-end">
           <div>
-            <SectionHeading top="Pilih template," bottom="kami sesuaikan buat kamu" />
-            <p className="mt-4 max-w-2xl text-lg text-ink/70">
-              Mulai dari template yang paling dekat sama usaha kamu. Warna, foto, dan isinya nanti kami ganti sesuai
-              brand kamu.
-            </p>
+            <SectionHeading
+              top="Pilih template,"
+              bottom={
+                <>
+                  kami sesuaikan <Stabilo>buat kamu</Stabilo>
+                </>
+              }
+            />
+            <p className="mt-4 max-w-2xl text-lg text-ink/70">Mulai dari template yang paling dekat sama usaha kamu. Warna, foto, dan isinya nanti kami ganti sesuai brand kamu.</p>
           </div>
-          <Link
-            href="/template"
-            className="group inline-flex items-center gap-2 justify-self-start font-semibold text-brand md:justify-self-end"
-          >
+          <Link href="/template" className="group inline-flex items-center gap-2 justify-self-start font-semibold text-brand md:justify-self-end">
             Lihat semua template
             <Icon name="arrow" className="size-4 transition-transform group-hover:translate-x-1" strokeWidth={2.5} />
           </Link>
@@ -45,9 +46,7 @@ export function Portfolio() {
               aria-selected={i === active}
               aria-controls="panel-template"
               onClick={() => setActive(i)}
-              className={`rounded-full px-4 py-2 text-sm font-semibold transition-colors ${
-                i === active ? "bg-brand text-white" : "bg-lilac-soft text-ink/75 hover:text-brand"
-              }`}
+              className={`rounded-full px-4 py-2 text-sm font-semibold transition-colors ${i === active ? "bg-brand text-white" : "bg-lilac-soft text-ink/75 hover:text-brand"}`}
             >
               {demo.kind}
             </button>
@@ -56,20 +55,13 @@ export function Portfolio() {
 
         <div
           id="panel-template"
+          data-gerak="buka"
           role="tabpanel"
           aria-labelledby={`tab-${d.slug}`}
           className="mt-6 grid gap-8 rounded-3xl bg-lilac p-4 sm:p-6 lg:grid-cols-[1fr_17rem] lg:items-end lg:p-8"
         >
           {d.screens && d.tone ? (
-            <PhoneTrio
-              key={d.slug}
-              name={d.name}
-              cover={d.phone}
-              screens={d.screens}
-              tone={d.tone}
-              width={210}
-              className="group h-[26rem] animate-rise rounded-2xl sm:h-[30rem] lg:h-[32rem]"
-            />
+            <PhoneTrio key={d.slug} name={d.name} cover={d.phone} screens={d.screens} tone={d.tone} width={210} className="group h-[26rem] animate-rise rounded-2xl sm:h-[30rem] lg:h-[32rem]" />
           ) : (
             <div className="relative pb-8 sm:pb-0">
               <div className="overflow-hidden rounded-2xl bg-white shadow-[0_24px_60px_-30px_rgb(21_19_43/0.5)]">
@@ -79,30 +71,12 @@ export function Portfolio() {
                     <span className="size-2.5 rounded-full bg-[#ffbd2e]" />
                     <span className="size-2.5 rounded-full bg-[#28c840]" />
                   </span>
-                  <span className="truncate rounded-full bg-lilac-soft px-3 py-1 text-xs font-medium text-ink/60">
-                    {d.url}
-                  </span>
+                  <span className="truncate rounded-full bg-lilac-soft px-3 py-1 text-xs font-medium text-ink/60">{d.url}</span>
                 </div>
-                <Image
-                  key={d.laptop}
-                  src={d.laptop}
-                  alt={`Tampilan laptop website ${d.name}`}
-                  width={1280}
-                  height={800}
-                  sizes="(min-width: 1024px) 760px, 92vw"
-                  className="w-full animate-rise"
-                />
+                <Image key={d.laptop} src={d.laptop} alt={`Tampilan laptop website ${d.name}`} width={1280} height={800} sizes="(min-width: 1024px) 760px, 92vw" className="w-full animate-rise" />
               </div>
               <div className="absolute -right-1 -bottom-2 w-[26%] max-w-40 overflow-hidden rounded-[1.25rem] bg-white p-1 shadow-2xl sm:-right-3 sm:-bottom-6">
-                <Image
-                  key={d.phone}
-                  src={d.phone}
-                  alt={`Tampilan HP website ${d.name}`}
-                  width={480}
-                  height={960}
-                  sizes="160px"
-                  className="w-full animate-rise rounded-2xl"
-                />
+                <Image key={d.phone} src={d.phone} alt={`Tampilan HP website ${d.name}`} width={480} height={960} sizes="160px" className="w-full animate-rise rounded-2xl" />
               </div>
             </div>
           )}

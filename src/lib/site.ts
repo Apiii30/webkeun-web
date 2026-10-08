@@ -661,20 +661,3 @@ export const templates = [
   },
 ];
 
-// Panggung hero: HP memperagakan undangan yang disebar lewat WhatsApp (link dikirim ke tamu → diketuk → undangan
-// terbuka dengan nama tamunya → RSVP masuk), lalu nama tamu & temanya berganti. Di belakangnya jendela browser
-// bergantian menampilkan contoh website. Screenshot dari /public/preview/<kategori>.
-export const heroPanggung = {
-  undangan: [
-    { sampul: "/preview/undangan/hp-undangan-sunda-1.webp", pasangan: "Fara & Aditya", url: "faraaditya.my.id", tamu: "Budi" },
-    { sampul: "/preview/undangan/hp-undangan-frisca-1.webp", pasangan: "Frisca & Arif", url: "friscaarif.my.id", tamu: "Sari" },
-    { sampul: "/preview/undangan/hp-undangan-porselen-1.webp", pasangan: "Fara & Aditya", url: "faraaditya.my.id", tamu: "Andi" },
-    { sampul: "/preview/undangan/hp-undangan-luxury-1.webp", pasangan: "Fara & Aditya", url: "faraaditya.my.id", tamu: "Rina" },
-  ],
-  website: [
-    { src: "/preview/umkm/laptop-kawalu-coffee.webp", url: "kawalucoffee.id", jenis: "Website UMKM" },
-    { src: "/preview/company-profile/laptop-bahtera-logistik.webp", url: "bahteralogistik.co.id", jenis: "Company Profile" },
-    { src: "/preview/portofolio/laptop-laras-kinanti.webp", url: "laraskinanti.com", jenis: "Portofolio" },
-  ],
-};
-

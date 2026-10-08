@@ -1,4 +1,4 @@
-import { SectionHeading } from "../brand";
+import { SectionHeading, Stabilo } from "../brand";
 import { Icon, type IconName } from "../icons";
 import { Mascot } from "../mascot";
 
@@ -14,21 +14,22 @@ export function Why() {
   return (
     <section id="kenapa" className="mx-auto grid max-w-6xl items-center gap-14 px-4 py-20 sm:px-6 md:grid-cols-[1.35fr_1fr] md:py-28">
       <div>
-        <SectionHeading top="Kenapa" bottom="harus Webkeun?" />
+        <SectionHeading
+          top="Kenapa"
+          bottom={
+            <>
+              harus <Stabilo>Webkeun?</Stabilo>
+            </>
+          }
+        />
         <p className="mt-6 max-w-2xl text-lg leading-relaxed text-ink/70">
-          Undangan dan website sama-sama kesan pertama: yang dilihat tamu sebelum datang ke acaramu, dan pelanggan
-          sebelum mampir ke usahamu. Webkeun bikinin undangan digital dan website yang{" "}
-          <strong className="font-semibold text-ink">rapi di HP</strong>,{" "}
-          <strong className="font-semibold text-ink">cepat dibuka</strong>, dan{" "}
-          <strong className="font-semibold text-ink">gampang dibagikan</strong>, tanpa kamu harus pusing urusan teknis.
-          Kamu cukup cerita, sisanya kami yang kerjakan.
+          Undangan dan website sama-sama kesan pertama: yang dilihat tamu sebelum datang ke acaramu, dan pelanggan sebelum mampir ke usahamu. Webkeun bikinin undangan digital dan website yang{" "}
+          <strong className="font-semibold text-ink">rapi di HP</strong>, <strong className="font-semibold text-ink">cepat dibuka</strong>, dan{" "}
+          <strong className="font-semibold text-ink">gampang dibagikan</strong>, tanpa kamu harus pusing urusan teknis. Kamu cukup cerita, sisanya kami yang kerjakan.
         </p>
-        <ul className="mt-8 flex flex-wrap gap-3">
+        <ul data-gerak="stiker-anak" className="mt-8 flex flex-wrap gap-3">
           {promises.map((p) => (
-            <li
-              key={p}
-              className="inline-flex items-center gap-2 rounded-full bg-lilac-soft px-4 py-2 text-sm font-semibold"
-            >
+            <li key={p} className="inline-flex items-center gap-2 rounded-full bg-lilac-soft px-4 py-2 text-sm font-semibold">
               <span className="grid size-5 place-items-center rounded-full bg-mint text-ink">
                 <Icon name="check" className="size-3" strokeWidth={3.5} />
               </span>
@@ -38,7 +39,7 @@ export function Why() {
         </ul>
       </div>
 
-      <div className="relative mx-auto w-full max-w-72 sm:max-w-sm">
+      <div data-gerak="buka" className="relative mx-auto w-full max-w-72 sm:max-w-sm">
         <div className="absolute inset-8 rotate-6 rounded-[2.5rem] bg-brand" aria-hidden="true" />
         <Mascot mood="senyum" className="relative w-full -rotate-3 p-10" />
         {chips.map((c) => (

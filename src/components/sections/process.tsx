@@ -4,7 +4,7 @@ import { AnimatePresence, motion, MotionConfig, useAnimationFrame, useInView, us
 import Image from "next/image";
 import { type KeyboardEvent, type ReactNode, useRef, useState } from "react";
 import { hargaPaket, steps } from "@/lib/site";
-import { SectionHeading } from "../brand";
+import { SectionHeading, Stabilo } from "../brand";
 import { Icon } from "../icons";
 import { Mascot } from "../mascot";
 
@@ -67,7 +67,14 @@ export function Process({ hanya }: { hanya?: "undangan" }) {
       <section id="cara-kerja" className="relative overflow-hidden bg-lilac-soft">
         <div className="mx-auto max-w-6xl px-4 py-20 sm:px-6 md:py-28">
           <div className="grid gap-6 md:grid-cols-[1fr_auto] md:items-end">
-            <SectionHeading top={hanya ? "Cara pesan undangan," : "Alur pemesanan,"} bottom="dari chat WA sampai link aktif" />
+            <SectionHeading
+              top={hanya ? "Cara pesan undangan," : "Alur pemesanan,"}
+              bottom={
+                <>
+                  dari chat WA sampai <Stabilo>link aktif</Stabilo>
+                </>
+              }
+            />
             <p className="max-w-sm text-lg text-ink/70 md:justify-self-end">{steps.length} langkah yang jelas dari awal. Kamu selalu tahu pesanan kamu lagi sampai mana.</p>
           </div>
 

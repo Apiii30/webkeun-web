@@ -4,7 +4,7 @@ import { motion, MotionConfig, type Variants } from "motion/react";
 import Image from "next/image";
 import Link from "next/link";
 import { type Testimoni, testimonials } from "@/lib/site";
-import { SectionHeading } from "../brand";
+import { SectionHeading, Stabilo } from "../brand";
 import { Icon } from "../icons";
 import { Mascot } from "../mascot";
 
@@ -152,10 +152,7 @@ function Utama({ t }: { t: Testimoni }) {
             </motion.span>
           </motion.div>
 
-          <Link
-            href={t.karya.href}
-            className="group mt-7 inline-flex items-center gap-3 rounded-full bg-ink py-1.5 pr-1.5 pl-5 text-[15px] font-semibold text-white transition-colors hover:bg-ink/85"
-          >
+          <Link href={t.karya.href} className="group mt-7 inline-flex items-center gap-3 rounded-full bg-ink py-1.5 pr-1.5 pl-5 text-[15px] font-semibold text-white transition-colors hover:bg-ink/85">
             {t.karya.label}
             <span className="grid size-8 place-items-center rounded-full bg-white text-ink transition-transform group-hover:translate-x-0.5">
               <Icon name="arrow" className="size-4" strokeWidth={2.5} />
@@ -169,13 +166,7 @@ function Utama({ t }: { t: Testimoni }) {
 
 function Kartu({ t }: { t: Testimoni }) {
   return (
-    <motion.figure
-      initial="awal"
-      whileInView="tampil"
-      viewport={{ once: true, amount: 0.5 }}
-      variants={gelembung}
-      className="flex flex-col rounded-3xl rounded-bl-md bg-lilac-soft p-6"
-    >
+    <motion.figure initial="awal" whileInView="tampil" viewport={{ once: true, amount: 0.5 }} variants={gelembung} className="flex flex-col rounded-3xl rounded-bl-md bg-lilac-soft p-6">
       <Bintang n={t.bintang} />
       <blockquote className="mt-3 flex-1 leading-relaxed text-ink/80">
         <Isi t={t} />
@@ -201,10 +192,15 @@ export function Testimonials() {
       <section id="testimoni" className="border-t border-ink/10">
         <div className="mx-auto max-w-6xl px-4 py-20 sm:px-6 md:py-28">
           <div className="grid gap-6 md:grid-cols-[1fr_auto] md:items-end">
-            <SectionHeading top="Kata mereka yang" bottom="sudah pakai Webkeun" />
-            <p className="max-w-sm text-lg text-ink/70 md:justify-self-end">
-              Cerita dari klien yang undangan dan websitenya kami kerjakan.
-            </p>
+            <SectionHeading
+              top="Kata mereka yang"
+              bottom={
+                <>
+                  sudah pakai <Stabilo>Webkeun</Stabilo>
+                </>
+              }
+            />
+            <p className="max-w-sm text-lg text-ink/70 md:justify-self-end">Cerita dari klien yang undangan dan websitenya kami kerjakan.</p>
           </div>
           <div className="mt-10">
             <Utama t={utama} />

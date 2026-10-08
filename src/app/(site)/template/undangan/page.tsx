@@ -93,7 +93,7 @@ export default function UndanganPage() {
       </section>
 
       <section className="border-b border-ink/10">
-        <ul className="mx-auto grid max-w-6xl grid-cols-2 gap-x-4 gap-y-4 px-4 py-8 sm:grid-cols-3 sm:px-6 lg:grid-cols-6">
+        <ul data-gerak="stiker-anak" className="mx-auto grid max-w-6xl grid-cols-2 gap-x-4 gap-y-4 px-4 py-8 sm:grid-cols-3 sm:px-6 lg:grid-cols-6">
           {fitur.map(([icon, label]) => (
             <li key={label} className="flex items-center gap-2.5 text-sm font-semibold">
               <span className="grid size-9 shrink-0 place-items-center rounded-xl bg-[#fadde4] text-[#b0415b]">

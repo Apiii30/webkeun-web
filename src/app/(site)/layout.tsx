@@ -1,4 +1,5 @@
 import { ChatWidget } from "@/components/chat-widget";
+import { PengamatGerak } from "@/components/gerak";
 import { BottomNav, Navbar } from "@/components/navbar";
 import { Footer } from "@/components/sections/closing";
 
@@ -11,6 +12,7 @@ export default function SiteLayout({ children }: LayoutProps<"/">) {
       <Footer />
       <ChatWidget />
       <BottomNav />
+      <PengamatGerak />
     </>
   );
 }

@@ -3,7 +3,7 @@
 import { animate, AnimatePresence, motion, MotionConfig, useInView, useMotionValue, useReducedMotion, useTransform } from "motion/react";
 import { type CSSProperties, type ReactNode, useEffect, useRef, useState } from "react";
 import { features } from "@/lib/site";
-import { Badge, SectionHeading } from "../brand";
+import { Badge, SectionHeading, Stabilo } from "../brand";
 import { Icon } from "../icons";
 
 // "Semua yang usaha kamu butuh, ada di dalamnya": sebuah website contoh (usahakamu.id) dirakit di depan mata.
@@ -68,7 +68,16 @@ export function Features() {
         <div className="mx-auto max-w-6xl px-4 py-20 sm:px-6 md:py-28">
           <div className="flex flex-col items-center text-center">
             <Badge>Sudah termasuk</Badge>
-            <SectionHeading center className="mt-5" top="Semua yang usaha kamu butuh," bottom="ada di dalamnya" />
+            <SectionHeading
+              center
+              className="mt-5"
+              top="Semua yang usaha kamu butuh,"
+              bottom={
+                <>
+                  ada <Stabilo>di dalamnya</Stabilo>
+                </>
+              }
+            />
             <p className="mt-4 max-w-xl text-lg text-ink/70">Nggak perlu bayar tambahan buat hal-hal dasar. Lihat sendiri apa saja yang terpasang di website Webkeun.</p>
           </div>
 
