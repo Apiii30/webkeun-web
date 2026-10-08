@@ -661,35 +661,20 @@ export const templates = [
   },
 ];
 
-// Potongan layar desktop & HP dari demo, untuk kolom bergerak di hero
-const kawalu = "kawalucoffee.id";
-const bahtera = "bahteralogistik.co.id";
-const laras = "laraskinanti.com";
-const faraAditya = "faraaditya.my.id";
-// Kolom desktop: hanya website (UMKM, company profile, portofolio). Undangan dibuat untuk HP, jadi tampil di kolom HP,
-// selang-seling dengan website dan lebih dulu.
-export const heroShots = {
-  desktop: [
-    { src: "/preview/umkm/laptop-kawalu-coffee.webp", url: kawalu },
-    { src: "/preview/company-profile/web-bahtera-2.webp", url: bahtera },
-    { src: "/preview/portofolio/laptop-laras-kinanti.webp", url: laras },
-    { src: "/preview/umkm/web-kawalu-2.webp", url: kawalu },
-    { src: "/preview/company-profile/laptop-bahtera-logistik.webp", url: bahtera },
-    { src: "/preview/portofolio/web-laras-2.webp", url: laras },
-    { src: "/preview/company-profile/web-bahtera-3.webp", url: bahtera },
+// Panggung hero: HP memperagakan undangan yang disebar lewat WhatsApp (link dikirim ke tamu → diketuk → undangan
+// terbuka dengan nama tamunya → RSVP masuk), lalu nama tamu & temanya berganti. Di belakangnya jendela browser
+// bergantian menampilkan contoh website. Screenshot dari /public/preview/<kategori>.
+export const heroPanggung = {
+  undangan: [
+    { sampul: "/preview/undangan/hp-undangan-sunda-1.webp", pasangan: "Fara & Aditya", url: "faraaditya.my.id", tamu: "Budi" },
+    { sampul: "/preview/undangan/hp-undangan-frisca-1.webp", pasangan: "Frisca & Arif", url: "friscaarif.my.id", tamu: "Sari" },
+    { sampul: "/preview/undangan/hp-undangan-porselen-1.webp", pasangan: "Fara & Aditya", url: "faraaditya.my.id", tamu: "Andi" },
+    { sampul: "/preview/undangan/hp-undangan-luxury-1.webp", pasangan: "Fara & Aditya", url: "faraaditya.my.id", tamu: "Rina" },
   ],
-  phone: [
-    { src: "/preview/undangan/hp-undangan-sunda-1.webp", url: faraAditya },
-    { src: "/preview/umkm/hp-kawalu-1.webp", url: kawalu },
-    { src: "/preview/undangan/hp-undangan-frisca-1.webp", url: "friscaarif.my.id" },
-    { src: "/preview/company-profile/hp-bahtera-1.webp", url: bahtera },
-    { src: "/preview/undangan/hp-undangan-luxury-1.webp", url: faraAditya },
-    { src: "/preview/portofolio/hp-laras-1.webp", url: laras },
-    { src: "/preview/undangan/hp-undangan-garden-1.webp", url: faraAditya },
-    { src: "/preview/umkm/hp-kawalu-2.webp", url: kawalu },
-    { src: "/preview/undangan/hp-undangan-porselen-1.webp", url: faraAditya },
-    { src: "/preview/company-profile/hp-bahtera-2.webp", url: bahtera },
-    { src: "/preview/undangan/hp-undangan-rimba-1.webp", url: faraAditya },
-    { src: "/preview/portofolio/hp-laras-2.webp", url: laras },
+  website: [
+    { src: "/preview/umkm/laptop-kawalu-coffee.webp", url: "kawalucoffee.id", jenis: "Website UMKM" },
+    { src: "/preview/company-profile/laptop-bahtera-logistik.webp", url: "bahteralogistik.co.id", jenis: "Company Profile" },
+    { src: "/preview/portofolio/laptop-laras-kinanti.webp", url: "laraskinanti.com", jenis: "Portofolio" },
   ],
 };
+

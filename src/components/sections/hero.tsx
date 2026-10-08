@@ -1,9 +1,7 @@
-import Image from "next/image";
-import type { CSSProperties } from "react";
-import { facts, heroShots } from "@/lib/site";
+import { facts } from "@/lib/site";
 import { PillLink, StrokeUnderline } from "../brand";
-import { HeroCameo } from "../hero-cameo";
 import { HeroMascot } from "../hero-mascot";
+import { HeroPanggung } from "../hero-panggung";
 import { Icon } from "../icons";
 
 // Kata muncul satu per satu
@@ -13,101 +11,6 @@ function Rise({ words, start = 0 }: { words: string; start?: number }) {
       {w}&nbsp;
     </span>
   ));
-}
-
-type Shot = { src: string; url: string };
-
-// Kartu desktop: bingkai browser kecil dengan alamat website demonya
-function DesktopCard({ shot, eager, hidden }: { shot: Shot; eager: boolean; hidden?: boolean }) {
-  return (
-    <div className="rounded-2xl bg-white p-1.5 shadow-[0_22px_44px_-20px_rgb(21_19_43/0.4)]">
-      <div className="flex items-center gap-1 px-1.5 pt-0.5 pb-1.5 sm:gap-1.5">
-        <span className="size-1.5 shrink-0 rounded-full bg-[#ff6159] sm:size-2" />
-        <span className="size-1.5 shrink-0 rounded-full bg-[#ffbd2e] sm:size-2" />
-        <span className="size-1.5 shrink-0 rounded-full bg-[#28c840] sm:size-2" />
-        <span className="ml-1 truncate rounded-full bg-lilac-soft px-2 py-0.5 text-[9px] font-medium text-ink/50 sm:ml-2 sm:text-[11px]">
-          {shot.url}
-        </span>
-      </div>
-      <Image
-        src={shot.src}
-        alt={hidden ? "" : `Contoh tampilan desktop ${shot.url}`}
-        width={1280}
-        height={800}
-        sizes="(min-width: 768px) 340px, 58vw"
-        loading={eager ? "eager" : "lazy"}
-        className="w-full rounded-xl"
-      />
-    </div>
-  );
-}
-
-function PhoneCard({ shot, eager, hidden }: { shot: Shot; eager: boolean; hidden?: boolean }) {
-  return (
-    <div className="relative rounded-[1.4rem] bg-white p-1.5 shadow-[0_18px_40px_-18px_rgb(21_19_43/0.35)]">
-      <Image
-        src={shot.src}
-        alt={hidden ? "" : `Contoh tampilan HP ${shot.url}`}
-        width={480}
-        height={960}
-        sizes="(min-width: 768px) 190px, 34vw"
-        loading={eager ? "eager" : "lazy"}
-        className="w-full rounded-[1.05rem]"
-      />
-    </div>
-  );
-}
-
-// Satu kolom yang terus bergulir; isinya digandakan supaya putarannya nyambung
-function ShotColumn({
-  shots,
-  kind,
-  down,
-  delay,
-  duration,
-  className = "",
-}: {
-  shots: Shot[];
-  kind: "desktop" | "phone";
-  down?: boolean;
-  delay: number;
-  duration: string;
-  className?: string;
-}) {
-  const Card = kind === "desktop" ? DesktopCard : PhoneCard;
-  const set = (hidden?: boolean) => (
-    <div className="flex flex-col gap-4 pb-4" aria-hidden={hidden || undefined}>
-      {shots.map((shot, i) => (
-        <div
-          key={`${shot.src}-${i}`}
-          className="animate-card-in"
-          style={
-            {
-              animationDelay: `${delay + 250 + i * 140}ms`,
-              "--enter-tilt": `${down ? -4 : 4}deg`,
-            } as CSSProperties
-          }
-        >
-          <Card shot={shot} eager={!hidden && i < 3} hidden={hidden} />
-        </div>
-      ))}
-    </div>
-  );
-
-  return (
-    <div
-      className={`marquee animate-column-in overflow-hidden ${className}`}
-      style={{ animationDelay: `${delay}ms`, "--enter-y": down ? "-7rem" : "7rem" } as CSSProperties}
-    >
-      <div
-        className={`marquee-track flex flex-col ${down ? "animate-marquee-down" : "animate-marquee-up"}`}
-        style={{ animationDuration: duration }}
-      >
-        {set()}
-        {set(true)}
-      </div>
-    </div>
-  );
 }
 
 export function Hero() {
@@ -133,12 +36,8 @@ export function Hero() {
             </span>
           </h1>
 
-          <p
-            className="mt-6 max-w-lg animate-rise text-lg leading-relaxed text-ink/70"
-            style={{ animationDelay: "650ms" }}
-          >
-            Undangan pernikahan digital dengan nama tiap tamu, RSVP, dan musik, juga website UMKM, company profile, dan
-            portofolio yang rapi di HP. Kamu fokus ke acara dan usaha, urusan teknis biar{" "}
+          <p className="mt-6 max-w-lg animate-rise text-lg leading-relaxed text-ink/70" style={{ animationDelay: "650ms" }}>
+            Undangan pernikahan digital dengan nama tiap tamu, RSVP, dan musik, juga website UMKM, company profile, dan portofolio yang rapi di HP. Kamu fokus ke acara dan usaha, urusan teknis biar{" "}
             <strong className="font-semibold text-ink">Webkeun</strong> yang beresin.
           </p>
 
@@ -152,22 +51,9 @@ export function Hero() {
           </div>
         </div>
 
-        {/* Kolom tampilan desktop & HP yang terus bergulir, dari demo undangan & website buatan Webkeun */}
-        <div className="relative -mx-4 h-104 mask-[linear-gradient(to_bottom,transparent,black_12%,black_88%,transparent)] sm:mx-0 sm:h-128 md:h-auto md:mask-none">
-          <div className="stage-shots absolute inset-0 grid grid-cols-[1.7fr_1fr] gap-3 px-4 sm:gap-4 sm:px-0 xl:grid-cols-[1fr_1.9fr_1fr]">
-            <ShotColumn
-              shots={heroShots.phone.toReversed()}
-              kind="phone"
-              delay={380}
-              duration="94s"
-              down
-              className="-mt-56 hidden xl:block"
-            />
-            <ShotColumn shots={heroShots.desktop} kind="desktop" delay={150} duration="64s" className="-mt-16" />
-            <ShotColumn shots={heroShots.phone} kind="phone" delay={520} duration="100s" down />
-          </div>
-          {/* Sesekali kolom contoh minggir dan maskot nongol */}
-          <HeroCameo />
+        {/* Panggung: undangan disebar lewat WhatsApp + contoh website (lihat hero-panggung.tsx) */}
+        <div className="relative h-[25rem] sm:h-[31rem] md:mt-20 md:h-[36rem] md:self-center lg:h-[38rem]">
+          <HeroPanggung />
         </div>
       </div>
     </section>
