@@ -51,3 +51,26 @@ export async function ambilBalasan(slug: string): Promise<BalasanTamu[]> {
   }
   return data;
 }
+
+export type TamuUndangan = { id: number; nama: string; wa: string; terkirim: string | null };
+
+// Tabel/kolom belum ada di database (SQL daftar tamu belum dijalankan)
+const belumAda = (kode?: string) => kode === "42P01" || kode === "42703" || kode === "PGRST204" || kode === "PGRST205";
+
+// Daftar tamu pengantin + teks pesan WhatsApp-nya. "belum": tabel daftar tamu belum dibuat
+// (supabase/migrations/20261008120000_daftar_tamu.sql belum dijalankan). "gagal": database sedang bermasalah.
+export async function ambilDaftarTamu(slug: string): Promise<{ tamu: TamuUndangan[]; pesan: string | null } | "belum" | "gagal"> {
+  const db = supabaseServer();
+  if (!db) return "belum";
+  const [tamu, undangan] = await Promise.all([
+    db.from("tamu").select("id, nama, wa, terkirim").eq("undangan", slug).order("id").limit(2000),
+    db.from("undangan").select("pesan").eq("slug", slug).maybeSingle(),
+  ]);
+  const galat = tamu.error ?? undangan.error;
+  if (galat) {
+    if (belumAda(galat.code)) return "belum";
+    console.error("ambilDaftarTamu", slug, galat.message);
+    return "gagal";
+  }
+  return { tamu: tamu.data ?? [], pesan: undangan.data?.pesan ?? null };
+}
