@@ -13,5 +13,7 @@
   "assets": { "directory": ".open-next/assets", "binding": "ASSETS" },
   // Pengecil foto next/image lewat Cloudflare Images (paket gratis: 5.000 ukuran foto berbeda per bulan)
   "images": { "binding": "IMAGES" },
+  // Anti-spam buku tamu: maksimal 5 ucapan per menit dari satu alamat IP (dipakai src/lib/batas.ts)
+  "ratelimits": [{ "name": "BATAS_UCAPAN", "namespace_id": "1001", "simple": { "limit": 5, "period": 60 } }],
   "observability": { "enabled": true },
 }

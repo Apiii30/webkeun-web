@@ -1,0 +1,6 @@
+# Header keamanan untuk file statis (gambar, musik, JS, CSS) yang disajikan langsung oleh Cloudflare tanpa lewat Next.
+# Header untuk halaman diatur di next.config.ts.
+/*
+  X-Content-Type-Options: nosniff
+  X-Frame-Options: SAMEORIGIN
+  Referrer-Policy: strict-origin-when-cross-origin

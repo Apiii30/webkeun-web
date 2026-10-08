@@ -4,6 +4,7 @@ import { footerLinks, mailLink, services, site, waLink } from "@/lib/site";
 import { PillLink } from "../brand";
 import { Icon } from "../icons";
 import { Mascot } from "../mascot";
+import { IkonSosial } from "./sosial";
 
 export function ClosingCta() {
   return (
@@ -47,6 +48,7 @@ export function Footer() {
             <Image src="/brand/tulisan.svg" alt="Webkeun" width={114} height={22} />
           </Link>
           <p className="mt-4 max-w-xs text-sm leading-relaxed text-ink/65">{site.description}</p>
+          <IkonSosial />
         </div>
 
         <div>

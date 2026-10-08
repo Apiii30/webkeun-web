@@ -45,6 +45,29 @@ const scrollTopOnReload = `(function () {
   } catch (e) {}
 })();`;
 
+// Penghalang ringan supaya desain tidak gampang dicontek: klik kanan, seret gambar, dan pintasan DevTools / lihat
+// sumber / simpan halaman dimatikan. Ini hanya penghalang, bukan pengaman: kode yang sampai ke browser tetap bisa
+// dilihat lewat menu browser. Klik kanan di kolom isian tetap boleh (untuk tempel), dan halaman /rekap tidak ikut
+// karena dipakai klien untuk menyalin link. Hanya di hasil build, supaya saat `npm run dev` DevTools tetap bisa dipakai.
+const penghalang = `(function () {
+  var bebas = function () { return location.pathname.indexOf("/rekap") === 0; };
+  addEventListener("contextmenu", function (e) {
+    if (bebas() || (e.target.closest && e.target.closest("input, textarea, select, [contenteditable]"))) return;
+    e.preventDefault();
+  });
+  addEventListener("dragstart", function (e) {
+    if (!bebas() && e.target.tagName === "IMG") e.preventDefault();
+  });
+  addEventListener("keydown", function (e) {
+    if (bebas()) return;
+    var k = e.code, mod = e.ctrlKey || e.metaKey, alat = k === "KeyI" || k === "KeyJ" || k === "KeyC";
+    if (k === "F12" || (mod && e.shiftKey && alat) || (e.metaKey && e.altKey && (alat || k === "KeyU")) || (mod && (k === "KeyU" || k === "KeyS"))) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+  }, true);
+})();`;
+
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     // data-scroll-behavior: scroll halus hanya untuk anchor di halaman yang sama;
@@ -52,6 +75,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     <html lang="id" data-scroll-behavior="smooth" className={`${jakarta.variable} h-full antialiased`}>
       <head>
         <script dangerouslySetInnerHTML={{ __html: scrollTopOnReload }} />
+        {process.env.NODE_ENV === "production" && <script dangerouslySetInnerHTML={{ __html: penghalang }} />}
       </head>
       <body className="min-h-full flex flex-col font-sans">{children}</body>
     </html>

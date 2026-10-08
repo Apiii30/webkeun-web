@@ -7,10 +7,11 @@ import { Portfolio } from "@/components/sections/portfolio";
 import { Pricing } from "@/components/sections/pricing";
 import { Process } from "@/components/sections/process";
 import { Services } from "@/components/sections/services";
+import { Sosial } from "@/components/sections/sosial";
 import { Testimonials } from "@/components/sections/testimonials";
 import { Why } from "@/components/sections/why";
 import { halaman, katalogHarga, SITUS } from "@/lib/seo";
-import { site } from "@/lib/site";
+import { site, sosial } from "@/lib/site";
 
 export const metadata: Metadata = halaman({ deskripsi: site.description, path: "/" });
 
@@ -29,6 +30,7 @@ const dataTerstruktur = {
       description: site.description,
       slogan: site.tagline,
       email: site.email,
+      sameAs: sosial.map((s) => s.href),
       areaServed: { "@type": "Country", name: "Indonesia" },
       knowsAbout: ["Undangan digital pernikahan", "Undangan pernikahan online", "Pembuatan website UMKM", "Company profile", "Website portofolio"],
       hasOfferCatalog: {
@@ -70,6 +72,7 @@ export default function Home() {
       <Pricing />
       <Process />
       <Faq />
+      <Sosial />
       <ClosingCta />
     </>
   );

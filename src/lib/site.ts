@@ -11,6 +11,12 @@ export const site = {
   email: "yukwebkeun@gmail.com",
 };
 
+// Akun media sosial Webkeun (tampil di beranda, kontak, footer, dan data terstruktur untuk Google)
+export const sosial = [
+  { id: "instagram", nama: "Instagram", handle: "@yuk_webkeun", href: "https://www.instagram.com/yuk_webkeun", ajakan: "Ikuti kabar & karya terbaru Webkeun", tombol: "Follow" },
+  { id: "tiktok", nama: "TikTok", handle: "@webkeun.id", href: "https://www.tiktok.com/@webkeun.id", ajakan: "Tonton video-video dari Webkeun", tombol: "Follow" },
+] as const;
+
 export function mailLink(subject = "Tanya soal undangan digital & website") {
   return `mailto:${site.email}?subject=${encodeURIComponent(subject)}`;
 }

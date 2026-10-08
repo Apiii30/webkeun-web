@@ -18,6 +18,22 @@ if (process.env.NODE_ENV === "production" && !process.env.SITUS_URL) {
   console.warn("⚠ SITUS_URL belum diisi (.env.production): gambar pratinjau link di WhatsApp akan mengarah ke localhost.");
 }
 
+// Header keamanan untuk semua halaman:
+// - frame-ancestors / X-Frame-Options: halaman tidak bisa dibingkai (iframe) di website lain, untuk mencegah pengunjung
+//   ditipu mengeklik tombol yang disamarkan (clickjacking)
+// - nosniff: browser tidak menebak-nebak jenis file, jadi file biasa tidak bisa dijalankan sebagai script
+// - base-uri, form-action, object-src: menutup beberapa celah sisipan kode yang umum
+// - Permissions-Policy: kamera, mikrofon, dan lokasi tidak dipakai, jadi dimatikan
+// CSP sengaja tidak membatasi script: halaman statis memakai script inline milik Next, dan membatasinya perlu nonce yang
+// membuat semua halaman jadi dinamis (lebih berat di paket gratis Cloudflare).
+const headerKeamanan = [
+  { key: "Content-Security-Policy", value: "frame-ancestors 'self'; base-uri 'self'; form-action 'self'; object-src 'none'" },
+  { key: "X-Frame-Options", value: "SAMEORIGIN" },
+  { key: "X-Content-Type-Options", value: "nosniff" },
+  { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
+  { key: "Permissions-Policy", value: "camera=(), microphone=(), geolocation=(), browsing-topics=()" },
+];
+
 const nextConfig: NextConfig = {
   // Supaya website bisa dicoba dari HP lewat WiFi yang sama (mis. http://192.168.1.7:3000) saat `npm run dev`.
   // Tanpa ini Next memblokir file JavaScript untuk alamat selain localhost, jadi tombol & animasi tidak jalan.
@@ -26,6 +42,9 @@ const nextConfig: NextConfig = {
   // 85 dipakai undangan Frisca & Arif untuk foto sampul & layar penuh (sama dengan proyek aslinya)
   images: {
     qualities: [75, 85],
+  },
+  async headers() {
+    return [{ source: "/(.*)", headers: headerKeamanan }];
   },
   // Halaman "Contoh" sudah diganti jadi "Template"
   async redirects() {

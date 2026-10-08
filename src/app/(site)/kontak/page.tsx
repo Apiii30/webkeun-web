@@ -5,6 +5,7 @@ import { Badge, PillLink } from "@/components/brand";
 import { Icon } from "@/components/icons";
 import { Mascot } from "@/components/mascot";
 import { ContactForm } from "@/components/sections/contact-form";
+import { TautanSosial } from "@/components/sections/sosial";
 import { mailLink, site, waLink } from "@/lib/site";
 
 export const metadata: Metadata = halaman({
@@ -66,6 +67,8 @@ export default function KontakPage() {
             </span>
             <Icon name="arrow" className="size-4 shrink-0 transition-transform group-hover:translate-x-1" strokeWidth={2.5} />
           </a>
+
+          <TautanSosial />
 
           <div className="rounded-3xl bg-lilac-soft p-7">
             <h2 className="text-lg font-bold">Biar ngobrolnya lancar, siapkan ini</h2>

@@ -1,10 +1,11 @@
 "use server";
 
+import { dalamBatas } from "@/lib/batas";
 import { supabaseServer } from "@/lib/supabase";
 
 // Server action buku tamu: dipanggil dari form RSVP di undangan sungguhan (/u/<slug>).
 // Server action bisa dipanggil siapa saja yang tahu alamatnya, jadi semua isian divalidasi ulang di sini
-// (database juga punya batasan yang sama sebagai lapis kedua).
+// (database juga punya batasan yang sama sebagai lapis kedua), dan jumlah kiriman per pengunjung dibatasi.
 
 export type UcapanTamu = { id: number; nama: string; hadir: boolean; ucapan: string; dibuat: string };
 export type HasilKirim = { ok: true; ucapan: UcapanTamu } | { ok: false; pesan: string };
@@ -47,6 +48,7 @@ export async function kirimUcapan(slug: string, isi: { nama: unknown; hadir: unk
   if (!nama) return { ok: false, pesan: "Nama belum diisi." };
   if (!ucapan) return { ok: false, pesan: "Tulis ucapan & doa dulu ya." };
   if (typeof isi.hadir !== "boolean") return { ok: false, pesan: "Pilih hadir atau tidak hadir dulu." };
+  if (!(await dalamBatas("BATAS_UCAPAN"))) return { ok: false, pesan: "Terlalu banyak ucapan terkirim dari perangkat ini. Tunggu sebentar, lalu coba lagi ya." };
 
   // satu nama satu ucapan per undangan (huruf besar-kecil dianggap sama)
   const { count, error: galatCek } = await db
