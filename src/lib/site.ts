@@ -235,10 +235,12 @@ export const serviceShowcase = {
 
 // Daftar harga (disepakati tim, Oktober 2026). Add-on (express, perpanjangan undangan, kelola website) belum final,
 // jadi belum ditampilkan. nilai: angka rupiah untuk data terstruktur Google. dasar: paket yang fiturnya ikut semua.
+// coret: harga normal sebelum diskon (rupiah); kalau diisi, harga normalnya tampil dicoret dengan emblem "Hemat x%".
 export type Paket = {
   nama: string;
   harga: string;
   nilai: number;
+  coret?: number;
   mulai?: boolean;
   sorot?: string;
   untuk: string;
@@ -257,6 +259,7 @@ export const hargaPaket = {
         nama: "Basic",
         harga: "99rb",
         nilai: 99_000,
+        coret: 150_000,
         untuk: "Undangan simpel yang tetap cantik",
         aktif: "3 bulan",
         fitur: ["Template siap pakai", "Nama tamu di link", "Hitung mundur acara", "Peta lokasi"],
@@ -265,6 +268,7 @@ export const hargaPaket = {
         nama: "Premium",
         harga: "229rb",
         nilai: 229_000,
+        coret: 300_000,
         sorot: "Terlaris",
         untuk: "Paling lengkap buat hari bahagia",
         aktif: "6 bulan",
@@ -273,8 +277,9 @@ export const hargaPaket = {
       },
       {
         nama: "Exclusive",
-        harga: "499rb",
-        nilai: 499_000,
+        harga: "349rb",
+        nilai: 349_000,
+        coret: 499_000,
         untuk: "Desain khusus, cuma punya kalian",
         aktif: "12 bulan",
         dasar: "Premium",
@@ -314,6 +319,15 @@ export const hargaPaket = {
   },
 } as const;
 export type JenisHarga = keyof typeof hargaPaket;
+
+// 150_000 → "150rb", 1_500_000 → "1,5jt" (gaya penulisan harga di atas)
+export function rupiahSingkat(n: number) {
+  return n >= 1_000_000 ? `${String(n / 1_000_000).replace(".", ",")}jt` : `${Math.round(n / 1000)}rb`;
+}
+// persen hemat dari harga coret, dibulatkan: 150rb → 99rb = 34
+export function persenHemat(p: Paket) {
+  return p.coret ? Math.round((1 - p.nilai / p.coret) * 100) : 0;
+}
 
 // Alur pemesanan (SOP Webkeun), dari chat pertama sampai link aktif. ringkas: teks pendek di daftar langkah,
 // desc: penjelasan di panggungnya. bayar: persen yang sudah dibayar setelah langkah ini. tahap: kelompok langkahnya.
@@ -660,4 +674,3 @@ export const templates = [
     includes: ["Sampul buka undangan", "Ayat & salam", "Galeri layar penuh", "RSVP & amplop digital"],
   },
 ];
-

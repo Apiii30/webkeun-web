@@ -73,7 +73,7 @@ export function HeroPanggung({ children }: { children: ReactNode }) {
   return (
     <MotionConfig reducedMotion="user">
       {/* lapisan dinding (hiasan): di HP menempati bagian bawah hero, di layar lebar sisi kanan sampai tepi layar */}
-      <div aria-hidden="true" className="dinding-tepi pointer-events-none absolute inset-x-0 top-[38%] bottom-0 overflow-hidden [perspective:1400px] md:top-0 md:left-[36%]">
+      <div aria-hidden="true" className="dinding-tepi pointer-events-none absolute inset-x-0 bottom-0 h-[30rem] overflow-hidden [perspective:1400px] sm:h-[36rem] md:top-0 md:left-[36%] md:h-auto">
         <motion.div
           animate={tampilDemo ? { opacity: 1, y: 0, scale: 1 } : { opacity: 0, y: 90, scale: 0.94 }}
           transition={tampilDemo ? { duration: 0.9, ease: lembut } : { duration: 0.6, ease: [0.5, 0, 0.75, 0] }}
@@ -99,12 +99,12 @@ export function HeroPanggung({ children }: { children: ReactNode }) {
       </div>
 
       {/* lapisan teks di atas dinding */}
-      <div className="relative mx-auto grid max-w-6xl gap-10 px-4 sm:px-6 md:min-h-184 md:grid-cols-[1.1fr_1fr] md:gap-12 xl:grid-cols-[1fr_1.15fr]">
+      <div className="relative mx-auto grid max-w-6xl gap-6 px-4 sm:px-6 md:min-h-184 md:grid-cols-[1.1fr_1fr] md:gap-12 xl:grid-cols-[1fr_1.15fr]">
         <div className="pt-28 md:self-center md:pt-32 md:pb-24">{children}</div>
 
-        <div className="pointer-events-none relative h-[34rem] sm:h-[36rem] md:h-auto">
+        <div className="pointer-events-none relative h-[22rem] sm:h-[28rem] md:h-auto">
           {/* babak maskot */}
-          <div className="absolute inset-0 flex items-start justify-center pt-28 md:items-center md:pt-24" aria-hidden="true">
+          <div className="absolute inset-0 flex items-center justify-center pt-10 md:pt-24" aria-hidden="true">
             <AnimatePresence>{babak === "maskot" && <BabakMaskot key={putaran} putaran={putaran} />}</AnimatePresence>
           </div>
         </div>

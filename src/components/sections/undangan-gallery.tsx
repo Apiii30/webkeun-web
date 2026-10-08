@@ -4,7 +4,7 @@ import { AnimatePresence, motion, MotionConfig, useMotionValue, useReducedMotion
 import Image from "next/image";
 import Link from "next/link";
 import { type CSSProperties, type PointerEvent, useState } from "react";
-import { type GayaUndangan, gayaUndangan, hargaPaket, templates, waLink } from "@/lib/site";
+import { type GayaUndangan, gayaUndangan, hargaPaket, rupiahSingkat, templates, waLink } from "@/lib/site";
 import { PillLink } from "../brand";
 import { Icon } from "../icons";
 import { Mascot } from "../mascot";
@@ -142,7 +142,13 @@ function KartuTema({ t }: { t: Tema }) {
                     </span>
                   )}
                   <span className={`relative block text-xs font-semibold ${on ? "text-white/80" : "text-ink/55"}`}>{q.nama}</span>
-                  <span className="relative block text-[15px] font-extrabold tracking-tight">{q.harga}</span>
+                  {q.coret && (
+                    <span className={`relative block text-[10px] leading-tight font-semibold line-through decoration-[#ff5c7a] decoration-2 ${on ? "text-white/60" : "text-ink/40"}`}>
+                      <span className="sr-only">Harga normal </span>
+                      {rupiahSingkat(q.coret)}
+                    </span>
+                  )}
+                  <span className="relative block text-[15px] leading-tight font-extrabold tracking-tight">{q.harga}</span>
                 </label>
               );
             })}

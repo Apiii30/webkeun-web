@@ -3,7 +3,7 @@
 import { AnimatePresence, motion, MotionConfig, useAnimationFrame, useInView, useMotionValue, useReducedMotion, type Variants } from "motion/react";
 import Image from "next/image";
 import { type KeyboardEvent, type ReactNode, useRef, useState } from "react";
-import { hargaPaket, steps } from "@/lib/site";
+import { hargaPaket, rupiahSingkat, steps } from "@/lib/site";
 import { SectionHeading, Stabilo } from "../brand";
 import { Icon } from "../icons";
 import { Mascot } from "../mascot";
@@ -307,7 +307,10 @@ function Konsultasi({ hanya }: { hanya: Jenis }) {
                 Undangan {p.nama}
                 {p.sorot && <span className="ml-1.5 rounded-full bg-mint/30 px-1.5 py-px text-[10px] font-bold text-[#0f8f74]">{p.sorot}</span>}
               </span>
-              <span className="font-bold">Rp{p.harga}</span>
+              <span className="font-bold">
+                {p.coret && <s className="mr-1.5 text-[11px] font-medium text-ink/40 decoration-[#ff5c7a] decoration-2">Rp{rupiahSingkat(p.coret)}</s>}
+                Rp{p.harga}
+              </span>
             </li>
           ))}
           {!hanya && (

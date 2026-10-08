@@ -3,7 +3,7 @@
 import { AnimatePresence, motion, MotionConfig } from "motion/react";
 import Link from "next/link";
 import { useState } from "react";
-import { hargaPaket, type JenisHarga, type Paket, waLink } from "@/lib/site";
+import { hargaPaket, type JenisHarga, type Paket, persenHemat, rupiahSingkat, waLink } from "@/lib/site";
 import { PillLink } from "../brand";
 import { Icon } from "../icons";
 import { Mascot } from "../mascot";
@@ -14,11 +14,51 @@ import { Mascot } from "../mascot";
 const urutan: JenisHarga[] = ["undangan", "website"];
 const lembut = [0.16, 1, 0.3, 1] as const;
 
+// Harga normal yang dicoret goresan tangan (tergambar saat kartunya terlihat) + emblem "Hemat x%" seperti stiker
+function HargaCoret({ p, sorot }: { p: Paket; sorot: boolean }) {
+  if (!p.coret) return null;
+  return (
+    <div className="mt-6 flex items-center gap-3">
+      <span className={`relative text-lg font-bold ${sorot ? "text-white/55" : "text-ink/40"}`}>
+        <span className="sr-only">Harga normal </span>Rp{rupiahSingkat(p.coret)}
+        <svg
+          viewBox="0 0 100 24"
+          preserveAspectRatio="none"
+          className="pointer-events-none absolute -inset-x-1.5 top-1/2 h-4 w-[calc(100%+0.75rem)] -translate-y-1/2 overflow-visible"
+          aria-hidden="true"
+        >
+          <motion.path
+            d="M3 15 C 28 9, 55 13, 97 6"
+            fill="none"
+            stroke="#ff5c7a"
+            strokeWidth="3.2"
+            strokeLinecap="round"
+            vectorEffect="non-scaling-stroke"
+            initial={{ pathLength: 0 }}
+            whileInView={{ pathLength: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.45, ease: "easeOut", delay: 0.35 }}
+          />
+        </svg>
+      </span>
+      <motion.span
+        initial={{ opacity: 0, scale: 0.5, rotate: -18 }}
+        whileInView={{ opacity: 1, scale: 1, rotate: -6 }}
+        viewport={{ once: true }}
+        transition={{ type: "spring", stiffness: 320, damping: 13, delay: 0.7 }}
+        className="inline-flex items-center gap-1 rounded-lg bg-[#ff5c7a] px-2 py-1 text-[11px] leading-none font-extrabold tracking-wide text-white uppercase shadow-[0_8px_18px_-8px_rgb(255_92_122/0.9)]"
+      >
+        Hemat {persenHemat(p)}%
+      </motion.span>
+    </div>
+  );
+}
+
 // "1,5jt" → angka "1,5" + satuan "jt", supaya angkanya bisa dibuat besar
 function Harga({ p, sorot }: { p: Paket; sorot: boolean }) {
   const [, angka, satuan] = p.harga.match(/^([\d,]+)(\D+)$/) ?? [, p.harga, ""];
   return (
-    <p className="mt-6 flex items-end gap-1 leading-none font-extrabold tracking-tight">
+    <p className={`${p.coret ? "mt-2" : "mt-6"} flex items-end gap-1 leading-none font-extrabold tracking-tight`}>
       {p.mulai && <span className={`mr-1 mb-1.5 text-sm font-semibold ${sorot ? "text-white/70" : "text-ink/50"}`}>mulai</span>}
       <span className={`mb-[0.55rem] text-xl ${sorot ? "text-mint" : "text-brand"}`}>Rp</span>
       <span className="text-[3.6rem]">{angka}</span>
@@ -64,6 +104,7 @@ function Kartu({ p, jenis, i }: { p: Paket; jenis: JenisHarga; i: number }) {
           )}
         </div>
 
+        <HargaCoret p={p} sorot={sorot} />
         <Harga p={p} sorot={sorot} />
 
         <ul className={`mt-7 flex-1 space-y-3 border-t pt-7 ${sorot ? "border-white/20" : "border-ink/10"}`}>

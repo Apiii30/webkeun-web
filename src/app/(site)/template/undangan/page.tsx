@@ -59,7 +59,7 @@ const tanya = [
   },
   {
     q: "Harganya berapa?",
-    a: "Mulai Rp99rb untuk paket Basic, Rp229rb untuk Premium, dan Rp499rb untuk Exclusive dengan desain custom. Rinciannya ada di bagian Harga di atas.",
+    a: "Mulai Rp99rb untuk paket Basic, Rp229rb untuk Premium, dan Rp349rb untuk Exclusive dengan desain custom. Rinciannya ada di bagian Harga di atas.",
   },
 ];
 
