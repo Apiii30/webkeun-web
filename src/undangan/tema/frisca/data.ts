@@ -1,21 +1,21 @@
-// Isi undangan Frisca & Arif, disalin dari proyek undangan aslinya (folder wedding-invitation).
-// Di sini dipakai sebagai demo template: RSVP & ucapan hanya tersimpan di browser, tanpa database.
+// Isi demo tema Rose Plum (awalnya undangan Frisca & Arif dari proyek wedding-invitation), sekarang dengan pasangan
+// fiktif Nadia & Rizky dan foto di public/undangan/002/. RSVP & ucapan hanya tersimpan di browser, tanpa database.
 // Bagian bertanda TODO masih berisi data sementara di proyek aslinya.
 
 export const wedding = {
   bride: {
-    nickname: "Frisca",
-    fullName: "Frisca Triani Ivanka",
-    parents: "Putri dari Bapak Agus Siswanto & Ibu (Almh.) Srie Astrie",
-    photo: "dsc00010",
+    nickname: "Nadia",
+    fullName: "Nadia Salsabila",
+    parents: "Putri dari Bapak Hendi Kurniawan & Ibu Yuliani",
+    photo: "wanita",
     instagram: "", // TODO: username tanpa @, kosongkan jika tidak ada
     whatsapp: "", // TODO: nomor WA untuk konfirmasi hadiah, format 628xxxxxxxxxx
   },
   groom: {
-    nickname: "Arif",
-    fullName: "Arif Rahman Fauzi",
-    parents: "Putra dari Bapak (Alm.) Endang & Ibu Enny",
-    photo: "dsc00324",
+    nickname: "Rizky",
+    fullName: "Rizky Ramadhan",
+    parents: "Putra dari Bapak Asep Saepudin & Ibu Rina Marlina",
+    photo: "pria",
     instagram: "", // TODO
     whatsapp: "", // TODO: format 628xxxxxxxxxx
   },
@@ -27,35 +27,35 @@ export const wedding = {
       year: "2011",
       title: "Awal Bertemu",
       icon: "sparkles",
-      photo: "dsc00291",
+      photo: "kafe",
       text: "Semua berawal dari sebuah perkenalan sederhana di tahun 2011. Tidak ada yang menyangka, pertemuan itu menjadi awal dari cerita panjang kami.",
     },
     {
       year: "2014",
       title: "Semakin Dekat",
       icon: "message",
-      photo: "dsc00306",
+      photo: "sawah",
       text: "Obrolan ringan perlahan menjadi kebiasaan. Dari teman bercerita, kami mulai saling mengenal lebih dalam.",
     },
     {
       year: "2019",
       title: "Saling Menguatkan",
       icon: "heart",
-      photo: "dsc00271",
+      photo: "hutan",
       text: "Banyak hal kami lewati bersama, suka maupun duka. Setiap langkah mengajarkan kami arti sabar dan saling percaya.",
     },
     {
       year: "2025",
       title: "Lamaran",
       icon: "gem",
-      photo: "dsc00314",
+      photo: "lamaran",
       text: "Dengan restu kedua keluarga, kami mengikat janji dalam acara lamaran yang penuh haru dan bahagia.",
     },
     {
       year: "2027",
       title: "Menuju Halal",
       icon: "rings",
-      photo: "dsc00254",
+      photo: "akad",
       text: "Insya Allah, pada 17 Januari 2027 kami menyempurnakan separuh agama dalam ikatan pernikahan.",
     },
   ],
@@ -90,8 +90,8 @@ export const wedding = {
   // TODO: ganti dengan rekening asli. Section amplop disembunyikan jika daftar ini kosong.
   // owner: pemilik rekening ("bride" / "groom"), dipakai sebagai tujuan default konfirmasi WhatsApp.
   gifts: [
-    { bank: "BCA", number: "0000000000", holder: "Frisca Triani Ivanka", owner: "bride" },
-    { bank: "Mandiri", number: "0000000000", holder: "Arif Rahman Fauzi", owner: "groom" },
+    { bank: "BCA", number: "0000000000", holder: "Nadia Salsabila", owner: "bride" },
+    { bank: "Mandiri", number: "0000000000", holder: "Rizky Ramadhan", owner: "groom" },
   ] as Gift[],
   giftAddress: "" as string, // TODO: alamat kirim kado, kosongkan jika tidak ada
 
@@ -99,25 +99,11 @@ export const wedding = {
   music: "/undangan/frisca-arif/backsound.mp3",
 
   photos: {
-    cover: "dsc00273",
-    hero: "dsc00306",
-    quote: "dsc00293",
-    closing: "dsc00311",
-    gallery: [
-      "dsc00251",
-      "dsc00022",
-      "dsc00279",
-      "dsc00319",
-      "dsc00015",
-      "dsc00271",
-      "dsc00252",
-      "dsc00314",
-      "dsc00001",
-      "dsc00291",
-      "dsc00254",
-      "dsc00007",
-      "dsc00325",
-    ],
+    cover: "sampul",
+    hero: "pelaminan",
+    quote: "kebun-teh",
+    closing: "senja",
+    gallery: ["buket", "pelaminan", "pria-pintu", "danau", "padang", "gedung", "quran-cincin", "tangan", "jalan-berdua", "kebun-teh", "senja", "akad", "lamaran"],
   },
 } as const;
 

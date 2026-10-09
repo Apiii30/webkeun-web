@@ -423,7 +423,7 @@ function Brief() {
           <div>
             <p className="text-ink/50">Kirim aset (foto, logo, teks)</p>
             <motion.div variants={urut} className="mt-1.5 flex gap-1.5">
-              {["/preview/undangan/hp-undangan-sunda-2.webp", "/preview/undangan/hp-undangan-luxury-2.webp", "/preview/undangan/hp-undangan-garden-2.webp"].map((src) => (
+              {["/preview/undangan/hp-undangan-sunda-sekar-2.webp", "/preview/undangan/hp-undangan-luxury-vania-2.webp", "/preview/undangan/hp-undangan-garden-alya-2.webp"].map((src) => (
                 <motion.span key={src} variants={muncul} className="relative size-11 overflow-hidden rounded-lg bg-lilac">
                   <Image src={src} alt="" fill sizes="44px" className="object-cover object-top" />
                 </motion.span>
@@ -487,7 +487,7 @@ function Revisi() {
     <div className="relative mx-auto flex w-full max-w-[19rem] items-center gap-3">
       <motion.div variants={muncul} className="w-[7.5rem] shrink-0 rounded-[1.4rem] bg-ink p-1.5 shadow-xl">
         <div className="relative aspect-[1/2] overflow-hidden rounded-[1.1rem] bg-white">
-          <Image src="/preview/undangan/hp-undangan-sunda-2.webp" alt="" fill sizes="120px" className="object-cover" />
+          <Image src="/preview/undangan/hp-undangan-sunda-sekar-2.webp" alt="" fill sizes="120px" className="object-cover" />
           <motion.span
             variants={{ awal: { opacity: 0, scale: 0 }, tampil: { opacity: 1, scale: 1, transition: { delay: 0.5, ...pegas } } }}
             className="absolute top-[38%] left-[46%] grid size-6 place-items-center rounded-full bg-[#ff9f1c] text-[11px] font-bold text-white ring-2 ring-white"

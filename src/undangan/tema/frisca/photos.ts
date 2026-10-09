@@ -1,6 +1,6 @@
 import manifest from "./photos.json";
 
-// Foto undangan Frisca & Arif (WebP + blur placeholder), di public/undangan/frisca-arif/.
+// Foto demo tema Rose Plum (WebP + blur placeholder), di public/undangan/002/.
 
 export type Photo = {
   src: string;

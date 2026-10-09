@@ -3,9 +3,9 @@ import Image from "next/image";
 // Tiga sampul undangan dari tema berbeda, dikipas seperti kartu. Saat induknya (class "group") di-hover,
 // kipasnya makin terbuka. Lebar tiap HP 31% wadah, jadi kipas yang terbuka tetap muat di dalam wadahnya.
 const SAMPUL = [
-  { src: "/preview/undangan/hp-undangan-porselen-1.webp", alt: "Sampul undangan tema Biru Porselen" },
+  { src: "/preview/undangan/hp-undangan-porselen-frisca-1.webp", alt: "Sampul undangan tema Biru Porselen" },
   { src: "/preview/undangan/hp-undangan-oriental-meilin-1.webp", alt: "Sampul undangan tema Oriental Peony" },
-  { src: "/preview/undangan/hp-undangan-rimba-1.webp", alt: "Sampul undangan tema Rimba" },
+  { src: "/preview/undangan/hp-undangan-rimba-senja-1.webp", alt: "Sampul undangan tema Rimba" },
 ];
 
 const POSISI = [

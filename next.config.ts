@@ -55,9 +55,19 @@ const nextConfig: NextConfig = {
       { source: "/contoh", destination: "/template", permanent: true },
       { source: "/contoh/:slug", destination: "/template/:slug", permanent: true },
       // Tema Floral sudah dihapus, alamat lamanya diarahkan ke tema Rimba
-      { source: "/template/undangan-fara-aditya", destination: "/template/undangan-fara-aditya-rimba", permanent: false },
-      // Tema Jawa Klasik sudah dihapus, diganti undangan Frisca & Arif
-      { source: "/template/undangan-fara-aditya-jawa", destination: "/template/undangan-frisca-arif", permanent: false },
+      { source: "/template/undangan-fara-aditya", destination: "/template/undangan-senja-raka-rimba", permanent: false },
+      // Tema Jawa Klasik sudah dihapus, diganti tema Rose Plum
+      { source: "/template/undangan-fara-aditya-jawa", destination: "/template/undangan-nadia-rizky-rose-plum", permanent: false },
+      // Demo undangan diberi alamat sesuai pasangan contohnya masing-masing (Oktober 2026)
+      { source: "/template/undangan-fara-aditya-oriental-peony", destination: "/template/undangan-meilin-kevin-oriental-peony", permanent: false },
+      { source: "/template/undangan-frisca-arif", destination: "/template/undangan-nadia-rizky-rose-plum", permanent: false },
+      { source: "/template/undangan-fara-aditya-sunda", destination: "/template/undangan-sekar-galih-art-sunda", permanent: false },
+      { source: "/template/undangan-fara-aditya-putih-sakinah", destination: "/template/undangan-aisyah-fauzan-putih-sakinah", permanent: false },
+      { source: "/template/undangan-fara-aditya-merah-delima", destination: "/template/undangan-clara-daniel-merah-delima", permanent: false },
+      { source: "/template/undangan-fara-aditya-luxury", destination: "/template/undangan-vania-adrian-luxury", permanent: false },
+      { source: "/template/undangan-fara-aditya-garden-premium", destination: "/template/undangan-alya-bima-garden-premium", permanent: false },
+      { source: "/template/undangan-fara-aditya-rimba", destination: "/template/undangan-senja-raka-rimba", permanent: false },
+      { source: "/template/undangan-fara-aditya-biru-porselen", destination: "/template/undangan-frisca-arif-biru-porselen", permanent: false },
       // Portofolio Nadia Putri sudah diganti template Laras Kinanti
       { source: "/template/nadia-putri", destination: "/template/laras-kinanti", permanent: false },
       // Kopi Senja sudah diganti template Kawalu Coffee
