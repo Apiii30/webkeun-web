@@ -32,10 +32,14 @@ const principles = [
 ];
 
 const moods: { mood: Mood; label: string; note: string }[] = [
-  { mood: "senyum", label: "Senyum", note: "waktu kamu mampir" },
-  { mood: "kedip", label: "Kedip", note: "waktu ada kabar baik" },
+  { mood: "melambai", label: "Melambai", note: "waktu kamu mampir" },
+  { mood: "utama", label: "Siap bantu", note: "waktu kamu mulai konsultasi" },
   { mood: "kaget", label: "Kaget", note: "waktu lihat harganya" },
-  { mood: "tertawa", label: "Ketawa", note: "waktu website kamu online" },
+  { mood: "kedip", label: "Kedip", note: "waktu ada kabar baik" },
+  { mood: "cinta", label: "Jatuh cinta", note: "waktu undanganmu jadi" },
+  { mood: "semangat", label: "Semangat", note: "waktu website kamu online" },
+  { mood: "sedih", label: "Sedih", note: "waktu kamu belum sempat chat" },
+  { mood: "grr", label: "Siaga", note: "waktu jagain website kamu" },
 ];
 
 export default function TentangPage() {
@@ -56,7 +60,7 @@ export default function TentangPage() {
           </div>
           <div className="relative mx-auto w-52 md:w-64" aria-hidden="true">
             <div className="absolute -inset-[5%] rotate-[9deg] rounded-[2.4rem] bg-brand" />
-            <Mascot mood="senyum" className="relative w-full -rotate-3" />
+            <Mascot mood="utama" className="stiker relative w-full -rotate-3" />
           </div>
         </div>
       </section>
@@ -102,7 +106,7 @@ export default function TentangPage() {
         <div className="grid gap-6 md:grid-cols-2 md:items-end">
           <SectionHeading top="Kenalan sama" bottom="maskot kami" />
           <p className="max-w-md text-lg text-ink/70 md:justify-self-end">
-            Bentuknya kotak kayak layar, ekspresinya macam-macam. Kamu bakal sering ketemu dia di seluruh website ini.
+            Namanya Webi, ada logo Webkeun di dahinya, ekspresinya macam-macam. Kamu bakal sering ketemu dia di seluruh website ini.
           </p>
         </div>
         <ul className="mt-12 grid grid-cols-2 gap-4 md:grid-cols-4">
@@ -110,7 +114,7 @@ export default function TentangPage() {
             <li key={m.mood} className="rounded-3xl bg-white p-6 text-center ring-1 ring-ink/8">
               <Mascot
                 mood={m.mood}
-                className={`mx-auto w-24 drop-shadow-[0_10px_18px_rgb(91_61_245/0.25)] ${i % 2 ? "rotate-3" : "-rotate-3"}`}
+                className={`mx-auto w-28 drop-shadow-[0_10px_18px_rgb(91_61_245/0.25)] ${i % 2 ? "rotate-3" : "-rotate-3"}`}
               />
               <p className="mt-5 font-bold">{m.label}</p>
               <p className="text-sm text-ink/60">{m.note}</p>

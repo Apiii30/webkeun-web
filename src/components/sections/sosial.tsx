@@ -33,7 +33,7 @@ export function Sosial() {
 
         <div data-gerak="buka" className="relative mt-10 grid gap-5 md:grid-cols-2">
           {/* maskot mengintip dari atas kartu TikTok */}
-          <Mascot mood="kedip" className="absolute -top-11 right-8 z-10 w-16 rotate-6 drop-shadow-lg max-md:hidden" />
+          <Mascot mood="kedip" className="stiker absolute -top-11 right-8 z-10 w-16 rotate-6 max-md:hidden" />
 
           <a
             href={ig.href}

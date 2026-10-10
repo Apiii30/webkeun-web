@@ -320,7 +320,7 @@ function KartuCustom() {
         </p>
       </div>
       <div className="relative flex shrink-0 items-end justify-between gap-4 md:flex-col md:items-end">
-        <Mascot mood="kedip" className="w-16 shrink-0 -rotate-6 md:order-2 md:w-20" />
+        <Mascot mood="cinta" className="stiker w-16 shrink-0 -rotate-6 md:order-2 md:w-20" />
         <PillLink href={waLink(`Halo Webkeun! Aku mau tanya undangan paket ${exclusive.nama} dengan desain custom.`)} external tone="white" icon="whatsapp">
           Ceritain konsepnya
         </PillLink>

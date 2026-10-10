@@ -342,7 +342,7 @@ function Meeting() {
           <span className="absolute bottom-1.5 left-2 text-[11px]">Kamu</span>
         </div>
         <div className="relative grid aspect-[4/3] place-items-center rounded-xl bg-brand ring-2 ring-mint">
-          <Mascot mood="senyum" className="w-14" />
+          <Mascot mood="profil" className="w-14 rounded-full" />
           <span className="absolute bottom-1.5 left-2 text-[11px]">Webkeun</span>
         </div>
       </div>
@@ -579,7 +579,7 @@ function SerahTerima() {
         variants={{ awal: { opacity: 0, y: 20, rotate: 0 }, tampil: { opacity: 1, y: 0, rotate: 8, transition: { delay: 0.6, ...pegas } } }}
         className="absolute -top-14 -right-1 w-14 sm:-right-3"
       >
-        <Mascot mood="tertawa" className="w-full drop-shadow-lg" />
+        <Mascot mood="kedip" className="stiker w-full" />
       </motion.div>
     </div>
   );

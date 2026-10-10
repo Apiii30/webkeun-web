@@ -117,7 +117,7 @@ export function ChatWidget() {
         >
           <div className="flex items-center gap-3 bg-brand px-4 py-3.5 text-white">
             <span className="grid size-10 place-items-center rounded-full bg-lilac">
-              <Mascot mood="senyum" className="w-8" />
+              <Mascot mood="kepala-senang" className="w-8" />
             </span>
             <div className="flex-1">
               <p className="font-bold">Webkeun</p>

@@ -168,7 +168,12 @@ body {
   color: var(--color-ink);
 }
 
-/* Maskot hero ketawa saat tombol utama di-hover */
+/* Webi di atas permukaan ungu: garis tepi putih seperti stiker, supaya badannya yang ungu tidak tenggelam */
+.stiker {
+  filter: drop-shadow(2px 0 0 #fff) drop-shadow(-2px 0 0 #fff) drop-shadow(0 2px 0 #fff) drop-shadow(0 -2px 0 #fff) drop-shadow(0 12px 18px rgb(21 19 43 / 0.25));
+}
+
+/* Kepala Webi kecil di hero bermata hati saat tombol utama di-hover */
 .hero:has(.hero-cta:hover, .hero-cta:focus-visible) .mascot-normal {
   opacity: 0;
 }
@@ -205,7 +210,7 @@ body {
   }
 }
 
-/* Maskot tombol chat juga ketawa saat di-hover */
+/* Kepala Webi di tombol chat juga bermata hati saat di-hover */
 .chat-fab:hover .mascot-normal {
   opacity: 0;
 }

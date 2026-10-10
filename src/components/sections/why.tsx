@@ -41,7 +41,7 @@ export function Why() {
 
       <div data-gerak="buka" className="relative mx-auto w-full max-w-72 sm:max-w-sm">
         <div className="absolute inset-8 rotate-6 rounded-[2.5rem] bg-brand" aria-hidden="true" />
-        <Mascot mood="senyum" className="relative w-full -rotate-3 p-10" />
+        <Mascot mood="utama" className="stiker relative w-full -rotate-3 p-10" />
         {chips.map((c) => (
           <span
             key={c.label}

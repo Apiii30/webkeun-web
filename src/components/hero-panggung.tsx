@@ -1,19 +1,18 @@
 "use client";
 
-import { AnimatePresence, motion, MotionConfig, type MotionValue, useReducedMotion, useSpring } from "motion/react";
+import { AnimatePresence, motion, MotionConfig, useReducedMotion } from "motion/react";
 import Image from "next/image";
-import { type CSSProperties, type ReactNode, useEffect, useRef, useState } from "react";
+import { type CSSProperties, type ReactNode, useEffect, useState } from "react";
 import { templates } from "@/lib/site";
-import { type Mood, MascotFace } from "./mascot";
+import { Mascot, type Mood } from "./mascot";
 
 // Panggung hero "dinding demo". Dua babak yang bergantian terus:
 // 1. Demo (±8 dtk): semua demo Webkeun (undangan & website) tersusun di dinding miring 3D selebar hero, enam kolom
 //    bergulir berlawanan arah (CSS .dinding-jalur di globals.css). Dindingnya ada di bawah lapisan teks; tepi yang mentok
 //    tulisan memudar (.dinding-tepi). Sengaja hanya hiasan (tidak bisa diklik, tanpa efek hover/kursor) supaya ringan;
 //    gerak guliran murni CSS transform.
-// 2. Maskot (±6 dtk): dinding turun & menghilang, maskot besar melompat naik dan berganti ekspresi (kaget → senyum →
-//    kedip → tertawa) sambil berceloteh, lalu turun lagi dan dindingnya kembali.
-// Maskot tertawa saat tombol utama hero di-hover (aturan .hero-cta di globals.css).
+// 2. Maskot (±6 dtk): dinding turun & menghilang, Webi besar melompat naik dan berganti pose (kaget → melambai →
+//    kedip → semangat) sambil berceloteh, lalu turun lagi dan dindingnya kembali.
 
 const lembut = [0.16, 1, 0.3, 1] as const;
 const LAMA_DEMO = 8000;
@@ -194,15 +193,13 @@ function KartuTrio({ k, eager }: { k: Kartu; eager: boolean }) {
 
 // ——— babak maskot ———
 
-const INK = "#15132B";
-
-// urutan ekspresi dalam satu babak (ms sejak maskot muncul); gelembung 0/1 = kalimat pertama/kedua
-const adegan: { t: number; mood: Mood; gelembung?: 0 | 1 }[] = [
-  { t: 0, mood: "kaget" },
-  { t: 1100, mood: "senyum", gelembung: 0 },
-  { t: 2500, mood: "kedip", gelembung: 0 },
-  { t: 2950, mood: "senyum", gelembung: 0 },
-  { t: 3500, mood: "tertawa", gelembung: 1 },
+// urutan pose Webi dalam satu babak (ms sejak maskot muncul); gelembung 0/1 = kalimat pertama/kedua
+const POSE = ["kaget", "melambai", "kedip", "semangat"] as const satisfies readonly Mood[];
+const adegan: { t: number; pose: (typeof POSE)[number]; gelembung?: 0 | 1 }[] = [
+  { t: 0, pose: "kaget" },
+  { t: 1100, pose: "melambai", gelembung: 0 },
+  { t: 2500, pose: "kedip", gelembung: 0 },
+  { t: 3500, pose: "semangat", gelembung: 1 },
 ];
 // kalimatnya berganti tiap putaran
 const kalimat: [string, string][] = [
@@ -210,7 +207,7 @@ const kalimat: [string, string][] = [
   ["Mau website buat usaha?", "Webkeun aja!"],
   [`Sudah lihat ${templates.length} demonya?`, "Konsultasi gratis, kok!"],
 ];
-// percikan titik saat tertawa
+// percikan titik saat semangat
 const percikan = [
   { x: -88, y: -40, c: "bg-mint size-4" },
   { x: 84, y: -52, c: "bg-brand size-3.5" },
@@ -220,49 +217,14 @@ const percikan = [
   { x: 100, y: 4, c: "bg-white size-2.5" },
 ];
 
-function MataBulat({ x, y }: { x: MotionValue<number>; y: MotionValue<number> }) {
-  return (
-    <>
-      <motion.g style={{ x, y }}>
-        <circle cx="44" cy="54" r="7.5" fill={INK} />
-        <circle cx="76" cy="54" r="7.5" fill={INK} />
-        <circle cx="46.6" cy="51.4" r="2.3" fill="#fff" />
-        <circle cx="78.6" cy="51.4" r="2.3" fill="#fff" />
-      </motion.g>
-      <circle cx="28" cy="70" r="5" fill="#5B3DF5" />
-      <circle cx="92" cy="70" r="5" fill="#5B3DF5" />
-      <path d="M40 70 Q 46 86, 53 77 Q 60 68, 67 77 Q 74 86, 80 70" fill="none" stroke={INK} strokeWidth="6" strokeLinecap="round" strokeLinejoin="round" />
-    </>
-  );
-}
-
 function BabakMaskot({ putaran }: { putaran: number }) {
   const [n, setN] = useState(0);
   useEffect(() => {
     const ts = adegan.slice(1).map((a, i) => setTimeout(() => setN(i + 1), a.t));
     return () => ts.forEach(clearTimeout);
   }, []);
-  const { mood, gelembung } = adegan[n];
+  const { pose, gelembung } = adegan[n];
   const teks = gelembung === undefined ? null : kalimat[putaran % kalimat.length][gelembung];
-
-  // mata mengikuti kursor saat tersenyum
-  const ex = useSpring(0, { stiffness: 260, damping: 22 });
-  const ey = useSpring(0, { stiffness: 260, damping: 22 });
-  const ref = useRef<SVGSVGElement>(null);
-  useEffect(() => {
-    function lihat(e: PointerEvent) {
-      const b = ref.current?.getBoundingClientRect();
-      if (!b) return;
-      const dx = e.clientX - (b.left + b.width / 2);
-      const dy = e.clientY - (b.top + b.height / 2);
-      const jarak = Math.hypot(dx, dy) || 1;
-      const jangkau = Math.min(jarak / 300, 1) * 5;
-      ex.set((dx / jarak) * jangkau);
-      ey.set((dy / jarak) * jangkau);
-    }
-    window.addEventListener("pointermove", lihat);
-    return () => window.removeEventListener("pointermove", lihat);
-  }, [ex, ey]);
 
   return (
     <motion.div
@@ -292,9 +254,9 @@ function BabakMaskot({ putaran }: { putaran: number }) {
         </AnimatePresence>
       </div>
 
-      {/* percikan & hati saat tertawa */}
+      {/* percikan & hati saat semangat */}
       <AnimatePresence>
-        {mood === "tertawa" &&
+        {pose === "semangat" &&
           percikan.map((p, i) => (
             <motion.span
               key={i}
@@ -305,7 +267,7 @@ function BabakMaskot({ putaran }: { putaran: number }) {
               className={`absolute top-[22%] left-1/2 rounded-full ${p.c}`}
             />
           ))}
-        {mood === "tertawa" &&
+        {pose === "semangat" &&
           [-30, 10, 40].map((dx, i) => (
             <motion.span
               key={`h${dx}`}
@@ -320,29 +282,27 @@ function BabakMaskot({ putaran }: { putaran: number }) {
           ))}
       </AnimatePresence>
 
-      {/* tubuh: kaget = melompat, tertawa = bergoyang, selainnya bernapas */}
+      {/* tubuh: kaget = melompat, semangat = bergoyang, selainnya bernapas. Semua pose dimuat sekaligus dan ditumpuk,
+          supaya tidak berkedip kosong saat berganti. */}
       <motion.div
-        key={mood}
+        key={pose}
         className="relative origin-bottom"
         animate={
-          mood === "kaget"
+          pose === "kaget"
             ? { y: [0, -26, 0, -8, 0], scaleY: [1, 1.08, 0.9, 1.03, 1], scaleX: [1, 0.94, 1.08, 0.98, 1] }
-            : mood === "tertawa"
+            : pose === "semangat"
               ? { rotate: [0, -5, 5, -4, 4, -2, 0], scaleY: [1, 0.96, 1.03, 0.97, 1.02, 1, 1] }
               : { scaleY: [1, 1.03, 1], scaleX: [1, 0.99, 1] }
         }
         transition={
-          mood === "kaget" ? { duration: 0.8, ease: "easeOut", delay: 0.45 } : mood === "tertawa" ? { duration: 1.2, ease: "easeInOut" } : { duration: 2.4, repeat: Infinity, ease: "easeInOut" }
+          pose === "kaget" ? { duration: 0.8, ease: "easeOut", delay: 0.45 } : pose === "semangat" ? { duration: 1.2, ease: "easeInOut" } : { duration: 2.4, repeat: Infinity, ease: "easeInOut" }
         }
       >
-        <div className="absolute -inset-[5%] rotate-[9deg] rounded-[2.6rem] bg-brand" />
-        <svg ref={ref} viewBox="2 8 116 104" className="relative w-full -rotate-3 drop-shadow-[0_18px_26px_rgb(21_19_43/0.3)]">
-          <rect x="6" y="12" width="108" height="96" rx="26" fill="#E4DEFF" />
-          <g className="mascot-normal transition-opacity duration-150">{mood === "senyum" ? <MataBulat x={ex} y={ey} /> : <MascotFace mood={mood} />}</g>
-          <g className="mascot-laugh opacity-0 transition-opacity duration-150">
-            <MascotFace mood="tertawa" />
-          </g>
-        </svg>
+        <div className="grid drop-shadow-[0_18px_26px_rgb(21_19_43/0.3)]">
+          {POSE.map((p) => (
+            <Mascot key={p} mood={p} eager className={`col-start-1 row-start-1 h-auto w-full ${p === pose ? "" : "opacity-0"}`} />
+          ))}
+        </div>
       </motion.div>
 
       {/* bayangan di lantai */}

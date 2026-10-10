@@ -80,7 +80,7 @@ function Kartu({ p, jenis, i }: { p: Paket; jenis: JenisHarga; i: number }) {
       {sorot && (
         <div className="pointer-events-none absolute -top-[4.2rem] right-3 z-10 flex items-start gap-1" aria-hidden="true">
           <span className="mt-2 -rotate-6 rounded-2xl bg-white px-3 py-1.5 text-sm font-bold text-ink shadow-md">Segini doang?!</span>
-          <Mascot mood="kaget" className="w-[4.5rem] drop-shadow-[0_10px_18px_rgb(47_211_176/0.35)]" />
+          <Mascot mood="kaget" className="stiker w-[4.5rem]" />
         </div>
       )}
 

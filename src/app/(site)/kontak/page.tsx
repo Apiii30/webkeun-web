@@ -41,7 +41,7 @@ export default function KontakPage() {
       <section className="mx-auto grid max-w-6xl gap-8 px-4 py-16 sm:px-6 md:py-20 lg:grid-cols-[1fr_1.35fr] lg:items-start">
         <div className="space-y-5">
           <div className="relative overflow-hidden rounded-3xl bg-brand p-7 text-white">
-            <Mascot mood="kedip" className="absolute -right-5 -bottom-6 w-28 rotate-12 opacity-90" />
+            <Mascot mood="melambai" className="stiker absolute -right-5 -bottom-6 w-28 rotate-12" />
             <span className="grid size-12 place-items-center rounded-2xl bg-white text-wa">
               <Icon name="whatsapp" className="size-6" />
             </span>

@@ -150,7 +150,7 @@ export default function UndanganPage() {
           </div>
           <div className="relative mx-auto w-44 md:w-full md:max-w-56">
             <div className="absolute inset-4 rotate-6 rounded-4xl bg-white/15" aria-hidden="true" />
-            <Mascot mood="kedip" className="relative w-full -rotate-6" />
+            <Mascot mood="cinta" className="stiker relative w-full -rotate-6" />
           </div>
         </div>
       </section>

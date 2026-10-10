@@ -21,7 +21,7 @@ export default async function Image() {
     readFile(join(process.cwd(), "src/app/_og/jakarta-800.ttf")),
     readFile(join(process.cwd(), "src/app/_og/jakarta-600.ttf")),
     svg(readFile(join(process.cwd(), "public/brand/logo-webkeun.svg"))),
-    svg(readFile(join(process.cwd(), "public/brand/maskot-senyum.svg"))),
+    svg(readFile(join(process.cwd(), "public/brand/webi-maskot-webkeun/webi-senang-melambai.svg"))),
   ]);
 
   return new ImageResponse(
@@ -47,8 +47,8 @@ export default async function Image() {
         </div>
 
         <div style={{ display: "flex", position: "relative", width: 330, alignItems: "center", justifyContent: "center", marginLeft: 24 }}>
-          <div style={{ position: "absolute", width: 290, height: 290, borderRadius: 64, background: "#5B3DF5", transform: "rotate(9deg)" }} />
-          <img src={maskot} width={300} height={269} style={{ transform: "rotate(-4deg)" }} alt="" />
+          <div style={{ position: "absolute", width: 290, height: 290, borderRadius: 64, background: "#FFFFFF", transform: "rotate(9deg)" }} />
+          <img src={maskot} width={292} height={312} style={{ transform: "rotate(-4deg)" }} alt="" />
         </div>
       </div>
     ),

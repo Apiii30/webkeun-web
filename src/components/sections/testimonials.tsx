@@ -116,7 +116,7 @@ function Utama({ t }: { t: Testimoni }) {
               </span>
             </div>
             <span className="grid size-8 shrink-0 place-items-center rounded-full bg-white ring-2 ring-lilac">
-              <Mascot mood="senyum" className="w-6" />
+              <Mascot mood="kepala-senang" className="w-6" />
             </span>
           </motion.div>
         </motion.blockquote>

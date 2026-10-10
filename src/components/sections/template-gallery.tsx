@@ -88,7 +88,7 @@ export function TemplateGallery({ awal }: { awal: KategoriWebsite | null }) {
               Pilih yang paling kamu suka!
             </span>
             <div className="absolute inset-[-5%] rotate-[9deg] rounded-[2.2rem] bg-brand" />
-            <Mascot mood="senyum" className="relative w-full -rotate-3" />
+            <Mascot mood="melambai" className="stiker relative w-full -rotate-3" />
           </div>
         </div>
       </section>
@@ -157,7 +157,7 @@ export function TemplateGallery({ awal }: { awal: KategoriWebsite | null }) {
               className={`flex flex-col items-start justify-between gap-8 rounded-3xl bg-brand p-7 text-white ${mdSpan} ${lgSpan}`}
             >
               <div className={wide ? "lg:flex lg:items-center lg:gap-8" : ""}>
-                <Mascot mood="kedip" className="w-20 shrink-0 -rotate-6" />
+                <Mascot mood="kedip" className="stiker w-20 shrink-0 -rotate-6" />
                 <div className={wide ? "mt-6 lg:mt-0" : "mt-6"}>
                   <h2 className="text-2xl leading-tight font-bold">
                     Nggak nemu yang pas?

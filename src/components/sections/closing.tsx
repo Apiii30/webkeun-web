@@ -22,7 +22,7 @@ export function ClosingCta() {
         </div>
         <div className="relative mx-auto w-48 md:w-full md:max-w-60">
           <div className="absolute inset-4 rotate-6 rounded-4xl bg-white/15" aria-hidden="true" />
-          <Mascot mood="tertawa" className="relative w-full -rotate-6" />
+          <Mascot mood="semangat" className="stiker relative w-full -rotate-6" />
         </div>
       </div>
     </section>

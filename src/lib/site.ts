@@ -162,7 +162,7 @@ export const serviceShowcase = {
     demo: "/template/kawalu-coffee",
     web: ["/preview/umkm/laptop-kawalu-coffee.webp", "/preview/umkm/web-kawalu-2.webp"],
     hp: ["/preview/umkm/hp-kawalu-1.webp", "/preview/umkm/hp-kawalu-2.webp"],
-    mood: "senyum",
+    mood: "melambai",
     line: "Warungmu jadi gampang dicari!",
     chips: [
       ["tag", "Menu & harga"],
@@ -192,7 +192,7 @@ export const serviceShowcase = {
     demo: "/template/laras-kinanti",
     web: ["/preview/portofolio/laptop-laras-kinanti.webp", "/preview/portofolio/web-laras-2.webp"],
     hp: ["/preview/portofolio/hp-laras-1.webp", "/preview/portofolio/hp-laras-2.webp"],
-    mood: "tertawa",
+    mood: "semangat",
     line: "Karyamu, panggungmu.",
     chips: [
       ["image", "Galeri karya"],
@@ -208,7 +208,7 @@ export const serviceShowcase = {
     demo: "/template/undangan",
     web: ["/preview/undangan/laptop-undangan-garden-alya.webp", "/preview/undangan/laptop-undangan-porselen-frisca.webp"],
     hp: ["/preview/undangan/hp-undangan-garden-alya-1.webp", "/preview/undangan/hp-undangan-porselen-frisca-1.webp"],
-    mood: "kedip",
+    mood: "cinta",
     line: "Tinggal sebar ke tamu!",
     chips: [
       ["heart", "RSVP & ucapan"],
