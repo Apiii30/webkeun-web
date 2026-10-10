@@ -1,6 +1,7 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
 import { Icon, type IconName } from "./icons";
+import { LinkDemo } from "./link-demo";
 
 // Garis tebal ujung bulat + titik mint, diambil dari bentuk logo "wk".
 export function StrokeUnderline({ children, color = "#5B3DF5" }: { children: ReactNode; color?: string }) {
@@ -75,6 +76,7 @@ export function PillLink({
   tone = "brand",
   icon = "arrow",
   external,
+  demo,
   size = "md",
   className = "",
 }: {
@@ -83,6 +85,8 @@ export function PillLink({
   tone?: keyof typeof pillTone;
   icon?: IconName;
   external?: boolean;
+  /** link ke halaman demo template: disiapkan saat disentuh, bukan saat terlihat (lihat link-demo.tsx) */
+  demo?: boolean;
   size?: "md" | "lg";
   className?: string;
 }) {
@@ -102,6 +106,10 @@ export function PillLink({
     <a href={href} target="_blank" rel="noopener noreferrer" className={classes}>
       {content}
     </a>
+  ) : demo ? (
+    <LinkDemo href={href} className={classes}>
+      {content}
+    </LinkDemo>
   ) : (
     <Link href={href} className={classes}>
       {content}

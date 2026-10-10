@@ -1,12 +1,12 @@
 "use client";
 
 import { AnimatePresence, motion, type MotionValue, useMotionValueEvent, useScroll, useTransform } from "motion/react";
-import Link from "next/link";
 import { useRef, useState } from "react";
 import { useDiam } from "@/lib/diam";
 import { serviceShowcase, services, waLink } from "@/lib/site";
 import { PillLink, SectionHeading, Stabilo } from "../brand";
 import { Icon } from "../icons";
+import { LinkDemo } from "../link-demo";
 import { Panggung } from "./services-stage";
 
 // Section Layanan. Panggungnya sticky dan tiap layanan dapat jatah ¾ layar guliran (tinggi track = 100svh + 75svh × jumlah layanan): contoh website di
@@ -160,13 +160,13 @@ function Rincian({ s }: { s: Layanan }) {
 
 function LihatContoh({ href }: { href: string }) {
   return (
-    <Link
+    <LinkDemo
       href={href}
       className="group inline-flex items-center gap-1.5 text-[15px] font-semibold text-ink underline decoration-brand/30 decoration-2 underline-offset-4 transition-colors hover:decoration-brand"
     >
       Lihat contohnya
       <Icon name="arrow" className="size-4 transition-transform group-hover:translate-x-0.5" strokeWidth={2.5} />
-    </Link>
+    </LinkDemo>
   );
 }
 

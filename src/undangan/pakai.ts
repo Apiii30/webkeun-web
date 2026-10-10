@@ -12,6 +12,7 @@ import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 export function useBukaUndangan({ halus = true }: { halus?: boolean } = {}) {
   const [opened, setOpened] = useState(false);
   const lenis = useRef<Lenis | null>(null);
+  useJedaAnimasiLuarLayar();
 
   // Mulai dari paling atas setiap kali dibuka, lalu nyalakan scroll halus
   useEffect(() => {
@@ -54,6 +55,79 @@ export function useBukaUndangan({ halus = true }: { halus?: boolean } = {}) {
   }
 
   return { opened, open };
+}
+
+// Animasi berulang (kelopak hanyut, kilau air, burung, dst.) tetap dihitung browser walaupun bagiannya jauh dari layar.
+// Satu tema bisa punya 100-200 animasi seperti ini, jadi di HP murah HP-nya cepat panas dan baterainya boros. Di sini
+// animasi berulang dijeda (style inline animation-play-state) selama wadahnya lebih dari satu layar dari layar, lalu
+// dilepas lagi sebelum terlihat. Animasi sekali jalan dan animasi ikut-gulir (animation-timeline) tidak disentuh, begitu
+// juga elemen yang jedanya sudah diatur temanya sendiri lewat style inline.
+export function useJedaAnimasiLuarLayar() {
+  useEffect(() => {
+    if (!document.getAnimations) return;
+    type El = HTMLElement | SVGElement;
+    const isi = new Map<Element, Set<El>>(); // wadah -> elemen beranimasi di dalamnya
+    const dijeda = new Set<El>();
+    const dikenal = new WeakSet<Element>();
+
+    // Posisi diukur langsung, bukan dengan IntersectionObserver: observer tidak melihat posisi elemen yang sedang
+    // digeser animasi CSS (dijalankan GPU), jadi burung yang terbang melintas dikira masih di luar layar.
+    const periksa = () => {
+      const h = innerHeight;
+      for (const [wadah, daftar] of isi) {
+        if (!wadah.isConnected) {
+          for (const el of daftar) dijeda.delete(el);
+          isi.delete(wadah);
+          continue;
+        }
+        const r = wadah.getBoundingClientRect();
+        const dekat = r.bottom > -h && r.top < 2 * h;
+        for (const el of daftar) {
+          if (dekat && dijeda.has(el)) {
+            el.style.animationPlayState = "";
+            dijeda.delete(el);
+          } else if (!dekat && !dijeda.has(el) && !el.style.animationPlayState) {
+            el.style.animationPlayState = "paused";
+            dijeda.add(el);
+          }
+        }
+      }
+    };
+
+    // Animasi baru muncul saat kelas berganti (undangan dibuka, bagian muncul), jadi dipindai ulang berkala
+    const pindai = () => {
+      for (const a of document.getAnimations()) {
+        const efek = a.effect as KeyframeEffect | null;
+        const el = efek?.target;
+        if (!el || dikenal.has(el) || !(a instanceof CSSAnimation) || !(a.timeline instanceof DocumentTimeline) || efek.pseudoElement) continue;
+        if (efek.getTiming().iterations !== Infinity || !(el instanceof HTMLElement || el instanceof SVGElement)) continue;
+        dikenal.add(el);
+        // wadah = induk terdekat yang tidak ikut bergerak; elemennya sendiri (kelopak jatuh, burung terbang) bisa
+        // sedang di luar layar walaupun bagiannya terlihat
+        let wadah: Element = el.parentElement ?? el;
+        while (wadah.parentElement && (getComputedStyle(wadah).display === "contents" || wadah.getAnimations().some((x) => x.playState === "running"))) wadah = wadah.parentElement;
+        isi.set(wadah, (isi.get(wadah) ?? new Set<El>()).add(el));
+      }
+      periksa();
+    };
+
+    let tunggu = 0;
+    const saatGulir = () => {
+      tunggu ||= window.setTimeout(() => {
+        tunggu = 0;
+        periksa();
+      }, 150);
+    };
+    addEventListener("scroll", saatGulir, { capture: true, passive: true });
+    pindai();
+    const jam = setInterval(pindai, 2000);
+    return () => {
+      clearInterval(jam);
+      clearTimeout(tunggu);
+      removeEventListener("scroll", saatGulir, { capture: true });
+      for (const el of dijeda) el.style.animationPlayState = "";
+    };
+  }, []);
 }
 
 // Sisa waktu menuju acara, diperbarui tiap detik. Bernilai null sebelum dihitung di browser

@@ -6,6 +6,7 @@ import { useState } from "react";
 import { templateCategories, templates } from "@/lib/site";
 import { SectionHeading, Stabilo } from "../brand";
 import { Icon } from "../icons";
+import { LinkDemo } from "../link-demo";
 import { PhoneTrio } from "../phone-trio";
 
 // Satu template unggulan per kategori (yang paling atas di daftar templates)
@@ -85,7 +86,7 @@ export function Portfolio() {
             <p className="text-sm font-semibold text-brand">{d.kind}</p>
             <h3 className="mt-1 text-2xl font-bold tracking-tight">{d.name}</h3>
             <p className="mt-3 text-ink/70">{d.desc}</p>
-            <Link
+            <LinkDemo
               href={`/template/${d.slug}`}
               className="group mt-6 inline-flex items-center gap-3 rounded-full bg-ink py-1.5 pr-1.5 pl-5 text-[15px] font-semibold text-white transition-colors hover:bg-ink/85"
             >
@@ -93,7 +94,7 @@ export function Portfolio() {
               <span className="grid size-8 place-items-center rounded-full bg-white text-ink transition-transform group-hover:translate-x-0.5">
                 <Icon name="arrow" className="size-4" strokeWidth={2.5} />
               </span>
-            </Link>
+            </LinkDemo>
           </div>
         </div>
       </div>

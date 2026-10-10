@@ -1,15 +1,15 @@
 import Image from "next/image";
-import Link from "next/link";
 import { templates, waLink } from "@/lib/site";
 import { PillLink } from "./brand";
 import { Icon } from "./icons";
+import { LinkDemo } from "./link-demo";
 
 // Isi satu kartu template website (undangan punya kartunya sendiri di sections/undangan-gallery.tsx). Bungkusnya (li)
 // diatur pemanggilnya, supaya galeri bisa memberi animasi saat filter berganti.
 export function TemplateCard({ t }: { t: (typeof templates)[number] }) {
   return (
     <>
-      <Link href={`/template/${t.slug}`} className="group relative block bg-lilac p-5 pb-8" aria-label={`Lihat demo template ${t.name}`}>
+      <LinkDemo href={`/template/${t.slug}`} className="group relative block bg-lilac p-5 pb-8" aria-label={`Lihat demo template ${t.name}`}>
         <div className="overflow-hidden rounded-xl bg-white shadow-[0_20px_40px_-24px_rgb(21_19_43/0.5)] transition-transform duration-500 group-hover:-translate-y-1">
           <div className="flex items-center gap-1.5 border-b border-ink/10 px-3 py-2">
             <span className="size-2 rounded-full bg-[#ff6159]" />
@@ -24,7 +24,7 @@ export function TemplateCard({ t }: { t: (typeof templates)[number] }) {
         <div className="absolute right-4 bottom-3 w-[24%] rotate-[4deg] overflow-hidden rounded-2xl bg-white p-1 shadow-xl transition-transform duration-500 group-hover:rotate-0">
           <Image src={t.phone} alt={`Tampilan HP template ${t.name}`} width={480} height={960} sizes="100px" className="w-full rounded-xl" />
         </div>
-      </Link>
+      </LinkDemo>
 
       <div className="flex flex-1 flex-col p-6">
         <p className="text-sm font-semibold text-brand">{t.kind}</p>
@@ -38,7 +38,9 @@ export function TemplateCard({ t }: { t: (typeof templates)[number] }) {
           ))}
         </ul>
         <div className="mt-auto flex flex-wrap items-center gap-x-4 gap-y-3 pt-6">
-          <PillLink href={`/template/${t.slug}`}>Lihat demo</PillLink>
+          <PillLink href={`/template/${t.slug}`} demo>
+            Lihat demo
+          </PillLink>
           <a
             href={waLink(`Halo Webkeun! Aku mau pakai template ${t.name} buat usahaku.`)}
             target="_blank"

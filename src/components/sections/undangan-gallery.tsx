@@ -2,11 +2,11 @@
 
 import { AnimatePresence, motion, MotionConfig, useMotionValue, useReducedMotion, useSpring, useTransform } from "motion/react";
 import Image from "next/image";
-import Link from "next/link";
 import { type CSSProperties, type PointerEvent, useState } from "react";
 import { type GayaUndangan, gayaUndangan, hargaPaket, rupiahSingkat, templates, waLink } from "@/lib/site";
 import { PillLink } from "../brand";
 import { Icon } from "../icons";
+import { LinkDemo } from "../link-demo";
 import { Mascot } from "../mascot";
 
 // Galeri tema undangan di /template/undangan, dikelompokkan per gaya (Adat & Budaya, Islami, dst.). Filter di atasnya
@@ -171,7 +171,7 @@ function KartuTema({ t }: { t: Tema }) {
         </fieldset>
 
         <div className="mt-auto grid grid-cols-[1fr_auto] items-center gap-2 pt-5">
-          <PillLink href={`/template/${t.slug}`} icon="eye" className="w-full">
+          <PillLink href={`/template/${t.slug}`} icon="eye" demo className="w-full">
             Lihat demo
           </PillLink>
           <a
@@ -219,7 +219,7 @@ function Panggung({ t, tema }: { t: Tema; tema: string }) {
   const transisi = "transition-[translate,rotate,scale] duration-700 ease-[cubic-bezier(0.2,0.8,0.2,1)] motion-reduce:transition-none";
 
   return (
-    <Link
+    <LinkDemo
       href={`/template/${t.slug}`}
       aria-label={`Lihat demo tema undangan ${tema}`}
       onPointerMove={gerak}
@@ -276,7 +276,7 @@ function Panggung({ t, tema }: { t: Tema; tema: string }) {
           <Icon name="arrow" className="size-3.5" strokeWidth={2.5} />
         </span>
       </span>
-    </Link>
+    </LinkDemo>
   );
 }
 

@@ -8,6 +8,7 @@ import "lenis/dist/lenis.css";
 import { useEffect, useRef, useState } from "react";
 import type { Photo } from "./photos";
 import { lockScroll, registerLenis, scrollToTop, unlockScroll } from "./scroll-lock";
+import { useJedaAnimasiLuarLayar } from "../../pakai";
 import { useTamu } from "../../tamu";
 import s from "./frisca.module.css";
 
@@ -30,6 +31,7 @@ export function InvitationShell({ names, cover, music, hasGifts, children }: Pro
   const [playing, setPlaying] = useState(false);
   const [musicMissing, setMusicMissing] = useState(false);
   const [toast, setToast] = useState(false);
+  useJedaAnimasiLuarLayar();
   const audio = useRef<HTMLAudioElement>(null);
   // true jika tamu sengaja mematikan musik: jangan dinyalakan otomatis lagi.
   const mutedByUser = useRef(false);
@@ -125,7 +127,7 @@ export function InvitationShell({ names, cover, music, hasGifts, children }: Pro
         ref={audio}
         src={music}
         loop
-        preload="auto"
+        preload="metadata" // lagu ±4 MB: diunduh saat diputar, bukan saat halaman dibuka
         onPlay={() => setPlaying(true)}
         onPause={() => setPlaying(false)}
         onError={() => {

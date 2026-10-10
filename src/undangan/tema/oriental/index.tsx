@@ -11,8 +11,11 @@ import { Oriental } from "./shell";
 // Khusus tampilan HP.
 
 const delafield = Mrs_Saint_Delafield({ subsets: ["latin"], weight: "400", variable: "--font-delafield" });
-const yuji = Yuji_Syuku({ subsets: ["latin"], weight: "400", variable: "--font-yuji" });
-const mincho = Shippori_Mincho({ subsets: ["latin"], weight: ["400", "500"], variable: "--font-mincho" });
+// Font Jepang dipecah Google jadi ±120 file per ketebalan dan subsets "latin" tidak menyaringnya. Kalau di-preload, semua
+// pecahan (±4 MB) ikut terunduh, juga di halaman lain yang sekadar menyiapkan (prefetch) demo ini. Tanpa preload, browser
+// hanya mengunduh pecahan yang hurufnya benar-benar tampil.
+const yuji = Yuji_Syuku({ subsets: ["latin"], weight: "400", variable: "--font-yuji", preload: false });
+const mincho = Shippori_Mincho({ subsets: ["latin"], weight: ["400", "500"], variable: "--font-mincho", preload: false });
 
 export function TemaOriental({ data }: { data: Undangan }) {
   return (

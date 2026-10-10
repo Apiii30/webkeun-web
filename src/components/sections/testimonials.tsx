@@ -2,10 +2,10 @@
 
 import { motion, MotionConfig, type Variants } from "motion/react";
 import Image from "next/image";
-import Link from "next/link";
 import { type Testimoni, testimonials } from "@/lib/site";
 import { SectionHeading, Stabilo } from "../brand";
 import { Icon } from "../icons";
+import { LinkDemo } from "../link-demo";
 import { Mascot } from "../mascot";
 
 // Testimoni klien, ditampilkan sebagai percakapan WhatsApp (memang lewat WhatsApp Webkeun ngobrol dengan klien).
@@ -152,12 +152,15 @@ function Utama({ t }: { t: Testimoni }) {
             </motion.span>
           </motion.div>
 
-          <Link href={t.karya.href} className="group mt-7 inline-flex items-center gap-3 rounded-full bg-ink py-1.5 pr-1.5 pl-5 text-[15px] font-semibold text-white transition-colors hover:bg-ink/85">
+          <LinkDemo
+            href={t.karya.href}
+            className="group mt-7 inline-flex items-center gap-3 rounded-full bg-ink py-1.5 pr-1.5 pl-5 text-[15px] font-semibold text-white transition-colors hover:bg-ink/85"
+          >
             {t.karya.label}
             <span className="grid size-8 place-items-center rounded-full bg-white text-ink transition-transform group-hover:translate-x-0.5">
               <Icon name="arrow" className="size-4" strokeWidth={2.5} />
             </span>
-          </Link>
+          </LinkDemo>
         </div>
       )}
     </div>
