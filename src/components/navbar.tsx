@@ -295,9 +295,8 @@ export function Navbar() {
           scrolled || open ? "bg-white/90 shadow-[0_8px_30px_-12px_rgb(21_19_43/0.25)]" : "bg-white/70"
         }`}
       >
-        <Link href="/" className="flex items-center gap-2.5" aria-label="Webkeun, ke beranda">
-          <Image src="/brand/logo-wk.svg" alt="" width={38} height={27} preload />
-          <Image src="/brand/tulisan.svg" alt="Webkeun" width={104} height={20} preload />
+        <Link href="/" className="flex items-center" aria-label="Webkeun, ke beranda">
+          <Image src="/brand/logo-webkeun.svg" alt="Webkeun" width={185} height={24} preload className="h-[22px] w-auto sm:h-6" />
         </Link>
 
         <ul className="hidden items-center gap-1 md:flex">

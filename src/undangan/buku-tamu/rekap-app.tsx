@@ -66,7 +66,7 @@ export function RekapApp({
           </svg>
 
           <div className="relative flex items-center justify-between gap-3">
-            <Image src="/brand/logo-wk-putih.svg" alt="Webkeun" width={40} height={28} />
+            <Image src="/brand/logo-webkeun-gelap.svg" alt="Webkeun" width={170} height={22} className="h-5 w-auto sm:h-[22px]" />
             <a
               href={`/u/${slug}`}
               target="_blank"

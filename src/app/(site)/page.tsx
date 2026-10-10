@@ -26,7 +26,7 @@ const dataTerstruktur = {
       "@id": `${asal}/#organisasi`,
       name: site.name,
       url: `${asal}/`,
-      logo: `${asal}/brand/logo-wk.svg`,
+      logo: `${asal}/brand/logo-webkeun-final/app-icon-ungu.png`,
       description: site.description,
       slogan: site.tagline,
       email: site.email,

@@ -17,11 +17,10 @@ export const contentType = "image/png";
 const svg = async (isi: Promise<Buffer>) => `data:image/svg+xml;base64,${(await isi).toString("base64")}`;
 
 export default async function Image() {
-  const [tebal, sedang, logo, tulisan, maskot] = await Promise.all([
+  const [tebal, sedang, logo, maskot] = await Promise.all([
     readFile(join(process.cwd(), "src/app/_og/jakarta-800.ttf")),
     readFile(join(process.cwd(), "src/app/_og/jakarta-600.ttf")),
-    svg(readFile(join(process.cwd(), "public/brand/logo-wk.svg"))),
-    svg(readFile(join(process.cwd(), "public/brand/tulisan.svg"))),
+    svg(readFile(join(process.cwd(), "public/brand/logo-webkeun.svg"))),
     svg(readFile(join(process.cwd(), "public/brand/maskot-senyum.svg"))),
   ]);
 
@@ -29,16 +28,14 @@ export default async function Image() {
     (
       <div style={{ display: "flex", width: "100%", height: "100%", background: "#E4DEFF", color: "#15132B", fontFamily: "Jakarta", padding: "64px 72px" }}>
         <div style={{ display: "flex", flexDirection: "column", justifyContent: "space-between", flex: 1 }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
-            <img src={logo} width={70} height={50} alt="" />
-            <img src={tulisan} width={175} height={34} alt="" />
-          </div>
+          <img src={logo} width={293} height={38} alt="" />
 
           <div style={{ display: "flex", flexDirection: "column" }}>
             <div style={{ fontSize: 70, fontWeight: 800, letterSpacing: -2, lineHeight: 1.08 }}>Undangan Digital</div>
             <div style={{ display: "flex", alignItems: "flex-end", fontSize: 62, fontWeight: 800, letterSpacing: -2, lineHeight: 1.1, color: "#5B3DF5" }}>
               & Pembuatan Website
-              <div style={{ width: 20, height: 20, borderRadius: 10, background: "#2FD3B0", marginLeft: 10, marginBottom: 16 }} />
+              {/* garis miring mint, seperti di logo */}
+              <div style={{ width: 13, height: 46, background: "#2FD3B0", transform: "skewX(-12.4deg)", marginLeft: 16, marginBottom: 12 }} />
             </div>
             <div style={{ marginTop: 26, fontSize: 25, fontWeight: 600, color: "rgba(21,19,43,0.68)" }}>Pernikahan · UMKM · Company Profile · Portofolio</div>
           </div>

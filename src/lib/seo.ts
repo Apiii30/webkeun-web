@@ -15,7 +15,7 @@ export const ogDasar = {
   siteName: site.name,
   locale: "id_ID",
   type: "website",
-  images: [{ url: "/brand/pratinjau.png?v=2", width: 1200, height: 630, alt: "Webkeun: undangan digital pernikahan dan jasa pembuatan website" }],
+  images: [{ url: "/brand/pratinjau.png?v=3", width: 1200, height: 630, alt: "Webkeun: undangan digital pernikahan dan jasa pembuatan website" }],
 };
 
 // Metadata halaman yang ingin ditemukan di Google: judul, deskripsi, alamat kanonik (satu alamat resmi walaupun

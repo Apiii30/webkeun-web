@@ -34,9 +34,8 @@ export function Footer() {
     <footer className="bg-lilac-soft">
       <div className="mx-auto grid max-w-6xl gap-10 px-4 py-14 sm:px-6 md:grid-cols-[1.6fr_1fr_1fr_1fr]">
         <div>
-          <Link href="/" className="inline-flex items-center gap-2.5" aria-label="Webkeun, ke beranda">
-            <Image src="/brand/logo-wk.svg" alt="" width={42} height={30} />
-            <Image src="/brand/tulisan.svg" alt="Webkeun" width={114} height={22} />
+          <Link href="/" className="inline-flex" aria-label="Webkeun, ke beranda">
+            <Image src="/brand/logo-webkeun.svg" alt="Webkeun" width={216} height={28} />
           </Link>
           <p className="mt-4 max-w-xs text-sm leading-relaxed text-ink/65">{site.description}</p>
           <IkonSosial />
