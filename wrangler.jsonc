@@ -5,7 +5,8 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "webkeun",
-  "main": ".open-next/worker.js",
+  // cloudflare-worker.mjs meneruskan semua permintaan ke Worker OpenNext (.open-next/worker.js) dan menambah cache foto
+  "main": "cloudflare-worker.mjs",
   "compatibility_date": "2026-10-01",
   "compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
   // File statis (JS, CSS, foto, musik, dan halaman yang sudah jadi saat build) disajikan langsung oleh Cloudflare:
